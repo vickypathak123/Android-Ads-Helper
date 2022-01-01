@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
+    <string name="app_name">Ads Helper</string>
+
+    <string name="exit">Exit</string>
+    <string name="do_you_want_to_exit">Do you want to exit?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <attr name="native_ads_main_color" format="reference" />
+    <attr name="native_ads_label_text_color" format="reference" />
+    <attr name="native_ads_body_text_color" format="reference" />
+    <attr name="native_ads_background_color" format="reference" />
+
+</resources>
