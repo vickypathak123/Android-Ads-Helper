@@ -17,9 +17,8 @@ buildscript {
 allprojects {
     repositories {
         mavenLocal()
-        // ADD IT HERE
-        maven { url "https://jitpack.io" }
         jcenter()
+        maven { url "https://jitpack.io" }
     }
 }
 

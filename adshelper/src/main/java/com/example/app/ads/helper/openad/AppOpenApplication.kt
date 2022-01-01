@@ -10,11 +10,14 @@ import android.os.SystemClock
 import android.provider.Settings
 import android.util.Log
 import android.webkit.WebView
-import androidx.lifecycle.*
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
-import com.example.app.ads.helper.*
 import com.example.app.ads.helper.dialogs.FullScreenNativeAdDialog
+import com.example.app.ads.helper.isAppForeground
+import com.example.app.ads.helper.isOpenAdEnable
 import com.example.app.ads.helper.isAnyAdOpen
 import com.example.app.ads.helper.isInterstitialAdShow
 import com.example.app.ads.helper.setTestDeviceIds
@@ -22,7 +25,6 @@ import com.google.android.gms.ads.AdActivity
 import com.google.android.gms.ads.MobileAds
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
-import java.util.*
 import kotlin.collections.ArrayList
 
 open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver {
@@ -119,7 +121,7 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
         return try {
             val androidId: String = Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
             val md5Data = customMD5(androidId)
-            val deviceId = md5Data?.uppercase(Locale.ENGLISH) ?: "null"
+            val deviceId = md5Data?.uppercase(java.util.Locale.ENGLISH) ?: "null"
             println("getDeviceId: $deviceId")
             deviceId
         } catch (e: Exception) {
