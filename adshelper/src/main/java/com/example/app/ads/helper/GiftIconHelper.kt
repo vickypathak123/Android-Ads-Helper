@@ -31,6 +31,7 @@ object GiftIconHelper {
      * @param fivGiftIcon this is your 1st visible main gift icon
      * @param fivBlastIcon this is your 2nd visible blast gift icon
      */
+    @JvmStatic
     fun loadGiftAd(@NonNull fContext: Activity, @NonNull fivGiftIcon: LottieAnimationView, @NonNull fivBlastIcon: LottieAnimationView) {
 
         fivGiftIcon.gone

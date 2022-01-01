@@ -14,7 +14,7 @@ import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
  *
  * AdMobAdsListener.kt - Simple interface which has notified your AD process
  */
-interface AdMobAdsListener {
+public interface AdMobAdsListener {
 
     /**
      * This method is called when your AD data was loaded successfully
