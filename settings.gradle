@@ -10,3 +10,4 @@ dependencyResolutionManagement {
 rootProject.name = "Ads Helper"
 include ':app'
 include ':adshelper'
+include ':base'

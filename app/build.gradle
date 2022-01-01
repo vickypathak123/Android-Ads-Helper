@@ -49,6 +49,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     implementation project(path: ':adshelper')
+    implementation project(path: ':base')
 
     //<editor-fold desc="Multidex support">
     implementation 'com.android.support:multidex:1.0.3'
