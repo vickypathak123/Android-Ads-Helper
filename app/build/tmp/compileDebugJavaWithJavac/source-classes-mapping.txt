@@ -1,0 +1,16 @@
+com/example/ads/helper/demo/databinding/ActivitySplashBinding.java
+ com.example.ads.helper.demo.databinding.ActivitySplashBinding
+com/example/ads/helper/demo/databinding/ActivityMainBinding.java
+ com.example.ads.helper.demo.databinding.ActivityMainBinding
+com/example/ads/helper/demo/databinding/AllScreenHeaderBinding.java
+ com.example.ads.helper.demo.databinding.AllScreenHeaderBinding
+com/example/ads/helper/demo/databinding/ActivitySecondBinding.java
+ com.example.ads.helper.demo.databinding.ActivitySecondBinding
+com/example/ads/helper/demo/databinding/ViewGiftAdBinding.java
+ com.example.ads.helper.demo.databinding.ViewGiftAdBinding
+com/example/ads/helper/demo/databinding/DialogExitBinding.java
+ com.example.ads.helper.demo.databinding.DialogExitBinding
+com/example/ads/helper/demo/databinding/ActivityNativeAdsBinding.java
+ com.example.ads.helper.demo.databinding.ActivityNativeAdsBinding
+com/example/ads/helper/demo/BuildConfig.java
+ com.example.ads.helper.demo.BuildConfig
