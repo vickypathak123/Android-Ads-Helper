@@ -70,16 +70,16 @@ dependencies {
     //</editor-fold>
 }
 
-//afterEvaluate {
-//    publishing {
-//        publications {
-//            release(MavenPublication) {
-//                from components.release
-//
-//                groupId = 'com.github.vickypathak123'
-//                artifactId = 'Android-Ads-Helper'
-//                version = '1.0.1'
-//            }
-//        }
-//    }
-//}
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = 'com.github.vickypathak123'
+                artifactId = 'Android-Ads-Helper'
+                version = '1.0.2'
+            }
+        }
+    }
+}
