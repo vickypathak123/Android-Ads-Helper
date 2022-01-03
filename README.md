@@ -40,6 +40,9 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
         initMobileAds(isAppInTesting = true) // Pass false when you give your project in Internal Testing Or Live
 ```
 
+###### Open Ads:
+- [AppApplication](https://github.com/vickypathak123/Android-Ads-Helper/blob/master/app/src/main/java/com/example/ads/helper/demo/AppApplication.kt) For More Details Refer This
+
 ###### Load Ads In Only `onCreate()` or `initAds()` Method
 ```kotlin
         InterstitialAdHelper.loadInterstitialAd(fContext = mActivity)
