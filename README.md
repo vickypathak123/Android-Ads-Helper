@@ -25,10 +25,25 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
 #### Native Ad Attribute Details
 <img src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/screenshots/3.jpg" height="auto" width="600"/>
 
+- Need to Initial all Native Ad Attribute in your App Theme
+```xml
+        <style name="Theme.NewCommonCode" parent="Theme.AppCompat.DayNight.NoActionBar">
+                <item name="colorPrimary">@color/purple_500</item>
+                <item name="colorPrimaryDark">@color/teal_700</item>
+                <item name="colorAccent">@color/colorAccent</item>
+        
+                <item name="native_ads_main_color">@color/purple_500</item>
+                <item name="native_ads_label_text_color">@android:color/white</item>
+                <item name="native_ads_background_color">@android:color/white</item>
+                <item name="native_ads_body_text_color">@android:color/black</item>
+        </style>
+```
+
 #### In Kotlin
 
 ###### Config Ads ID In `onCreate()` Method Of Your Application Class
 ```kotlin
+        // All Ad-Ids are Optional
         VasuAdsConfig.with(this)
             .isEnableOpenAd(true /* Default Value */) // Pass false if you don't need to show open ad in your project
             .setAdmobAppId("YOUR_LIVE_APP_ID")
