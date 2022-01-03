@@ -1,4 +1,5 @@
 # Android-Ads-Helper
+Android Ads code that is required in every app of Vasundhara Infotech [Vasundhara Infotech LLP](https://vasundharainfotechllp.com)
 
 ###### latest_build_version [![](https://jitpack.io/v/vickypathak123/Android-Ads-Helper.svg)](https://jitpack.io/#vickypathak123/Android-Ads-Helper)
 
@@ -17,6 +18,28 @@
 	dependencies {
 	        implementation 'com.github.vickypathak123:Android-Ads-Helper:latest_build_version'
 	}
+```
+
+## How To Use this Library
+
+#### In Kotlin
+
+###### Load Ads In Only `onCreate()` or `initAds()` Method
+```kotlin
+        InterstitialAdHelper.loadInterstitialAd(fContext = mActivity)
+        RewardVideoHelper.loadRewardVideoAd(fContext = mActivity)
+        InterstitialRewardHelper.loadRewardedInterstitialAd(fContext = mActivity)
+
+        NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
+            NativeAdsSize.Medium,
+            mBinding.flNativeAdPlaceHolderMedium
+        )
+
+        GiftIconHelper.loadGiftAd(
+            fContext = mActivity,
+            fivGiftIcon = mBinding.layoutHeader.layoutGiftAd.giftAdIcon,
+            fivBlastIcon = mBinding.layoutHeader.layoutGiftAd.giftBlastAdIcon
+        )
 ```
 
 ### ⭐️ If you liked it support me with your stars!
