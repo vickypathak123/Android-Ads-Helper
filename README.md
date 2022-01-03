@@ -24,6 +24,22 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
 
 #### In Kotlin
 
+###### Config Ads ID In `onCreate()` Method Of Your Application Class
+```kotlin
+        VasuAdsConfig.with(this)
+            .isEnableOpenAd(true /* Default Value */) // Pass false if you don't need to show open ad in your project
+            .setAdmobAppId("YOUR_LIVE_APP_ID")
+            .setAdmobBannerAdId("YOUR_LIVE_BANNER_AD_ID")
+            .setAdmobInterstitialAdId("YOUR_LIVE_INTERSTITIAL_AD_ID")
+            .setAdmobNativeAdvancedAdId("YOUR_LIVE_NATIVE_ADVANCED_AD_ID")
+            .setAdmobOpenAdId("YOUR_LIVE_OPEN_AD_ID")
+            .setAdmobRewardVideoAdId("YOUR_LIVE_REWARD_VIDEO_AD_ID")
+            .setAdmobInterstitialAdRewardId("YOUR_LIVE_INTERSTITIAL_AD_REWARD_ID")
+            .initialize()
+
+        initMobileAds(isAppInTesting = true) // Pass false when you give your project in Internal Testing Or Live
+```
+
 ###### Load Ads In Only `onCreate()` or `initAds()` Method
 ```kotlin
         InterstitialAdHelper.loadInterstitialAd(fContext = mActivity)
@@ -39,6 +55,49 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
             fContext = mActivity,
             fivGiftIcon = mBinding.layoutHeader.layoutGiftAd.giftAdIcon,
             fivBlastIcon = mBinding.layoutHeader.layoutGiftAd.giftBlastAdIcon
+        )
+```
+
+###### Show Loaded Ads Anywhere
+```kotlin
+        // For Showing InterstitialAd
+        mActivity.isShowInterstitialAd { 
+            // Perform your Action
+        }
+
+        // For Showing RewardVideoAd
+        mActivity.showRewardVideoAd()
+
+        // For Showing RewardedInterstitialAd
+        mActivity.showRewardedInterstitialAd()
+```
+
+###### For Set Reward Ad Listener, Call In Your `initViewListener()` Method
+```kotlin
+        // For RewardVideoAd
+        mActivity.isShowRewardVideoAd(
+            onStartToLoadRewardVideoAd = {
+                // Call When New Ad Start To Load
+            },
+            onUserEarnedReward = { isUserEarnedReward ->
+                // Call After Ad Closed And 'isUserEarnedReward = true' if user earned his reward
+            },
+            onAdLoaded = {
+                // Call After Ad Loaded
+            }
+        )
+
+        // For Showing RewardedInterstitialAd
+        mActivity.isShowRewardedInterstitialAd(
+            onStartToLoadRewardedInterstitialAd = {
+                // Call When New Ad Start To Load
+            },
+            onUserEarnedReward = { isUserEarnedReward ->
+                // Call After Ad Closed And 'isUserEarnedReward = true' if user earned his reward
+            },
+            onAdLoaded = {
+                // Call After Ad Loaded
+            }
         )
 ```
 
