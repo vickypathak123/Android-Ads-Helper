@@ -11,6 +11,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.app.ads.helper.R;
@@ -46,6 +47,9 @@ public final class LayoutGoogleNativeAdBigBinding implements ViewBinding {
   public final RatingBar adStars;
 
   @NonNull
+  public final CardView cvAppIcon;
+
+  @NonNull
   public final LinearLayout llStar;
 
   @NonNull
@@ -57,8 +61,8 @@ public final class LayoutGoogleNativeAdBigBinding implements ViewBinding {
   private LayoutGoogleNativeAdBigBinding(@NonNull NativeAdView rootView,
       @NonNull TextView adAdvertiser, @NonNull ImageView adAppIcon, @NonNull TextView adBody,
       @NonNull Button adCallToAction, @NonNull TextView adHeadline, @NonNull MediaView adMedia,
-      @NonNull RatingBar adStars, @NonNull LinearLayout llStar, @NonNull View testIconView,
-      @NonNull TextView txtAd) {
+      @NonNull RatingBar adStars, @NonNull CardView cvAppIcon, @NonNull LinearLayout llStar,
+      @NonNull View testIconView, @NonNull TextView txtAd) {
     this.rootView = rootView;
     this.adAdvertiser = adAdvertiser;
     this.adAppIcon = adAppIcon;
@@ -67,6 +71,7 @@ public final class LayoutGoogleNativeAdBigBinding implements ViewBinding {
     this.adHeadline = adHeadline;
     this.adMedia = adMedia;
     this.adStars = adStars;
+    this.cvAppIcon = cvAppIcon;
     this.llStar = llStar;
     this.testIconView = testIconView;
     this.txtAd = txtAd;
@@ -141,6 +146,12 @@ public final class LayoutGoogleNativeAdBigBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.cv_app_icon;
+      CardView cvAppIcon = ViewBindings.findChildViewById(rootView, id);
+      if (cvAppIcon == null) {
+        break missingId;
+      }
+
       id = R.id.ll_star;
       LinearLayout llStar = ViewBindings.findChildViewById(rootView, id);
       if (llStar == null) {
@@ -160,7 +171,8 @@ public final class LayoutGoogleNativeAdBigBinding implements ViewBinding {
       }
 
       return new LayoutGoogleNativeAdBigBinding((NativeAdView) rootView, adAdvertiser, adAppIcon,
-          adBody, adCallToAction, adHeadline, adMedia, adStars, llStar, testIconView, txtAd);
+          adBody, adCallToAction, adHeadline, adMedia, adStars, cvAppIcon, llStar, testIconView,
+          txtAd);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

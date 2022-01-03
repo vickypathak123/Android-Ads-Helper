@@ -10,6 +10,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.app.ads.helper.R;
@@ -38,6 +39,9 @@ public final class LayoutGoogleNativeAdMediumBinding implements ViewBinding {
   public final RatingBar adStars;
 
   @NonNull
+  public final CardView cvAppIcon;
+
+  @NonNull
   public final View testIconView;
 
   @NonNull
@@ -45,14 +49,15 @@ public final class LayoutGoogleNativeAdMediumBinding implements ViewBinding {
 
   private LayoutGoogleNativeAdMediumBinding(@NonNull NativeAdView rootView,
       @NonNull ImageView adAppIcon, @NonNull TextView adBody, @NonNull Button adCallToAction,
-      @NonNull TextView adHeadline, @NonNull RatingBar adStars, @NonNull View testIconView,
-      @NonNull TextView txtAd) {
+      @NonNull TextView adHeadline, @NonNull RatingBar adStars, @NonNull CardView cvAppIcon,
+      @NonNull View testIconView, @NonNull TextView txtAd) {
     this.rootView = rootView;
     this.adAppIcon = adAppIcon;
     this.adBody = adBody;
     this.adCallToAction = adCallToAction;
     this.adHeadline = adHeadline;
     this.adStars = adStars;
+    this.cvAppIcon = cvAppIcon;
     this.testIconView = testIconView;
     this.txtAd = txtAd;
   }
@@ -114,6 +119,12 @@ public final class LayoutGoogleNativeAdMediumBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.cv_app_icon;
+      CardView cvAppIcon = ViewBindings.findChildViewById(rootView, id);
+      if (cvAppIcon == null) {
+        break missingId;
+      }
+
       id = R.id.test_icon_view;
       View testIconView = ViewBindings.findChildViewById(rootView, id);
       if (testIconView == null) {
@@ -127,7 +138,7 @@ public final class LayoutGoogleNativeAdMediumBinding implements ViewBinding {
       }
 
       return new LayoutGoogleNativeAdMediumBinding((NativeAdView) rootView, adAppIcon, adBody,
-          adCallToAction, adHeadline, adStars, testIconView, txtAd);
+          adCallToAction, adHeadline, adStars, cvAppIcon, testIconView, txtAd);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
