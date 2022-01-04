@@ -22,8 +22,8 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
     }
 
 	dependencies {
-       implementation 'com.android.support:multidex:1.0.3'
-	   implementation 'com.github.vickypathak123:Android-Ads-Helper:latest_build_version'
+            implementation 'com.android.support:multidex:1.0.3'
+            implementation 'com.github.vickypathak123:Android-Ads-Helper:latest_build_version'
 	}
 ```
 
