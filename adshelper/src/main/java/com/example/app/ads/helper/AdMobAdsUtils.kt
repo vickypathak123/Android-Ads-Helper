@@ -126,5 +126,5 @@ internal fun setTestDeviceIds(vararg fDeviceId: String) {
  * Extension method for add different size of Native Ad
  */
 enum class NativeAdsSize {
-    Big, Medium, FullScreen
+    Big, Medium, FullScreen, Custom
 }

@@ -42,6 +42,7 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
 
     private var mSize: NativeAdsSize = NativeAdsSize.Medium
     private var mLayout: FrameLayout = FrameLayout(mContext)
+    private var mCustomAdView: View? = null
     private var mIsNeedLayoutShow: Boolean = true
     private var mIsAddVideoOptions: Boolean = false
     private var mIsAdLoaded: (isNeedToRemoveCloseButton: Boolean) -> Unit = {}
@@ -64,6 +65,7 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
     fun loadNativeAdvancedAd(
         @NonNull fSize: NativeAdsSize,
         @NonNull fLayout: FrameLayout,
+        fCustomAdView: View? = null,
         isNeedLayoutShow: Boolean = true,
         isAddVideoOptions: Boolean = true,
         isAdLoaded: (isNeedToRemoveCloseButton: Boolean) -> Unit = {},
@@ -72,6 +74,7 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
         Log.i(TAG, "loadAd: ")
         mSize = fSize
         mLayout = fLayout
+        mCustomAdView = fCustomAdView
         mIsNeedLayoutShow = isNeedLayoutShow
         mIsAddVideoOptions = isAddVideoOptions
         mIsAdLoaded = isAdLoaded
@@ -100,6 +103,7 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
         @NonNull fSize: NativeAdsSize,
         @NonNull fLayout: FrameLayout,
         @NonNull nativeAd: NativeAd,
+        fCustomAdView: View? = null,
         isNeedLayoutShow: Boolean = true,
         isAdLoaded: (isNeedToRemoveCloseButton: Boolean) -> Unit = {},
         onClickAdClose: () -> Unit
@@ -136,6 +140,14 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
                     ) as NativeAdView
                 }
             }
+
+            NativeAdsSize.Custom -> {
+                fCustomAdView
+                    ?: mContext.inflater.inflate(
+                        R.layout.layout_google_native_ad_big,
+                        null
+                    ) as NativeAdView
+            }
         }
 
 
@@ -145,6 +157,13 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
                     nativeAd,
                     adView.findViewById(R.id.native_ad_view),
                     onClickAdClose
+                )
+            }
+
+            NativeAdsSize.Custom -> {
+                populateCustomNativeAdView(
+                    nativeAd,
+                    adView.findViewById(R.id.native_ad_view),
                 )
             }
 
@@ -381,6 +400,13 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
         adView.setNativeAd(nativeAd)
     }
 
+    private fun populateCustomNativeAdView(
+        nativeAd: NativeAd,
+        adView: NativeAdView
+    ) {
+
+    }
+
     private fun getCamelCaseString(text: String): String {
 
         val words: Array<String> = text.split(" ").toTypedArray()
@@ -426,6 +452,7 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
             fSize = mSize,
             fLayout = mLayout,
             nativeAd = nativeAd,
+            fCustomAdView = mCustomAdView,
             isNeedLayoutShow = mIsNeedLayoutShow,
             isAdLoaded = mIsAdLoaded,
             onClickAdClose = mOnClickAdClose
