@@ -15,12 +15,29 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
 
 ###### Step 2. Add the dependency to your module's `build.gradle`
 ```groovy
+    android {
+        defaultConfig {
+            multiDexEnabled true
+        }
+    }
+
 	dependencies {
+            implementation 'com.android.support:multidex:1.0.3'
 	        implementation 'com.github.vickypathak123:Android-Ads-Helper:latest_build_version'
 	}
 ```
 
 ## How To Use this Library
+
+#### Note:
+1. Your App-Application Class Compulsory Extend `com.example.app.ads.helper.openad.AppOpenApplication` This Class.
+2. Please make sure before submitting final bundle for uploading on console,
+   initMobileAds(isAppInTesting = true) must be pass false.
+3. If You Don't Pass Any Ad-ID Through `VasuAdsConfig`, It will take Test ID of this ad Automatically.
+4. Inside this is already loading open ads so,
+   If Your App Don't Need To Show Open-Ad then must be pass false in this 'isEnableOpenAd(true /* Default Value */)' function.
+5. Update This Flag 'com.example.app.ads.helper.isNeedToShowAds = true /* Default Value */',
+   Must be pass false after your In-App Purchase or Subscription.
 
 #### Native Ad Attribute Details
 <img src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/screenshots/3.jpg" height="auto" width="600"/>

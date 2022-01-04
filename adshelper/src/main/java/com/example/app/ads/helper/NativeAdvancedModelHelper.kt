@@ -57,7 +57,7 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
      * @param fSize it indicate your Ad Size
      * @param fLayout FrameLayout for add NativeAd View
      * @param isNeedLayoutShow [by Default value = true] pass false if you do not need to show AD at a time when it's loaded successfully
-     * @param isAddVideoOptions [by Default value = false] pass true if you need to add video option
+     * @param isAddVideoOptions [by Default value = true] pass false if you don't need to add video option
      * @param isAdLoaded lambda function call when ad isLoaded
      * @param onClickAdClose lambda function call when user click close button of ad
      */
@@ -65,7 +65,7 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
         @NonNull fSize: NativeAdsSize,
         @NonNull fLayout: FrameLayout,
         isNeedLayoutShow: Boolean = true,
-        isAddVideoOptions: Boolean = false,
+        isAddVideoOptions: Boolean = true,
         isAdLoaded: (isNeedToRemoveCloseButton: Boolean) -> Unit = {},
         onClickAdClose: () -> Unit = {}
     ) {
