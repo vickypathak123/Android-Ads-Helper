@@ -42,10 +42,27 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
 6. You must set [Native-Ad Attribute](https://github.com/vickypathak123/Android-Ads-Helper/blob/master/adshelper/src/main/res/values/attrs.xml) In your Main App-Theme.
 7. For More Details Refer This [AppApplication](https://github.com/vickypathak123/Android-Ads-Helper/blob/master/app/src/main/java/com/example/ads/helper/demo/AppApplication.kt) Class.
 
+#### Config Ads ID In `onCreate()` Method Of Your Application Class
+```kotlin
+        // All Ad-Ids are Optional
+        VasuAdsConfig.with(this)
+            .isEnableOpenAd(true /* Default Value */) // Pass false if you don't need to show open ad in your project
+            .setAdmobAppId("YOUR_LIVE_APP_ID")
+            .setAdmobBannerAdId("YOUR_LIVE_BANNER_AD_ID")
+            .setAdmobInterstitialAdId("YOUR_LIVE_INTERSTITIAL_AD_ID")
+            .setAdmobNativeAdvancedAdId("YOUR_LIVE_NATIVE_ADVANCED_AD_ID")
+            .setAdmobOpenAdId("YOUR_LIVE_OPEN_AD_ID")
+            .setAdmobRewardVideoAdId("YOUR_LIVE_REWARD_VIDEO_AD_ID")
+            .setAdmobInterstitialAdRewardId("YOUR_LIVE_INTERSTITIAL_AD_REWARD_ID")
+            .initialize()
+
+        initMobileAds(isAppInTesting = true) // Pass false when you give your project in Internal Testing Or Live
+```
+
 ## Native Ad Details
 
 #### Native Ad Attribute Details
-<img src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/screenshots/3.jpg" height="auto" width="800"/>
+<img src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/screenshots/native_ad_attribute.jpg" height="auto" width="600"/> <img src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/screenshots/native_ad_custom_layout_id.jpg" height="auto" width="600"/>
 
 #### Need to Initial all Native Ad Attribute in your App Theme
 ```xml
@@ -63,7 +80,7 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
 
 ## Open Ad Details
 
-#### show open Ad After [Splash Screen](https://github.com/vickypathak123/Android-Ads-Helper/blob/master/app/src/main/java/com/example/ads/helper/demo/SplashActivity.kt)
+#### Load & Show open Ad In [Splash Screen](https://github.com/vickypathak123/Android-Ads-Helper/blob/master/app/src/main/java/com/example/ads/helper/demo/SplashActivity.kt)
 ```kotlin
         // Load Open Ad When You Need
         OpenAdHelper.loadOpenAd(mActivity, onAdLoad = {
@@ -72,34 +89,21 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
         })
 
         // Show Open Ad When You Need
-        // Check first open ad 
+        // Check first open ad is Available or Not
         if (OpenAdHelper.isAdAvailable()) {
-           
             mActivity.isShowOpenAd {
-               startNextActivity()
+                // Perform your Action
             }
         }
 ```
 
-
-## In Kotlin
-
-#### Config Ads ID In `onCreate()` Method Of Your Application Class
+#### Load open Ad In Your Application class
 ```kotlin
-        // All Ad-Ids are Optional
-        VasuAdsConfig.with(this)
-            .isEnableOpenAd(true /* Default Value */) // Pass false if you don't need to show open ad in your project
-            .setAdmobAppId("YOUR_LIVE_APP_ID")
-            .setAdmobBannerAdId("YOUR_LIVE_BANNER_AD_ID")
-            .setAdmobInterstitialAdId("YOUR_LIVE_INTERSTITIAL_AD_ID")
-            .setAdmobNativeAdvancedAdId("YOUR_LIVE_NATIVE_ADVANCED_AD_ID")
-            .setAdmobOpenAdId("YOUR_LIVE_OPEN_AD_ID")
-            .setAdmobRewardVideoAdId("YOUR_LIVE_REWARD_VIDEO_AD_ID")
-            .setAdmobInterstitialAdRewardId("YOUR_LIVE_INTERSTITIAL_AD_REWARD_ID")
-            .initialize()
-
-        initMobileAds(isAppInTesting = true) // Pass false when you give your project in Internal Testing Or Live
+        // Load Open Ad After `initMobileAds()`
+        OpenAdHelper.loadOpenAd(this)
 ```
+
+## All Ad Details
 
 #### Load Ads In Only `onCreate()` or `initAds()` Method
 ```kotlin
