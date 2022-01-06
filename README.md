@@ -61,8 +61,11 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
 
 ## Native Ad Details
 
-#### Native Ad Attribute Details
-<img src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/screenshots/native_ad_attribute.jpg" height="auto" width="400"/> <img src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/screenshots/native_ad_custom_layout_id.jpg" height="auto" width="400"/>
+#### Native Ad Custom Layout ID Details (Compulsory Set This Id in your layout file)
+<img src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/screenshots/native_ad_custom_layout_id.jpg" height="auto" width="600"/>
+
+#### Native Ad Attribute Details (Compulsory Set This Attribute)
+<img src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/screenshots/native_ad_attribute.jpg" height="auto" width="600"/>
 
 #### Need to Initial all Native Ad Attribute in your App Theme
 ```xml
