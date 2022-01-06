@@ -1,5 +1,9 @@
 [
     {
+        "merged": "/Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/activity_custom_native_ads.xml",
+        "source": "/Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/res/layout/activity_custom_native_ads.xml"
+    },
+    {
         "merged": "/Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/dialog_exit.xml",
         "source": "/Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/res/layout/dialog_exit.xml"
     },

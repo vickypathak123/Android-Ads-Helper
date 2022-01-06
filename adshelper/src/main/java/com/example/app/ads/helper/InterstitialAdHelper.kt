@@ -55,6 +55,7 @@ object InterstitialAdHelper {
                             override fun onAdDismissedFullScreenContent() {
                                 super.onAdDismissedFullScreenContent()
                                 Log.i(TAG, "onAdDismissedFullScreenContent: ")
+                                isAnyAdShowing = false
                                 isInterstitialAdShow = false
                                 fListener.onAdClosed()
                             }
@@ -152,18 +153,28 @@ object InterstitialAdHelper {
 
         mIsAnyAdShow = if (!isInterstitialAdShow && isNeedToShowAds && !mIsAnyAdShow) {
             if (mIsAdMobAdLoaded && mInterstitialAdMob != null) {
-                isAnyAdOpen = true
-                isInterstitialAdShow = true
-                mInterstitialAdMob?.show(this)
-                Log.i(TAG, "isShowInterstitialAd: Show Interstitial Ad")
-                true
+                if (!isAnyAdShowing) {
+                    isAnyAdShowing = true
+                    isAnyAdOpen = true
+                    isInterstitialAdShow = true
+                    mInterstitialAdMob?.show(this)
+                    Log.i(TAG, "isShowInterstitialAd: Show Interstitial Ad")
+                    true
+                } else {
+                    false
+                }
             } else {
                 if (mIsShowFullScreenNativeAd && NativeAdvancedModelHelper.getNativeAd != null && isOnline && !this.isFinishing) {
-                    FullScreenNativeAdDialog(this) {
-                        mIsAnyAdShow = false
-                        mListener?.onAdClosed(true)
-                    }.showFullScreenNativeAdDialog(true)
-                    true
+                    if (!isAnyAdShowing) {
+                        isAnyAdShowing = true
+                        FullScreenNativeAdDialog(this) {
+                            mIsAnyAdShow = false
+                            mListener?.onAdClosed(true)
+                        }.showFullScreenNativeAdDialog(true)
+                        true
+                    } else {
+                        false
+                    }
                 } else {
                     false
                 }

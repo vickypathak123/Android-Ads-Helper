@@ -84,6 +84,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
             mBinding.showRewardVideoAds,
             mBinding.showRewardInterstitialAds,
             mBinding.showNativeAds,
+            mBinding.showCustomNativeAds,
             mBinding.showRunTimePermission,
             mBinding.showDialogs,
         )
@@ -160,6 +161,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
                     launchActivity(getActivityIntent<NativeAdsActivity> { putBoolean("is_add_video_options", mBinding.adsSwitch.isChecked) })
                 }
             }
+
+            mBinding.showCustomNativeAds -> {
+                mActivity.isShowInterstitialAd { _ ->
+                    launchActivity(getActivityIntent<CustomNativeAdsActivity> { putBoolean("is_add_video_options", mBinding.adsSwitch.isChecked) })
+                }
+            }
+
             mBinding.showRunTimePermission -> {
                 isInterstitialAdShow = true
                 AksPermission.with(mActivity)

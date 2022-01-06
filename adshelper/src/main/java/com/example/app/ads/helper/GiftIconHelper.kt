@@ -103,6 +103,7 @@ object GiftIconHelper {
             }
 
             override fun onAdClosed(isShowFullScreenAd: Boolean) {
+                isAnyAdShowing = false
                 isInterstitialAdLoaded = false
                 isInterstitialAdShow = false
                 fivBlastIcon.gone
@@ -117,10 +118,15 @@ object GiftIconHelper {
     private val Activity.isNewInterstitialAdLoad: Boolean
         get() {
             return if (!isInterstitialAdShow && isInterstitialAdLoaded && interstitial != null) {
-                isInterstitialAdShow = true
-                isAnyAdOpen = true
-                interstitial?.show(this)
-                true
+                if (!isAnyAdShowing) {
+                    isAnyAdShowing = true
+                    isInterstitialAdShow = true
+                    isAnyAdOpen = true
+                    interstitial?.show(this)
+                    true
+                } else {
+                    false
+                }
             } else {
                 false
             }

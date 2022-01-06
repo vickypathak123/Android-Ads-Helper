@@ -30,6 +30,9 @@ public final class ActivityMainBinding implements ViewBinding {
   public final SwitchCompat openAdsSwitch;
 
   @NonNull
+  public final Button showCustomNativeAds;
+
+  @NonNull
   public final Button showDialogs;
 
   @NonNull
@@ -52,14 +55,15 @@ public final class ActivityMainBinding implements ViewBinding {
 
   private ActivityMainBinding(@NonNull ConstraintLayout rootView, @NonNull SwitchCompat adsSwitch,
       @NonNull AllScreenHeaderBinding layoutHeader, @NonNull SwitchCompat openAdsSwitch,
-      @NonNull Button showDialogs, @NonNull Button showFullScreenNativeAd,
-      @NonNull Button showInterstitialAds, @NonNull Button showNativeAds,
-      @NonNull Button showRewardInterstitialAds, @NonNull Button showRewardVideoAds,
-      @NonNull Button showRunTimePermission) {
+      @NonNull Button showCustomNativeAds, @NonNull Button showDialogs,
+      @NonNull Button showFullScreenNativeAd, @NonNull Button showInterstitialAds,
+      @NonNull Button showNativeAds, @NonNull Button showRewardInterstitialAds,
+      @NonNull Button showRewardVideoAds, @NonNull Button showRunTimePermission) {
     this.rootView = rootView;
     this.adsSwitch = adsSwitch;
     this.layoutHeader = layoutHeader;
     this.openAdsSwitch = openAdsSwitch;
+    this.showCustomNativeAds = showCustomNativeAds;
     this.showDialogs = showDialogs;
     this.showFullScreenNativeAd = showFullScreenNativeAd;
     this.showInterstitialAds = showInterstitialAds;
@@ -115,6 +119,12 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.show_custom_native_ads;
+      Button showCustomNativeAds = ViewBindings.findChildViewById(rootView, id);
+      if (showCustomNativeAds == null) {
+        break missingId;
+      }
+
       id = R.id.show_dialogs;
       Button showDialogs = ViewBindings.findChildViewById(rootView, id);
       if (showDialogs == null) {
@@ -158,8 +168,9 @@ public final class ActivityMainBinding implements ViewBinding {
       }
 
       return new ActivityMainBinding((ConstraintLayout) rootView, adsSwitch, binding_layoutHeader,
-          openAdsSwitch, showDialogs, showFullScreenNativeAd, showInterstitialAds, showNativeAds,
-          showRewardInterstitialAds, showRewardVideoAds, showRunTimePermission);
+          openAdsSwitch, showCustomNativeAds, showDialogs, showFullScreenNativeAd,
+          showInterstitialAds, showNativeAds, showRewardInterstitialAds, showRewardVideoAds,
+          showRunTimePermission);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

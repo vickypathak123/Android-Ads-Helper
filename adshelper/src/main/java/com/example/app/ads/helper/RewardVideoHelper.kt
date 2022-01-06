@@ -60,6 +60,7 @@ object RewardVideoHelper {
                             super.onAdDismissedFullScreenContent()
                             Log.i(TAG, "onAdDismissedFullScreenContent: ")
                             isInterstitialAdShow = false
+                            isAnyAdShowing = false
                             fListener.onAdClosed()
                         }
 
@@ -171,12 +172,15 @@ object RewardVideoHelper {
         isUserEarnedReward = false
 
         if (isNeedToShowAds && isRewardVideoAdLoaded) {
-            isAdShow.invoke()
-            isAnyAdOpen = true
-            mRewardedAd?.show(this) {
-                isUserEarnedReward = true
+            if (!isAnyAdShowing) {
+                isAnyAdShowing = true
+                isAdShow.invoke()
+                isAnyAdOpen = true
+                mRewardedAd?.show(this) {
+                    isUserEarnedReward = true
+                }
+                isInterstitialAdShow = true
             }
-            isInterstitialAdShow = true
         }
     }
 }

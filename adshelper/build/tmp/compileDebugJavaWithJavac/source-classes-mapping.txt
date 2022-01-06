@@ -1,3 +1,5 @@
+com/example/app/ads/helper/databinding/LayoutGoogleNativeAdCustomSampleBinding.java
+ com.example.app.ads.helper.databinding.LayoutGoogleNativeAdCustomSampleBinding
 com/example/app/ads/helper/databinding/LayoutGoogleNativeAdExitFullScreenWebsiteBinding.java
  com.example.app.ads.helper.databinding.LayoutGoogleNativeAdExitFullScreenWebsiteBinding
 com/example/app/ads/helper/databinding/LayoutGoogleNativeAdBigBinding.java

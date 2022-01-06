@@ -161,10 +161,15 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
             }
 
             NativeAdsSize.Custom -> {
-                populateCustomNativeAdView(
-                    nativeAd,
-                    adView.findViewById(R.id.native_ad_view),
-                )
+                if (fCustomAdView != null) {
+//                    populateCustomNativeAdView(
+                    populateNativeAdView(
+                        nativeAd,
+                        adView.findViewById(R.id.native_ad_view),
+                    )
+                } else {
+                    populateNativeAdView(nativeAd, adView as NativeAdView)
+                }
             }
 
             else -> {
@@ -191,108 +196,141 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
         adView: NativeAdView,
         onClickAdClose: () -> Unit
     ) {
-
-        adView.headlineView = adView.findViewById(R.id.ad_headline)
-        adView.mediaView = adView.findViewById(R.id.ad_media)
-        adView.imageView = adView.findViewById(R.id.iv_bg_main_image)
-        adView.bodyView = adView.findViewById(R.id.ad_body)
-        adView.iconView = adView.findViewById(R.id.ad_app_icon)
-        adView.starRatingView = adView.findViewById(R.id.ad_stars)
-        adView.storeView = adView.findViewById(R.id.ad_store)
-        adView.priceView = adView.findViewById(R.id.ad_price)
         adView.advertiserView = adView.findViewById(R.id.ad_advertiser)
-
+        adView.bodyView = adView.findViewById(R.id.ad_body)
+        adView.headlineView = adView.findViewById(R.id.ad_headline)
+        adView.priceView = adView.findViewById(R.id.ad_price)
+        adView.storeView = adView.findViewById(R.id.ad_store)
+        adView.starRatingView = adView.findViewById(R.id.ad_stars)
+        adView.iconView = adView.findViewById(R.id.ad_app_icon)
+        adView.mediaView = adView.findViewById(R.id.ad_media)
         adView.callToActionView = adView.findViewById(R.id.ad_call_to_action)
+        adView.imageView = adView.findViewById(R.id.iv_bg_main_image)
 
-        (adView.headlineView as TextView).text = nativeAd.headline
-
-        if (nativeAd.mediaContent != null && adView.mediaView != null) {
-            nativeAd.mediaContent?.let { mediaContent ->
-                adView.mediaView?.setMediaContent(mediaContent)
-            }
-        } else {
-            populateFullScreenNativeAdView(getNativeAd!!, adView, onClickAdClose)
-        }
-
-
-        if (nativeAd.images.size > 0) {
-            if (nativeAd.images[0] != null && adView.imageView != null) {
-                (adView.imageView as ImageView).setImageDrawable(nativeAd.images[0].drawable!!)
-
-                val blurView: View = adView.findViewById(R.id.blur_view)
-                val blurDrawable = BlurDrawable(adView.imageView, 15)
-                blurView.background = blurDrawable
-            }
-        }
-
-        if (nativeAd.body == null && adView.bodyView != null) {
-            adView.bodyView?.visibility = View.GONE
-        } else if (adView.bodyView != null) {
-            adView.bodyView?.visibility = View.VISIBLE
-            (adView.bodyView as TextView).text = nativeAd.body
-        }
-
-        if (nativeAd.icon == null && adView.iconView != null) {
-            adView.iconView?.visibility = View.GONE
-        } else if (adView.iconView != null) {
-            (adView.iconView as ImageView).setImageDrawable(
-                nativeAd.icon?.drawable
-            )
-            adView.iconView?.visibility = View.VISIBLE
-        }
-
-        if (nativeAd.starRating == null && adView.starRatingView != null) {
-            adView.starRatingView?.visibility = View.GONE
-            (adView.findViewById(R.id.txt_rating) as TextView?)?.visibility = View.GONE
-        } else if (adView.starRatingView != null) {
-            (adView.findViewById(R.id.txt_rating) as TextView?)?.text =
-                nativeAd.starRating!!.toFloat().toString()
-            (adView.starRatingView as RatingBar).rating = nativeAd.starRating!!.toFloat()
-            adView.starRatingView?.visibility = View.VISIBLE
-            (adView.findViewById(R.id.txt_rating) as TextView?)?.visibility = View.VISIBLE
-        }
-
-        if (nativeAd.callToAction == null && adView.callToActionView != null) {
-            adView.callToActionView?.visibility = View.GONE
-        } else if (adView.callToActionView != null) {
-            adView.callToActionView?.visibility = View.VISIBLE
-            (adView.callToActionView as Button).isSelected = true
-            nativeAd.callToAction?.let {
-                (adView.callToActionView as Button).text = getCamelCaseString(it)
-            }
-        }
-
-        if (nativeAd.store == null && adView.storeView != null) {
-            adView.storeView?.visibility = View.GONE
-        } else if (adView.storeView != null) {
-            (adView.storeView as TextView).isSelected = true
-            adView.storeView?.visibility = View.VISIBLE
-            nativeAd.store?.let {
-                (adView.storeView as TextView).text = it
-                if (it.equals("Google Play", false)) {
-                    (adView.findViewById(R.id.iv_play_logo) as View?)?.visibility = View.VISIBLE
-                } else {
-                    (adView.findViewById(R.id.iv_play_logo) as View?)?.visibility = View.GONE
+        adView.mediaView?.let { fView ->
+            fView.gone
+            if (nativeAd.mediaContent != null) {
+                nativeAd.mediaContent?.let { fData ->
+                    Log.e(TAG, "populateFullScreenNativeAdView: Set Media View")
+                    fView.setMediaContent(fData)
+                    fView.visible
+                }
+            } else {
+                getNativeAd?.let { fNativeAd ->
+                    populateFullScreenNativeAdView(fNativeAd, adView, onClickAdClose)
                 }
             }
         }
 
-        if (nativeAd.price == null && adView.priceView != null) {
-            adView.priceView?.visibility = View.GONE
-        } else if (adView.priceView != null) {
-            adView.priceView?.visibility = View.VISIBLE
-            (adView.priceView as TextView).text = nativeAd.price
+        adView.imageView?.let { fView ->
+            if (nativeAd.images.size > 0) {
+                nativeAd.images[0]?.drawable?.let { fData ->
+                    (fView as ImageView).setImageDrawable(fData)
+                    fView.visible
+
+                    val blurView: View = adView.findViewById(R.id.blur_view)
+                    val blurDrawable = BlurDrawable(fView, 15)
+                    blurView.background = blurDrawable
+                }
+            }
         }
 
-        if (nativeAd.advertiser == null && adView.advertiserView != null) {
-            adView.advertiserView?.visibility = View.GONE
-        } else if (adView.advertiserView != null) {
-            adView.advertiserView?.visibility = View.VISIBLE
-            (adView.advertiserView as TextView).text = nativeAd.advertiser
+        adView.advertiserView?.let { fView ->
+            fView.gone
+            nativeAd.advertiser?.let { fData ->
+                (fView as TextView).text = fData
+                fView.visible
+            }
+        }
+
+        adView.bodyView?.let { fView ->
+            fView.gone
+            nativeAd.body?.let { fData ->
+                (fView as TextView).text = fData
+                fView.visible
+            }
+        }
+
+        adView.headlineView?.let { fView ->
+            fView.gone
+            nativeAd.headline?.let { fData ->
+                (fView as TextView).text = fData
+                fView.visible
+            }
+        }
+
+        adView.priceView?.let { fView ->
+            fView.gone
+            nativeAd.price?.let { fData ->
+                (fView as TextView).text = fData
+                fView.visible
+            }
+        }
+
+        adView.storeView?.let { fView ->
+            with(fView as TextView) {
+                this.gone
+                nativeAd.store?.let { fData ->
+                    this.text = fData
+                    this.isSelected = true
+                    this.visible
+                    if (fData.equals("Google Play", false)) {
+                        (adView.findViewById(R.id.iv_play_logo) as View?)?.visible
+                    } else {
+                        (adView.findViewById(R.id.iv_play_logo) as View?)?.gone
+                    }
+                }
+            }
+        }
+
+        adView.starRatingView?.let { fView ->
+            fView.gone
+            (adView.findViewById(R.id.txt_rating) as TextView?)?.gone
+
+            nativeAd.starRating?.let { fData ->
+                (fView as RatingBar).rating = fData.toFloat()
+                fView.visible
+
+                (adView.findViewById(R.id.txt_rating) as TextView?)?.let { txtRating ->
+                    txtRating.text = fData.toFloat().toString()
+                    txtRating.visible
+                }
+            }
+        }
+
+        adView.iconView?.let { fView ->
+            fView.gone
+
+            when {
+                nativeAd.icon != null -> {
+                    nativeAd.icon!!.drawable?.let { fData ->
+                        (fView as ImageView).setImageDrawable(fData)
+                        fView.visible
+                    }
+                }
+                nativeAd.images.size > 0 -> {
+                    nativeAd.images[0]?.drawable?.let { fData ->
+                        (fView as ImageView).setImageDrawable(fData)
+                        fView.visible
+                    }
+                }
+                else -> {
+                    fView.gone
+                }
+            }
+        }
+
+        adView.callToActionView?.let { fView ->
+            fView.gone
+            nativeAd.callToAction?.let { fData ->
+                (fView as Button).text = getCamelCaseString(fData)
+                (fView as Button).isSelected = true
+                fView.visible
+            }
         }
 
         if (adView.storeView?.visibility == View.GONE && adView.priceView?.visibility == View.GONE) {
-            (adView.findViewById(R.id.cl_ad_price_store) as View?)?.visibility = View.GONE
+            (adView.findViewById(R.id.cl_ad_price_store) as View?)?.gone
         }
 
         (adView.findViewById(R.id.ad_call_to_close) as Button?)?.let {
@@ -305,96 +343,116 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
     }
 
     private fun populateNativeAdView(nativeAd: NativeAd, adView: NativeAdView) {
-        Log.i(TAG, Throwable().stackTrace[0].methodName)
-
-        adView.mediaView = adView.findViewById(R.id.ad_media)
-
-        adView.headlineView = adView.findViewById(R.id.ad_headline)
-        adView.bodyView = adView.findViewById(R.id.ad_body)
-        adView.callToActionView = adView.findViewById(R.id.ad_call_to_action)
-        adView.iconView = adView.findViewById(R.id.ad_app_icon)
-        adView.priceView = adView.findViewById(R.id.ad_price)
-        adView.starRatingView = adView.findViewById(R.id.ad_stars)
-        adView.storeView = adView.findViewById(R.id.ad_store)
         adView.advertiserView = adView.findViewById(R.id.ad_advertiser)
+        adView.bodyView = adView.findViewById(R.id.ad_body)
+        adView.headlineView = adView.findViewById(R.id.ad_headline)
+        adView.priceView = adView.findViewById(R.id.ad_price)
+        adView.storeView = adView.findViewById(R.id.ad_store)
+        adView.starRatingView = adView.findViewById(R.id.ad_stars)
+        adView.iconView = adView.findViewById(R.id.ad_app_icon)
+        adView.mediaView = adView.findViewById(R.id.ad_media)
+        adView.callToActionView = adView.findViewById(R.id.ad_call_to_action)
 
-        (adView.headlineView as TextView).text = nativeAd.headline
-
-        if (nativeAd.mediaContent != null) {
-            if (adView.mediaView != null) {
-                adView.mediaView!!.setMediaContent(nativeAd.mediaContent!!)
-            }
-        } else {
-            populateNativeAdView(getNativeAd!!, adView)
-        }
-
-        if (nativeAd.body == null && adView.bodyView != null) {
-            adView.bodyView!!.visibility = View.GONE
-        } else if (adView.bodyView != null) {
-            adView.bodyView!!.visibility = View.VISIBLE
-            (adView.bodyView as TextView).text = nativeAd.body
-        }
-
-        if (nativeAd.callToAction == null && adView.callToActionView != null) {
-            adView.callToActionView!!.visibility = View.INVISIBLE
-        } else if (adView.callToActionView != null) {
-            adView.callToActionView!!.visibility = View.VISIBLE
-            (adView.callToActionView as Button).text = nativeAd.callToAction
-        }
-
-        if (nativeAd.icon != null && adView.iconView != null) {
-            (adView.iconView as ImageView).setImageDrawable(
-                nativeAd.icon!!.drawable
-            )
-            adView.iconView!!.visibility = View.VISIBLE
-        } else if (adView.iconView != null) {
-            if (nativeAd.images.size > 0) {
-                if (nativeAd.images[0] != null && nativeAd.images[0].drawable != null) {
-                    (adView.iconView as ImageView).setImageDrawable(nativeAd.images[0].drawable!!)
-                    adView.iconView!!.visibility = View.VISIBLE
-                } else {
-                    adView.iconView!!.visibility = View.GONE
+        adView.mediaView?.let { fView ->
+            fView.gone
+            if (nativeAd.mediaContent != null) {
+                nativeAd.mediaContent?.let { fData ->
+                    Log.e(TAG, "populateNativeAdView: Set Media View")
+                    fView.setMediaContent(fData)
+                    fView.visible
                 }
             } else {
-                adView.iconView!!.visibility = View.GONE
+                getNativeAd?.let { fNativeAd ->
+                    populateNativeAdView(fNativeAd, adView)
+                }
             }
-        } else {
-            adView.iconView!!.visibility = View.GONE
         }
 
-        if (nativeAd.price == null && adView.priceView != null) {
-            adView.priceView!!.visibility = View.INVISIBLE
-        } else if (adView.priceView != null) {
-            adView.priceView!!.visibility = View.VISIBLE
-            (adView.priceView as TextView).text = nativeAd.price
+        adView.advertiserView?.let { fView ->
+            fView.gone
+
+            if (nativeAd.advertiser != null) {
+                nativeAd.advertiser?.let { fData ->
+                    (fView as TextView).text = fData
+                    fView.visible
+                }
+            } else {
+                (fView as TextView).text = "Google"
+                fView.visible
+            }
         }
 
-        if (nativeAd.store == null && adView.storeView != null) {
-            adView.storeView!!.visibility = View.INVISIBLE
-        } else if (adView.storeView != null) {
-            adView.storeView!!.visibility = View.VISIBLE
-            (adView.storeView as TextView).text = nativeAd.store
+        adView.bodyView?.let { fView ->
+            fView.gone
+            nativeAd.body?.let { fData ->
+                (fView as TextView).text = fData
+                fView.visible
+            }
         }
 
-        if (adView.priceView != null) {
-            adView.priceView!!.visibility = View.GONE
-        }
-        if (adView.storeView != null) {
-            adView.storeView!!.visibility = View.GONE
-        }
-
-        if (nativeAd.starRating == null && adView.starRatingView != null) {
-            adView.starRatingView!!.visibility = View.GONE
-        } else if (adView.starRatingView != null) {
-            (adView.starRatingView as RatingBar).rating = nativeAd.starRating!!.toFloat()
-            adView.starRatingView!!.visibility = View.VISIBLE
+        adView.headlineView?.let { fView ->
+            fView.gone
+            nativeAd.headline?.let { fData ->
+                (fView as TextView).text = fData
+                fView.visible
+            }
         }
 
-        if (nativeAd.advertiser == null && adView.advertiserView != null) {
-            adView.advertiserView!!.visibility = View.GONE
-        } else if (adView.advertiserView != null) {
-            (adView.advertiserView as TextView).text = nativeAd.advertiser
-            adView.advertiserView!!.visibility = View.VISIBLE
+        adView.priceView?.let { fView ->
+            fView.gone
+            nativeAd.price?.let { fData ->
+                (fView as TextView).text = fData
+                fView.visible
+            }
+        }
+
+        adView.storeView?.let { fView ->
+            with(fView as TextView) {
+                this.gone
+                nativeAd.store?.let { fData ->
+                    this.text = fData
+                    this.visible
+                }
+            }
+        }
+
+        adView.starRatingView?.let { fView ->
+            fView.gone
+            nativeAd.starRating?.let { fData ->
+                (fView as RatingBar).rating = fData.toFloat()
+                fView.visible
+            }
+        }
+
+        adView.iconView?.let { fView ->
+            fView.gone
+
+            when {
+                nativeAd.icon != null -> {
+                    nativeAd.icon!!.drawable?.let { fData ->
+                        (fView as ImageView).setImageDrawable(fData)
+                        fView.visible
+                    }
+                }
+                nativeAd.images.size > 0 -> {
+                    nativeAd.images[0]?.drawable?.let { fData ->
+                        (fView as ImageView).setImageDrawable(fData)
+                        fView.visible
+                    }
+                }
+                else -> {
+                    fView.gone
+                }
+            }
+        }
+
+        adView.callToActionView?.let { fView ->
+            fView.gone
+            nativeAd.callToAction?.let { fData ->
+                (fView as Button).text = getCamelCaseString(fData)
+                (fView as Button).isSelected = true
+                fView.visible
+            }
         }
 
         adView.setNativeAd(nativeAd)
@@ -404,7 +462,107 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
         nativeAd: NativeAd,
         adView: NativeAdView
     ) {
+        adView.advertiserView = adView.findViewById(R.id.ad_advertiser)
+        adView.bodyView = adView.findViewById(R.id.ad_body)
+        adView.headlineView = adView.findViewById(R.id.ad_headline)
+        adView.priceView = adView.findViewById(R.id.ad_price)
+        adView.storeView = adView.findViewById(R.id.ad_store)
+        adView.starRatingView = adView.findViewById(R.id.ad_stars)
+        adView.iconView = adView.findViewById(R.id.ad_app_icon)
+        adView.mediaView = adView.findViewById(R.id.ad_media)
+        adView.callToActionView = adView.findViewById(R.id.ad_call_to_action)
 
+        adView.mediaView?.let { fView ->
+            fView.gone
+            if (nativeAd.mediaContent != null) {
+                nativeAd.mediaContent?.let { fData ->
+                    Log.e(TAG, "populateCustomNativeAdView: Set Media View")
+                    fView.setMediaContent(fData)
+                    fView.visible
+                }
+            } else {
+                populateCustomNativeAdView(nativeAd, adView)
+            }
+        }
+
+        adView.advertiserView?.let { fView ->
+            fView.gone
+            nativeAd.advertiser?.let { fData ->
+                (fView as TextView).text = fData
+                fView.visible
+            }
+        }
+
+        adView.bodyView?.let { fView ->
+            fView.gone
+            nativeAd.body?.let { fData ->
+                (fView as TextView).text = fData
+                fView.visible
+            }
+        }
+
+        adView.headlineView?.let { fView ->
+            fView.gone
+            nativeAd.headline?.let { fData ->
+                (fView as TextView).text = fData
+                fView.visible
+            }
+        }
+
+        adView.priceView?.let { fView ->
+            fView.gone
+            nativeAd.price?.let { fData ->
+                (fView as TextView).text = fData
+                fView.visible
+            }
+        }
+
+        adView.storeView?.let { fView ->
+            fView.gone
+            nativeAd.store?.let { fData ->
+                (fView as TextView).text = fData
+                fView.visible
+            }
+        }
+
+        adView.starRatingView?.let { fView ->
+            fView.gone
+            nativeAd.starRating?.let { fData ->
+                (fView as RatingBar).rating = fData.toFloat()
+                fView.visible
+            }
+        }
+
+        adView.iconView?.let { fView ->
+            fView.gone
+
+            if (nativeAd.icon != null) {
+                nativeAd.icon!!.drawable?.let { fData ->
+                    (fView as ImageView).setImageDrawable(fData)
+                    fView.visible
+                }
+            } else {
+                if (nativeAd.images.size > 0) {
+                    nativeAd.images[0]?.drawable?.let { fData ->
+                        (fView as ImageView).setImageDrawable(fData)
+                        fView.visible
+                    }
+                } else {
+                    fView.gone
+                }
+            }
+
+        }
+
+        adView.callToActionView?.let { fView ->
+            fView.gone
+            nativeAd.callToAction?.let { fData ->
+                (fView as Button).text = fData
+                fView.visible
+            }
+        }
+
+        adView.setNativeAd(nativeAd)
     }
 
     private fun getCamelCaseString(text: String): String {

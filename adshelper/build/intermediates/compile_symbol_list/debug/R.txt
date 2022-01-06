@@ -2719,7 +2719,11 @@ int id give_us_a_review_landmine_button 0x0
 int id give_us_a_review_landmine_main_layout 0x0
 int id give_us_a_review_landmine_text_1 0x0
 int id give_us_a_review_landmine_text_2 0x0
+int id gl_end_data 0x0
+int id gl_end_title 0x0
 int id gl_horizontal_center 0x0
+int id gl_start_data 0x0
+int id gl_start_title 0x0
 int id gone 0x0
 int id group_divider 0x0
 int id guideline 0x0
@@ -2945,7 +2949,16 @@ int id transition_scene_layoutid_cache 0x0
 int id transition_transform 0x0
 int id triangle 0x0
 int id txt_ad 0x0
+int id txt_advertiser_title 0x0
+int id txt_body_title 0x0
+int id txt_call_to_action_title 0x0
+int id txt_headline_title 0x0
+int id txt_icon_title 0x0
+int id txt_media_content_title 0x0
+int id txt_price_title 0x0
 int id txt_rating 0x0
+int id txt_star_rating_title 0x0
+int id txt_store_title 0x0
 int id unchecked 0x0
 int id uniform 0x0
 int id unlabeled 0x0
@@ -3049,6 +3062,7 @@ int layout design_text_input_start_icon 0x0
 int layout dialog_full_screen_native_ad 0x0
 int layout dp_example 0x0
 int layout layout_google_native_ad_big 0x0
+int layout layout_google_native_ad_custom_sample 0x0
 int layout layout_google_native_ad_exit_full_screen_app_store 0x0
 int layout layout_google_native_ad_exit_full_screen_website 0x0
 int layout layout_google_native_ad_medium 0x0

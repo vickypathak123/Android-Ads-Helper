@@ -4,6 +4,8 @@ com/example/ads/helper/demo/databinding/ActivityMainBinding.java
  com.example.ads.helper.demo.databinding.ActivityMainBinding
 com/example/ads/helper/demo/databinding/AllScreenHeaderBinding.java
  com.example.ads.helper.demo.databinding.AllScreenHeaderBinding
+com/example/ads/helper/demo/databinding/ActivityCustomNativeAdsBinding.java
+ com.example.ads.helper.demo.databinding.ActivityCustomNativeAdsBinding
 com/example/ads/helper/demo/databinding/ActivitySecondBinding.java
  com.example.ads.helper.demo.databinding.ActivitySecondBinding
 com/example/ads/helper/demo/databinding/ViewGiftAdBinding.java

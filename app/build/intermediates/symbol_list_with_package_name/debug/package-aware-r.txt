@@ -2855,6 +2855,7 @@ id fitToContents
 id fixed
 id fl_native_ad_place_holder
 id fl_native_ad_place_holder_big
+id fl_native_ad_place_holder_custom
 id fl_native_ad_place_holder_medium
 id flip
 id floating
@@ -2869,7 +2870,11 @@ id give_us_a_review_landmine_button
 id give_us_a_review_landmine_main_layout
 id give_us_a_review_landmine_text_1
 id give_us_a_review_landmine_text_2
+id gl_end_data
+id gl_end_title
 id gl_horizontal_center
+id gl_start_data
+id gl_start_title
 id gone
 id graph
 id graph_wrap
@@ -3059,6 +3064,7 @@ id shortcut
 id showCustom
 id showHome
 id showTitle
+id show_custom_native_ads
 id show_dialogs
 id show_full_screen_native_ad
 id show_interstitial_ads
@@ -3152,9 +3158,18 @@ id transition_scene_layoutid_cache
 id transition_transform
 id triangle
 id txt_ad
+id txt_advertiser_title
+id txt_body_title
+id txt_call_to_action_title
 id txt_exit
 id txt_header_title
+id txt_headline_title
+id txt_icon_title
+id txt_media_content_title
+id txt_price_title
 id txt_rating
+id txt_star_rating_title
+id txt_store_title
 id unchecked
 id uniform
 id unlabeled
@@ -3245,6 +3260,7 @@ layout abc_search_dropdown_item_icons_2line
 layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
+layout activity_custom_native_ads
 layout activity_main
 layout activity_native_ads
 layout activity_second
@@ -3272,6 +3288,7 @@ layout dialog_exit
 layout dialog_full_screen_native_ad
 layout dp_example
 layout layout_google_native_ad_big
+layout layout_google_native_ad_custom_sample
 layout layout_google_native_ad_exit_full_screen_app_store
 layout layout_google_native_ad_exit_full_screen_website
 layout layout_google_native_ad_medium

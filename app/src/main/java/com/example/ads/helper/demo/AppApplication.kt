@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.multidex.MultiDex
 import com.example.app.ads.helper.VasuAdsConfig
 import com.example.app.ads.helper.openad.AppOpenApplication
+import com.example.app.ads.helper.openad.OpenAdHelper
 
 class AppApplication : AppOpenApplication(), AppOpenApplication.AppLifecycleListener {
 
@@ -28,6 +29,8 @@ class AppApplication : AppOpenApplication(), AppOpenApplication.AppLifecycleList
             .initialize()
 
         initMobileAds(isAppInTesting = true)
+
+//        OpenAdHelper.loadOpenAd(this)
     }
 
     override fun onResumeApp(fCurrentActivity: Activity): Boolean {

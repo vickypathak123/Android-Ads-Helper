@@ -57,6 +57,7 @@ object InterstitialRewardHelper {
                             super.onAdDismissedFullScreenContent()
                             Log.i(TAG, "onAdDismissedFullScreenContent: ")
                             isInterstitialAdShow = false
+                            isAnyAdShowing = false
                             fListener.onAdClosed()
                         }
 
@@ -161,11 +162,14 @@ object InterstitialRewardHelper {
         isUserEarnedReward = false
 
         if (isNeedToShowAds && isRewardedInterstitialAdLoaded) {
-            isAnyAdOpen = true
-            mRewardedInterstitialAd?.show(this) {
-                isUserEarnedReward = true
+            if (!isAnyAdShowing) {
+                isAnyAdShowing = true
+                isAnyAdOpen = true
+                mRewardedInterstitialAd?.show(this) {
+                    isUserEarnedReward = true
+                }
+                isInterstitialAdShow = true
             }
-            isInterstitialAdShow = true
         }
     }
 }

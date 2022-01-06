@@ -86,10 +86,12 @@ internal object NativeAdvancedHelper {
                 override fun onAdClicked() {
                     super.onAdClicked()
                     isAnyAdOpen = true
+                    isAnyAdShowing = true
                 }
 
                 override fun onAdClosed() {
                     super.onAdClosed()
+                    isAnyAdShowing = false
                     if (fContext.isOnline) {
                         mNativeAd = null
                         for (lListener in mListenerList) {

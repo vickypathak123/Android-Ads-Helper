@@ -112,6 +112,10 @@
         "source": "/Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/build/generated/res/pngs/debug/drawable-anydpi-v24/ic_launcher_foreground.xml"
     },
     {
+        "merged": "/Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/build/intermediates/merged_res/debug/layout_activity_custom_native_ads.xml.flat",
+        "source": "/Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/res/layout/activity_custom_native_ads.xml"
+    },
+    {
         "merged": "/Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/build/intermediates/merged_res/debug/layout_activity_second.xml.flat",
         "source": "/Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/res/layout/activity_second.xml"
     },

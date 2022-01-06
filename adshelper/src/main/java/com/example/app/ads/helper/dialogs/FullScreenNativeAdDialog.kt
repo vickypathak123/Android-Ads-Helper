@@ -59,6 +59,7 @@ class FullScreenNativeAdDialog(
         setCanceledOnTouchOutside(false)
 
         setOnDismissListener {
+            isAnyAdShowing = false
             mBinding.flNativeAdPlaceHolder.removeAllViews()
         }
 

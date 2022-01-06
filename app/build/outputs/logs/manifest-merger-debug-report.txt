@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-54:12
-INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-54:12
-INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-54:12
-INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-54:12
+ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-57:12
+INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-57:12
+INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-57:12
+INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-57:12
 MERGED from [:adshelper] /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/adshelper/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-12:12
 MERGED from [com.github.AkshayHarsoda:AksPermission-Android:v1.1.0] /Users/android/.gradle/caches/transforms-3/8c3d49bdc8612cc7b2ca7ab1d0b49c32/transformed/jetified-AksPermission-Android-v1.1.0/AndroidManifest.xml:2:1-17:12
 MERGED from [androidx.databinding:viewbinding:7.0.3] /Users/android/.gradle/caches/transforms-3/bdebbaec14c45c15f98b50940271f991/transformed/jetified-viewbinding-7.0.3/AndroidManifest.xml:17:1-22:12
@@ -86,22 +86,22 @@ MERGED from [androidx.print:print:1.0.0] /Users/android/.gradle/caches/transform
 MERGED from [androidx.sqlite:sqlite-framework:2.0.1] /Users/android/.gradle/caches/transforms-3/8684f99b5f627f47dd7b803385710413/transformed/sqlite-framework-2.0.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.sqlite:sqlite:2.0.1] /Users/android/.gradle/caches/transforms-3/c6c63f3899b73ce38a4edf7699499e9f/transformed/sqlite-2.0.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.annotation:annotation-experimental:1.1.0] /Users/android/.gradle/caches/transforms-3/c834ac66386d7ab1cc0524445ed4065d/transformed/jetified-annotation-experimental-1.1.0/AndroidManifest.xml:17:1-24:12
-INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-54:12
-INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-54:12
-INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-54:12
+INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-57:12
+INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-57:12
+INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-57:12
 	package
 		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:4:5-42
 		INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml
 		INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml
 	android:versionName
 		INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml
-		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-54:12
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-57:12
 		INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml
 	xmlns:tools
 		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:3:5-51
 	android:versionCode
 		INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml
-		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-54:12
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:1-57:12
 		INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml
 	xmlns:android
 		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:2:11-69
@@ -120,7 +120,7 @@ ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper
 	android:name
 		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:7:22-62
 uses-permission#android.permission.RECORD_AUDIO
-ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:8:5-70
+ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:8:5-71
 	android:name
 		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:8:22-68
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
@@ -134,7 +134,7 @@ ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper
 	android:name
 		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:12:22-77
 application
-ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:14:5-52:19
+ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:14:5-55:19
 MERGED from [com.github.AkshayHarsoda:AksPermission-Android:v1.1.0] /Users/android/.gradle/caches/transforms-3/8c3d49bdc8612cc7b2ca7ab1d0b49c32/transformed/jetified-AksPermission-Android-v1.1.0/AndroidManifest.xml:11:5-15:19
 MERGED from [com.github.AkshayHarsoda:AksPermission-Android:v1.1.0] /Users/android/.gradle/caches/transforms-3/8c3d49bdc8612cc7b2ca7ab1d0b49c32/transformed/jetified-AksPermission-Android-v1.1.0/AndroidManifest.xml:11:5-15:19
 MERGED from [org.jetbrains.anko:anko:0.10.8] /Users/android/.gradle/caches/transforms-3/0b7ab9355009c103580146ae94b06716/transformed/jetified-anko-0.10.8/AndroidManifest.xml:11:5-20
@@ -211,56 +211,62 @@ MERGED from [org.jetbrains.anko:anko-commons:0.10.8] /Users/android/.gradle/cach
 		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:23:9-47
 	android:name
 		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:15:9-39
-activity#com.example.ads.helper.demo.NativeAdsActivity
+activity#com.example.ads.helper.demo.CustomNativeAdsActivity
 ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:25:9-27:40
 	android:exported
 		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:27:13-37
 	android:name
-		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:26:13-46
-activity#com.example.ads.helper.demo.SecondActivity
-ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:28:9-31:52
-	android:screenOrientation
-		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:31:13-49
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:26:13-52
+activity#com.example.ads.helper.demo.NativeAdsActivity
+ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:28:9-30:40
 	android:exported
 		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:30:13-37
 	android:name
-		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:29:13-43
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:29:13-46
+activity#com.example.ads.helper.demo.SecondActivity
+ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:31:9-34:52
+	android:screenOrientation
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:34:13-49
+	android:exported
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:33:13-37
+	android:name
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:32:13-43
 activity#com.example.ads.helper.demo.MainActivity
-ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:32:9-35:52
+ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:35:9-38:52
 	android:screenOrientation
-		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:35:13-49
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:38:13-49
 	android:exported
-		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:34:13-37
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:37:13-37
 	android:name
-		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:33:13-41
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:36:13-41
 activity#com.example.ads.helper.demo.SplashActivity
-ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:36:9-47:20
+ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:39:9-50:20
 	android:screenOrientation
-		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:39:13-49
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:42:13-49
 	android:windowSoftInputMode
-		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:41:13-56
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:44:13-56
 	android:exported
-		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:38:13-36
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:41:13-36
 	android:theme
-		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:40:13-50
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:43:13-50
 	android:name
-		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:37:13-43
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:40:13-43
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:42:13-46:29
+ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:45:13-49:29
 action#android.intent.action.MAIN
-ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:43:17-69
+ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:46:17-69
 	android:name
-		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:43:25-66
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:46:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:45:17-77
+ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:48:17-77
 	android:name
-		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:45:27-74
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:48:27-74
 meta-data#com.google.android.gms.ads.APPLICATION_ID
-ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:49:9-51:52
+ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:52:9-54:52
 	android:value
-		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:51:13-49
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:54:13-49
 	android:name
-		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:50:13-69
+		ADDED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml:53:13-69
 uses-sdk
 INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Volumes/Extra/AD/Drive E/Work Space/Common-Code/Ads-Helper/AdsHelper/app/src/main/AndroidManifest.xml

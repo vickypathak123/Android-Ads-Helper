@@ -97,6 +97,7 @@ object OpenAdHelper {
 
                 override fun onAdClosed(isShowFullScreenAd: Boolean) {
                     super.onAdClosed(isShowFullScreenAd)
+                    isAnyAdShowing = false
                     mAppOpenAd?.fullScreenContentCallback = null
                     mAppOpenAd = null
                     mListener?.onAdClosed()
@@ -120,6 +121,10 @@ object OpenAdHelper {
     }
 
     fun isAdAvailable(): Boolean {
+        Log.e(
+            TAG,
+            "isAdAvailable: \nisOpenAdEnable::$isOpenAdEnable,\n(mAppOpenAd != null)::${(mAppOpenAd != null)},\nwasLoadTimeLessThanNHoursAgo()::${wasLoadTimeLessThanNHoursAgo()}"
+        )
         return isOpenAdEnable && mAppOpenAd != null && wasLoadTimeLessThanNHoursAgo()
     }
 
@@ -131,9 +136,14 @@ object OpenAdHelper {
                     onAdClosed.invoke()
                 }
             }
-
+            Log.e(TAG, "isShowOpenAd: isAdAvailable()::${isAdAvailable()}")
             if (isAdAvailable()) {
-                mAppOpenAd?.show(this)
+                if (!isAnyAdShowing) {
+                    isAnyAdShowing = true
+                    mAppOpenAd?.show(this)
+                } else {
+                    onAdClosed.invoke()
+                }
             } else {
                 onAdClosed.invoke()
             }

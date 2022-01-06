@@ -49,6 +49,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AdsHelper" >
         <activity
+            android:name="com.example.ads.helper.demo.CustomNativeAdsActivity"
+            android:exported="false" />
+        <activity
             android:name="com.example.ads.helper.demo.NativeAdsActivity"
             android:exported="false" />
         <activity
