@@ -19,7 +19,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
  */
 object GiftIconHelper {
 
-    private val TAG: String = javaClass.simpleName
+    private val TAG: String = "Admob_${javaClass.simpleName}"
 
     private var isInterstitialAdLoaded = false
     private var interstitial: InterstitialAd? = null
@@ -43,6 +43,8 @@ object GiftIconHelper {
             fivGiftIcon.gone
             fivBlastIcon.visible
 
+            Log.i(TAG, "loadGiftAd: Gift Click For Ad Showing")
+
             fivBlastIcon.addAnimatorListener(object : Animator.AnimatorListener {
                 override fun onAnimationRepeat(animation: Animator?) {
 
@@ -51,7 +53,7 @@ object GiftIconHelper {
                 override fun onAnimationEnd(animation: Animator?) {
                     if (!fContext.isNewInterstitialAdLoad) {
                         if (isInterstitialAdLoaded && interstitial != null) {
-                            Log.e(TAG, "onAnimationEnd: Load New Ads")
+                            Log.i(TAG, "onAnimationEnd: Load New Ads")
                             isInterstitialAdLoaded = false
                             interstitial = null
                             isInterstitialAdShow = false
@@ -119,6 +121,7 @@ object GiftIconHelper {
         get() {
             return if (!isInterstitialAdShow && isInterstitialAdLoaded && interstitial != null) {
                 if (!isAnyAdShowing) {
+                    Log.i(TAG, "Gift Ad Show: ")
                     isAnyAdShowing = true
                     isInterstitialAdShow = true
                     isAnyAdOpen = true

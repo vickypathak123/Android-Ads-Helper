@@ -18,7 +18,7 @@ class FullScreenNativeAdDialog(
     private val onDialogDismiss: () -> Unit = {}
 ) : Dialog(activity, R.style.full_screen_dialog) {
 
-    private val TAG: String = javaClass.simpleName
+    private val TAG: String = "Admob_${javaClass.simpleName}"
 
     private var mBinding: DialogFullScreenNativeAdBinding
 
@@ -42,7 +42,6 @@ class FullScreenNativeAdDialog(
         window?.let {
 
             it.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//            it.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
             ///////////   Animation  ////////
             val lp = WindowManager.LayoutParams()
@@ -67,13 +66,14 @@ class FullScreenNativeAdDialog(
             if (this != null && this.isShowing) {
                 this.dismiss()
             }
+            NativeAdvancedModelHelper.removeListener()
             onDialogDismiss.invoke()
+            Log.i(TAG, "Dismiss FullScreen NativeAd Dialog: ")
         }
     }
 
     fun showFullScreenNativeAdDialog(checked: Boolean) {
         if (NativeAdvancedModelHelper.getNativeAd != null && !activity.isFinishing && !isShowing && activity.isOnline) {
-            Log.i(TAG, "showFullScreenNativeAdDialog: ")
 
             mBinding.ivCloseAd.visible
 
@@ -95,6 +95,7 @@ class FullScreenNativeAdDialog(
             )
             testDialog = this
             isInterstitialAdShow = true
+            Log.i(TAG, "Show FullScreen NativeAd Dialog: ")
             show()
         } else if (!activity.isOnline) {
             Toast.makeText(activity, "check your internet connection", Toast.LENGTH_SHORT).show()

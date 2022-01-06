@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
 import androidx.fragment.app.FragmentActivity
+import com.example.app.ads.helper.openad.OpenAdHelper
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -69,14 +70,20 @@ object InterstitialRewardHelper {
 
                         override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                             super.onAdFailedToShowFullScreenContent(adError)
-                            Log.i(TAG, "onAdFailedToShowFullScreenContent: ")
+                            Log.i(
+                                TAG,
+                                "onAdFailedToShowFullScreenContent: \nErrorMessage::${adError.message}\nErrorCode::${adError.code}"
+                            )
                         }
 
                     }
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.i(TAG, "onAdFailedToLoad: RewardedInterstitial, Ad failed to load : ${adError.responseInfo}")
+                    Log.i(
+                        TAG,
+                        "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}"
+                    )
                     lRewardedInterstitialAd = null
                     fListener.onAdFailed()
                 }

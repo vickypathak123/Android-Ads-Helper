@@ -11,7 +11,7 @@ class OpenAdManager(
     private val myApplication: Application
 ) : Application.ActivityLifecycleCallbacks {
 
-    private val TAG: String = javaClass.simpleName
+    private val TAG: String = "Admob_${javaClass.simpleName}"
 
     var mCurrentActivity: Activity? = null
 
@@ -22,7 +22,6 @@ class OpenAdManager(
     //<editor-fold desc="ActivityLifecycleCallback methods">
     override fun onActivityResumed(activity: Activity) {
         mCurrentActivity = activity
-        Log.e(TAG, "onActivityResumed: ${(activity is AdActivity)}")
     }
 
     override fun onActivityDestroyed(activity: Activity) {
@@ -34,7 +33,7 @@ class OpenAdManager(
     }
 
     override fun onActivityStarted(activity: Activity) {
-//        Log.e(TAG, "onActivityStarted: $activity")
+
     }
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
@@ -42,7 +41,7 @@ class OpenAdManager(
     }
 
     override fun onActivityPaused(activity: Activity) {
-        Log.e(TAG, "onActivityPaused: ")
+
     }
 
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
@@ -50,11 +49,8 @@ class OpenAdManager(
 
     fun showOpenAd() {
         mCurrentActivity?.let {
-
-            Log.e(TAG, "showOpenAd: packageName::${it.packageName}")
-
             it.isShowOpenAd {
-                Log.e(TAG, "showOpenAd: Ads Close")
+                Log.i(TAG, "showOpenAd: Ads Close")
             }
         }
     }

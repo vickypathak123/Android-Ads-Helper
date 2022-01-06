@@ -21,7 +21,7 @@ import com.google.android.gms.ads.nativead.NativeAdView
  */
 class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListener {
 
-    private val TAG = "Admob_" + javaClass.simpleName
+    private val TAG = "Admob_${javaClass.simpleName}"
 
     companion object {
         val getNativeAd: NativeAd?
@@ -32,13 +32,13 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
         fun destroy() {
             NativeAdvancedHelper.destroy()
         }
+
+        internal fun removeListener() {
+            NativeAdvancedHelper.removeListener()
+        }
     }
 
     private var mCloseTimer: AdsCloseTimer? = null
-
-    private var isAdClicked: Boolean = false
-    private var isAdOwnerPause: Boolean = false
-
 
     private var mSize: NativeAdsSize = NativeAdsSize.Medium
     private var mLayout: FrameLayout = FrameLayout(mContext)
@@ -94,6 +94,7 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
         NativeAdvancedHelper.loadNativeAdvancedAd(
             fContext = mContext,
             isAddVideoOptions = isAddVideoOptions,
+            fSize = fSize,
             fListener = this,
         )
     }
@@ -110,6 +111,7 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
     ) {
 
         mCloseTimer?.cancel()
+        mCloseTimer = null
 
         val adView = when (fSize) {
 
@@ -162,7 +164,6 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
 
             NativeAdsSize.Custom -> {
                 if (fCustomAdView != null) {
-//                    populateCustomNativeAdView(
                     populateNativeAdView(
                         nativeAd,
                         adView.findViewById(R.id.native_ad_view),
@@ -371,15 +372,15 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
         adView.advertiserView?.let { fView ->
             fView.gone
 
-            if (nativeAd.advertiser != null) {
+//            if (nativeAd.advertiser != null) {
                 nativeAd.advertiser?.let { fData ->
                     (fView as TextView).text = fData
                     fView.visible
                 }
-            } else {
-                (fView as TextView).text = "Google"
-                fView.visible
-            }
+//            } else {
+//                (fView as TextView).text = "Google"
+//                fView.visible
+//            }
         }
 
         adView.bodyView?.let { fView ->
@@ -458,113 +459,6 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
         adView.setNativeAd(nativeAd)
     }
 
-    private fun populateCustomNativeAdView(
-        nativeAd: NativeAd,
-        adView: NativeAdView
-    ) {
-        adView.advertiserView = adView.findViewById(R.id.ad_advertiser)
-        adView.bodyView = adView.findViewById(R.id.ad_body)
-        adView.headlineView = adView.findViewById(R.id.ad_headline)
-        adView.priceView = adView.findViewById(R.id.ad_price)
-        adView.storeView = adView.findViewById(R.id.ad_store)
-        adView.starRatingView = adView.findViewById(R.id.ad_stars)
-        adView.iconView = adView.findViewById(R.id.ad_app_icon)
-        adView.mediaView = adView.findViewById(R.id.ad_media)
-        adView.callToActionView = adView.findViewById(R.id.ad_call_to_action)
-
-        adView.mediaView?.let { fView ->
-            fView.gone
-            if (nativeAd.mediaContent != null) {
-                nativeAd.mediaContent?.let { fData ->
-                    Log.e(TAG, "populateCustomNativeAdView: Set Media View")
-                    fView.setMediaContent(fData)
-                    fView.visible
-                }
-            } else {
-                populateCustomNativeAdView(nativeAd, adView)
-            }
-        }
-
-        adView.advertiserView?.let { fView ->
-            fView.gone
-            nativeAd.advertiser?.let { fData ->
-                (fView as TextView).text = fData
-                fView.visible
-            }
-        }
-
-        adView.bodyView?.let { fView ->
-            fView.gone
-            nativeAd.body?.let { fData ->
-                (fView as TextView).text = fData
-                fView.visible
-            }
-        }
-
-        adView.headlineView?.let { fView ->
-            fView.gone
-            nativeAd.headline?.let { fData ->
-                (fView as TextView).text = fData
-                fView.visible
-            }
-        }
-
-        adView.priceView?.let { fView ->
-            fView.gone
-            nativeAd.price?.let { fData ->
-                (fView as TextView).text = fData
-                fView.visible
-            }
-        }
-
-        adView.storeView?.let { fView ->
-            fView.gone
-            nativeAd.store?.let { fData ->
-                (fView as TextView).text = fData
-                fView.visible
-            }
-        }
-
-        adView.starRatingView?.let { fView ->
-            fView.gone
-            nativeAd.starRating?.let { fData ->
-                (fView as RatingBar).rating = fData.toFloat()
-                fView.visible
-            }
-        }
-
-        adView.iconView?.let { fView ->
-            fView.gone
-
-            if (nativeAd.icon != null) {
-                nativeAd.icon!!.drawable?.let { fData ->
-                    (fView as ImageView).setImageDrawable(fData)
-                    fView.visible
-                }
-            } else {
-                if (nativeAd.images.size > 0) {
-                    nativeAd.images[0]?.drawable?.let { fData ->
-                        (fView as ImageView).setImageDrawable(fData)
-                        fView.visible
-                    }
-                } else {
-                    fView.gone
-                }
-            }
-
-        }
-
-        adView.callToActionView?.let { fView ->
-            fView.gone
-            nativeAd.callToAction?.let { fData ->
-                (fView as Button).text = fData
-                fView.visible
-            }
-        }
-
-        adView.setNativeAd(nativeAd)
-    }
-
     private fun getCamelCaseString(text: String): String {
 
         val words: Array<String> = text.split(" ").toTypedArray()
@@ -586,25 +480,20 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
         super.onAdClosed(isShowFullScreenAd)
         Log.i(TAG, "onAdClosed: ")
 
-        isAdClicked = true
+        mLayout.removeAllViews()
 
-        if (!isAdOwnerPause) {
-            mLayout.removeAllViews()
-
-            loadNativeAdvancedAd(
-                fSize = mSize,
-                fLayout = mLayout,
-                isNeedLayoutShow = mIsNeedLayoutShow,
-                isAddVideoOptions = mIsAddVideoOptions,
-                isAdLoaded = mIsAdLoaded,
-                onClickAdClose = mOnClickAdClose
-            )
-        }
+        loadNativeAdvancedAd(
+            fSize = mSize,
+            fLayout = mLayout,
+            isNeedLayoutShow = mIsNeedLayoutShow,
+            isAddVideoOptions = mIsAddVideoOptions,
+            isAdLoaded = mIsAdLoaded,
+            onClickAdClose = mOnClickAdClose
+        )
     }
 
     override fun onNativeAdLoaded(nativeAd: NativeAd) {
         super.onNativeAdLoaded(nativeAd)
-        isAdClicked = false
 
         loadAdWithPerfectLayout(
             fSize = mSize,
@@ -623,7 +512,7 @@ class NativeAdvancedModelHelper(private val mContext: Context) : AdMobAdsListene
         private val onFinish: () -> Unit
     ) : CountDownTimer(millisInFuture, countDownInterval) {
         override fun onTick(millisUntilFinished: Long) {
-            Log.e(TAG, "onTick: Time::${(((millisInFuture - millisUntilFinished) / 1000) + 1)}")
+
         }
 
         override fun onFinish() {

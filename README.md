@@ -29,7 +29,7 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
 
 ## How To Use this Library
 
-####- Note:
+#### Note:
 1. Your App-Application Class Compulsory Extend [AppApplication](https://github.com/vickypathak123/Android-Ads-Helper/blob/master/app/src/main/java/com/example/ads/helper/demo/AppApplication.kt) Class.
 2. Please make sure before submitting final bundle for uploading on console,
    initMobileAds(isAppInTesting = true) must be pass false.
@@ -44,10 +44,10 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
 
 ## Native Ad Details
 
-####- Native Ad Attribute Details
-<img src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/screenshots/3.jpg" height="auto" width="600"/>
+#### Native Ad Attribute Details
+<img src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/screenshots/3.jpg" height="auto" width="800"/>
 
-####- Need to Initial all Native Ad Attribute in your App Theme
+#### Need to Initial all Native Ad Attribute in your App Theme
 ```xml
         <style name="YOUR_APP_THEME" parent="Theme.AppCompat.DayNight.NoActionBar">
                 <item name="colorPrimary">@color/colorPrimary</item>
@@ -61,9 +61,30 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
         </style>
 ```
 
+## Open Ad Details
+
+#### show open Ad After [Splash Screen](https://github.com/vickypathak123/Android-Ads-Helper/blob/master/app/src/main/java/com/example/ads/helper/demo/SplashActivity.kt)
+```kotlin
+        // Load Open Ad When You Need
+        OpenAdHelper.loadOpenAd(mActivity, onAdLoad = {
+            // Call When Open Ad Loaded Successfully
+            // Perform your Action
+        })
+
+        // Show Open Ad When You Need
+        // Check first open ad 
+        if (OpenAdHelper.isAdAvailable()) {
+           
+            mActivity.isShowOpenAd {
+               startNextActivity()
+            }
+        }
+```
+
+
 ## In Kotlin
 
-####- Config Ads ID In `onCreate()` Method Of Your Application Class
+#### Config Ads ID In `onCreate()` Method Of Your Application Class
 ```kotlin
         // All Ad-Ids are Optional
         VasuAdsConfig.with(this)
@@ -80,7 +101,7 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
         initMobileAds(isAppInTesting = true) // Pass false when you give your project in Internal Testing Or Live
 ```
 
-####- Load Ads In Only `onCreate()` or `initAds()` Method
+#### Load Ads In Only `onCreate()` or `initAds()` Method
 ```kotlin
         InterstitialAdHelper.loadInterstitialAd(fContext = mActivity)
         RewardVideoHelper.loadRewardVideoAd(fContext = mActivity)
@@ -98,7 +119,7 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
         )
 ```
 
-####- Show Loaded Ads Anywhere
+#### Show Loaded Ads Anywhere
 ```kotlin
         // For Showing InterstitialAd
         mActivity.isShowInterstitialAd { 
@@ -112,7 +133,7 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
         mActivity.showRewardedInterstitialAd()
 ```
 
-####- For Set Reward Ad Listener, Call In Your `initViewListener()` Method
+#### For Set Reward Ad Listener, Call In Your `initViewListener()` Method
 ```kotlin
         // For RewardVideoAd
         mActivity.isShowRewardVideoAd(

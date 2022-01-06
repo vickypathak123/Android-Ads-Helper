@@ -29,7 +29,7 @@ import kotlin.collections.ArrayList
 
 open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver {
 
-    private val TAG: String = "AppOpenApplication"
+    private val TAG: String = "Admob_${javaClass.simpleName}"
 
     // variable to track pause event time
     private var isPause: Boolean = false
@@ -53,7 +53,6 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
 
     override fun onCreate() {
         super<MultiDexApplication>.onCreate()
-        Log.e(TAG, "onCreate: ")
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
         mOpenAdManager = OpenAdManager(this@AppOpenApplication)
@@ -146,20 +145,20 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
     //<editor-fold desc="For Application Lifecycle">
     override fun onPause(owner: LifecycleOwner) {
         super.onPause(owner)
-        Log.e(TAG, "onPause: ")
+        Log.i(TAG, "onPause: ")
         mLastPauseTime = SystemClock.elapsedRealtime()
         isPause = true
     }
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
-        Log.e(TAG, "onStart: onAppForegrounded: ")
+        Log.i(TAG, "onStart: onAppForegrounded: ")
         isAppForeground = true
     }
 
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
-        Log.e(TAG, "onStop: onAppBackgrounded: ")
+        Log.i(TAG, "onStop: onAppBackgrounded: ")
         isAppForeground = false
 
         if (SystemClock.elapsedRealtime() - mLastPauseTime < mMinPauseDuration) {
@@ -170,14 +169,9 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
         }
     }
 
-    override fun onDestroy(owner: LifecycleOwner) {
-        super.onDestroy(owner)
-        Log.e(TAG, "onDestroy: ")
-    }
-
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
-        Log.e(TAG, "onResume")
+        Log.i(TAG, "onResume")
         if (isOpenAdEnable) {
             mAppLifecycleListener?.let { lListener ->
                 mOpenAdManager?.let { lOpenAdManager ->

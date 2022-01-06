@@ -7,10 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.annotation.NonNull
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdLoader
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.VideoOptions
+import com.google.android.gms.ads.*
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
 
@@ -26,7 +23,13 @@ internal object NativeAdvancedHelper {
 
     internal var mNativeAd: NativeAd? = null
 
-    internal val mListenerList: ArrayList<Pair<Context, AdMobAdsListener>> = ArrayList()
+    internal val mListenerList: ArrayList<Triple<Context, AdMobAdsListener, NativeAdsSize>> = ArrayList()
+
+    internal fun removeListener() {
+        val lList = mListenerList.filter { it.third != NativeAdsSize.FullScreen }
+        mListenerList.removeAll(mListenerList.toSet())
+        mListenerList.addAll(lList)
+    }
 
     /**
      * Call this method when you need to load your Native Advanced AD
@@ -39,11 +42,12 @@ internal object NativeAdvancedHelper {
     internal fun loadNativeAdvancedAd(
         @NonNull fContext: Context,
         isAddVideoOptions: Boolean = true,
+        fSize: NativeAdsSize,
         fListener: AdMobAdsListener
     ) {
-        if (!mListenerList.contains(Pair(fContext, fListener))) {
-            Log.e(TAG, "loadNativeAdvancedAd: New Listener::${fContext}")
-            mListenerList.add(Pair(fContext, fListener))
+        if (!mListenerList.contains(Triple(fContext, fListener, fSize))) {
+            Log.i(TAG, "loadNativeAdvancedAd: New Listener::${fContext}")
+            mListenerList.add(Triple(fContext, fListener, fSize))
         }
 
         if (mNativeAd == null) {
@@ -83,6 +87,13 @@ internal object NativeAdvancedHelper {
 
             val adLoader = builder.withAdListener(object : AdListener() {
 
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.i(
+                        TAG,
+                        "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}"
+                    )
+                }
+
                 override fun onAdClicked() {
                     super.onAdClicked()
                     isAnyAdOpen = true
@@ -96,7 +107,6 @@ internal object NativeAdvancedHelper {
                         mNativeAd = null
                         for (lListener in mListenerList) {
                             Handler(Looper.getMainLooper()).postDelayed({
-                                Log.i(TAG, "onAdClosed: ")
                                 lListener.second.onAdClosed()
                             }, 500)
                         }

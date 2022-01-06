@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
 import androidx.fragment.app.FragmentActivity
+import com.example.app.ads.helper.openad.OpenAdHelper
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -40,8 +41,6 @@ object RewardVideoHelper {
 
         fListener.onStartToLoadRewardVideoAd()
 
-        Log.e(TAG, "loadRewardVideoAd: adUnitId::${admob_reward_video_ad_id ?: fContext.getStringRes(R.string.admob_reward_video_ad_id)}")
-
         RewardedAd.load(
             fContext,
             admob_reward_video_ad_id ?: fContext.getStringRes(R.string.admob_reward_video_ad_id),
@@ -72,7 +71,10 @@ object RewardVideoHelper {
 
                         override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                             super.onAdFailedToShowFullScreenContent(adError)
-                            Log.i(TAG, "onAdFailedToShowFullScreenContent: ")
+                            Log.i(
+                                TAG,
+                                "onAdFailedToShowFullScreenContent: \nErrorMessage::${adError.message}\nErrorCode::${adError.code}"
+                            )
                         }
 
                     }
@@ -81,7 +83,7 @@ object RewardVideoHelper {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
                     Log.i(
                         TAG,
-                        "onAdFailedToLoad: RewardVideo, Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}"
+                        "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}"
                     )
                     lRewardedAd = null
                     fListener.onAdFailed()

@@ -226,7 +226,6 @@ com/example/app/ads/helper/openad/AppOpenApplication$$ExternalSyntheticLambda1.c
 com/example/app/ads/helper/openad/AppOpenApplication$$ExternalSyntheticLambda2.class
 com/example/app/ads/helper/openad/AppOpenApplication$AppLifecycleListener.class
 com/example/app/ads/helper/openad/AppOpenApplication.class
-com/example/app/ads/helper/openad/OpenAdHelper.class
 com/example/app/ads/helper/openad/OpenAdManager.class
 com/google/ads/mediation/MediationServerParameters$Parameter.class
 com/google/android/gms/ads/AdActivity.class
@@ -549,7 +548,7 @@ kotlin/ExperimentalMultiplatform.class
 kotlin/ExperimentalStdlibApi.class
 kotlin/ExperimentalUnsignedTypes.class
 kotlin/ExtensionFunctionType.class
-kotlin/Function.class
+kotlin/KotlinNullPointerException.class
 kotlin/Metadata$DefaultImpls.class
 kotlin/Metadata.class
 kotlin/OptIn.class
@@ -562,6 +561,7 @@ kotlin/RequiresOptIn$Level.class
 kotlin/RequiresOptIn.class
 kotlin/SinceKotlin.class
 kotlin/Suppress.class
+kotlin/UninitializedPropertyAccessException.class
 kotlin/UnsafeVariance.class
 kotlin/UseExperimental.class
 kotlin/WasExperimental.class
@@ -633,7 +633,6 @@ kotlin/jvm/Synchronized.class
 kotlin/jvm/Throws.class
 kotlin/jvm/Transient.class
 kotlin/jvm/Volatile.class
-kotlin/jvm/functions/Function0.class
 kotlin/jvm/internal/FunctionImpl.class
 kotlin/jvm/internal/Intrinsics.class
 kotlin/jvm/internal/RepeatableContainer.class
