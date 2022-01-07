@@ -181,21 +181,21 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
        style="max-width:100%;">
   </a>
 
-  <a href="" rel="nofollow">
+  <a href="https://www.linkedin.com/in/akshay-harsoda-b66820116" rel="nofollow">
   <img alt="Follow me on LinkedIn" 
        height="50" width="50" 
        src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/social/linkedin.png" 
        style="max-width:100%;">
   </a>
 
-  <a href="" rel="nofollow">
-  <img alt="Follow me on Facebook" 
+  <a href="https://twitter.com/Akshayharsoda1" rel="nofollow">
+  <img alt="Follow me on Twitter" 
        height="50" width="50"
        src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/social/twitter.png" 
        style="max-width:100%;">
   </a>
 
-  <a href="" rel="nofollow">
+  <a href="https://www.facebook.com/akshay.harsoda" rel="nofollow">
   <img alt="Follow me on Facebook" 
        height="50" width="50" 
        src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/social/facebook.png" 
