@@ -27,7 +27,7 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
 	}
 ```
 
-# [AdMob Error Codes & Logs](https://support.google.com/admob/thread/3494603/admob-error-codes-logs?hl=en)
+# Check [AdMob Error Codes & Logs](https://support.google.com/admob/thread/3494603/admob-error-codes-logs?hl=en)
 
 ## How To Use this Library
 
