@@ -44,6 +44,7 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
 6. You must set [Native-Ad Attribute](https://github.com/vickypathak123/Android-Ads-Helper/blob/master/adshelper/src/main/res/values/attrs.xml) In your Main App-Theme.
 7. For More Details Refer This [AppApplication](https://github.com/vickypathak123/Android-Ads-Helper/blob/master/app/src/main/java/com/example/ads/helper/demo/AppApplication.kt) Class.
 8. Faced Any Error When Ads Loading, Check [AdMob Error Codes & Logs](https://support.google.com/admob/thread/3494603/admob-error-codes-logs?hl=en)
+9. You Find Ads Log in Your Logcat with this Keyword `Admob_`.
 
 #### Config Ads ID In `onCreate()` Method Of Your Application Class
 ```kotlin
