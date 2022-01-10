@@ -24,7 +24,7 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
     override fun initAds() {
         super.initAds()
 
-        InterstitialAdHelper.loadInterstitialAd(fContext = mActivity)
+//        InterstitialAdHelper.loadInterstitialAd(fContext = mActivity)
 
         NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
             NativeAdsSize.Big,
@@ -42,11 +42,17 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
             }
         )
 
-        GiftIconHelper.loadGiftAd(
-            fContext = mActivity,
-            fivGiftIcon = mBinding.layoutHeader.layoutGiftAd.giftAdIcon,
-            fivBlastIcon = mBinding.layoutHeader.layoutGiftAd.giftBlastAdIcon
-        )
+       /* NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
+            NativeAdsSize.Medium,
+            mBinding.flNativeAdPlaceHolderMedium,
+            isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
+        )*/
+
+//        GiftIconHelper.loadGiftAd(
+//            fContext = mActivity,
+//            fivGiftIcon = mBinding.layoutHeader.layoutGiftAd.giftAdIcon,
+//            fivBlastIcon = mBinding.layoutHeader.layoutGiftAd.giftBlastAdIcon
+//        )
     }
 
     override fun initView() {
@@ -75,8 +81,8 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
 
 
     override fun onBackPressed() {
-        mActivity.isShowInterstitialAd(isBackAds = true) { _ ->
+//        mActivity.isShowInterstitialAd(isBackAds = true) { _ ->
             finish()
-        }
+//        }
     }
 }

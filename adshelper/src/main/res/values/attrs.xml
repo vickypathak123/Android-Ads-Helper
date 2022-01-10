@@ -2,9 +2,9 @@
 
 <resources>
 
-    <attr name="native_ads_main_color" format="reference" />
-    <attr name="native_ads_label_text_color" format="reference" />
-    <attr name="native_ads_body_text_color" format="reference" />
-    <attr name="native_ads_background_color" format="reference" />
+    <attr name="native_ads_main_color" format="color" />
+    <attr name="native_ads_label_text_color" format="color" />
+    <attr name="native_ads_body_text_color" format="color" />
+    <attr name="native_ads_background_color" format="color" />
 
 </resources>

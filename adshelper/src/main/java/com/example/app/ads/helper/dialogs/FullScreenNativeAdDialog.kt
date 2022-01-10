@@ -54,6 +54,8 @@ class FullScreenNativeAdDialog(
 
         }
 
+        Log.e(TAG, "init: ")
+
         setCancelable(false)
         setCanceledOnTouchOutside(false)
 
@@ -73,6 +75,20 @@ class FullScreenNativeAdDialog(
     }
 
     fun showFullScreenNativeAdDialog(checked: Boolean) {
+
+        /*val view = activity.inflater.inflate(
+            R.layout.layout_google_native_ad_big,
+            null
+        )
+
+        mBinding.flNativeAdPlaceHolder.apply {
+            removeAllViews()
+            addView(view)
+            visible
+        }
+
+        show()*/
+
         if (NativeAdvancedModelHelper.getNativeAd != null && !activity.isFinishing && !isShowing && activity.isOnline) {
 
             mBinding.ivCloseAd.visible

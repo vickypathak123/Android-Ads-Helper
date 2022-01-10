@@ -2,6 +2,7 @@
 
 package com.example.app.ads.helper
 
+import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
@@ -23,10 +24,19 @@ internal object NativeAdvancedHelper {
 
     internal var mNativeAd: NativeAd? = null
 
-    internal val mListenerList: ArrayList<Triple<Context, AdMobAdsListener, NativeAdsSize>> = ArrayList()
+    internal val mListenerList: ArrayList<Triple<Activity, AdMobAdsListener, NativeAdsSize>> = ArrayList()
 
     internal fun removeListener() {
         val lList = mListenerList.filter { it.third != NativeAdsSize.FullScreen }
+        mListenerList.removeAll(mListenerList.toSet())
+        mListenerList.addAll(lList)
+    }
+
+    private fun removeFinishedList() {
+        val lList = mListenerList.filter {
+            !it.first.isFinishing
+        }
+        Log.d(TAG, "removeFinishedList() returned: 1 --> ${lList.size}")
         mListenerList.removeAll(mListenerList.toSet())
         mListenerList.addAll(lList)
     }
@@ -40,15 +50,18 @@ internal object NativeAdvancedHelper {
      * @param fListener see once this [AdMobAdsListener] it's a callback of ads
      */
     internal fun loadNativeAdvancedAd(
-        @NonNull fContext: Context,
+        @NonNull fContext: Activity,
         isAddVideoOptions: Boolean = true,
         fSize: NativeAdsSize,
         fListener: AdMobAdsListener
     ) {
+        removeFinishedList()
+
         if (!mListenerList.contains(Triple(fContext, fListener, fSize))) {
-            Log.i(TAG, "loadNativeAdvancedAd: New Listener::${fContext}")
             mListenerList.add(Triple(fContext, fListener, fSize))
         }
+
+        Log.e(TAG, "loadNativeAdvancedAd: mListenerList.size::${mListenerList.size}")
 
         if (mNativeAd == null) {
 

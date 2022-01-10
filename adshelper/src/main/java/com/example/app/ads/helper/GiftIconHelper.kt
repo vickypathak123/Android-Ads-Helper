@@ -84,6 +84,7 @@ object GiftIconHelper {
         InterstitialAdHelper.loadAd(fContext, object : AdMobAdsListener {
 
             override fun onAdLoaded() {
+                Log.e(TAG, "Gift Ad onAdLoaded: ")
                 isInterstitialAdLoaded = true
                 fivGiftIcon.visible
                 fivBlastIcon.gone
@@ -91,6 +92,7 @@ object GiftIconHelper {
 
             override fun onInterstitialAdLoaded(interstitialAd: InterstitialAd) {
                 super.onInterstitialAdLoaded(interstitialAd)
+                Log.e(TAG, "Gift Ad onInterstitialAdLoaded: ")
                 interstitial = interstitialAd
                 isInterstitialAdLoaded = true
                 fivGiftIcon.visible
@@ -98,6 +100,7 @@ object GiftIconHelper {
             }
 
             override fun onAdFailed() {
+                Log.e(TAG, "Gift Ad onAdFailed: ")
                 isInterstitialAdLoaded = false
                 fivGiftIcon.gone
                 fivBlastIcon.gone
@@ -105,6 +108,7 @@ object GiftIconHelper {
             }
 
             override fun onAdClosed(isShowFullScreenAd: Boolean) {
+                Log.e(TAG, "Gift Ad onAdClosed: ")
                 isAnyAdShowing = false
                 isInterstitialAdLoaded = false
                 isInterstitialAdShow = false

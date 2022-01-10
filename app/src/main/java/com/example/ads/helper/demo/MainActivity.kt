@@ -157,9 +157,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
             }
 
             mBinding.showNativeAds -> {
-                mActivity.isShowInterstitialAd { _ ->
+//                mActivity.isShowInterstitialAd { _ ->
                     launchActivity(getActivityIntent<NativeAdsActivity> { putBoolean("is_add_video_options", mBinding.adsSwitch.isChecked) })
-                }
+//                }
             }
 
             mBinding.showCustomNativeAds -> {
