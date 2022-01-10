@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="#E9E9E9">
 
+<!--        app:progressTint="@android:color/holo_red_light"-->
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

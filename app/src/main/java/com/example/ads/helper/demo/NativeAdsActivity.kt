@@ -48,11 +48,11 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
             isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
         )*/
 
-//        GiftIconHelper.loadGiftAd(
-//            fContext = mActivity,
-//            fivGiftIcon = mBinding.layoutHeader.layoutGiftAd.giftAdIcon,
-//            fivBlastIcon = mBinding.layoutHeader.layoutGiftAd.giftBlastAdIcon
-//        )
+        GiftIconHelper.loadGiftAd(
+            fContext = mActivity,
+            fivGiftIcon = mBinding.layoutHeader.layoutGiftAd.giftAdIcon,
+            fivBlastIcon = mBinding.layoutHeader.layoutGiftAd.giftBlastAdIcon
+        )
     }
 
     override fun initView() {

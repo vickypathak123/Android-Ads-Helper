@@ -54,7 +54,7 @@ class FullScreenNativeAdDialog(
 
         }
 
-        Log.e(TAG, "init: ")
+        Log.e(TAG, "init: native_ads_main_color::${R.attr.native_ads_main_color}")
 
         setCancelable(false)
         setCanceledOnTouchOutside(false)
