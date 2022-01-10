@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.graphics.Color
+import android.graphics.ColorFilter
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.*
 import android.widget.Toast
@@ -12,6 +14,16 @@ import com.example.app.ads.helper.R
 import com.example.app.ads.helper.*
 import com.example.app.ads.helper.databinding.DialogFullScreenNativeAdBinding
 import com.example.app.ads.helper.visible
+import android.util.TypedValue
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
+import android.widget.Button
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+
+import androidx.appcompat.content.res.AppCompatResources
+
 
 class FullScreenNativeAdDialog(
     private val activity: Activity,
@@ -54,8 +66,6 @@ class FullScreenNativeAdDialog(
 
         }
 
-        Log.e(TAG, "init: native_ads_main_color::${R.attr.native_ads_main_color}")
-
         setCancelable(false)
         setCanceledOnTouchOutside(false)
 
@@ -63,6 +73,20 @@ class FullScreenNativeAdDialog(
             isAnyAdShowing = false
             mBinding.flNativeAdPlaceHolder.removeAllViews()
         }
+
+        val rotate = RotateAnimation(
+            0f,
+            360f,
+            Animation.RELATIVE_TO_SELF,
+            0.5f,
+            Animation.RELATIVE_TO_SELF,
+            0.5f
+        )
+        rotate.repeatCount = Animation.INFINITE
+        rotate.duration = 1000
+        rotate.interpolator = LinearInterpolator()
+
+        mBinding.ivProgress.startAnimation(rotate)
 
         mBinding.ivCloseAd.setOnClickListener {
             if (this != null && this.isShowing) {
@@ -75,20 +99,6 @@ class FullScreenNativeAdDialog(
     }
 
     fun showFullScreenNativeAdDialog(checked: Boolean) {
-
-        /*val view = activity.inflater.inflate(
-            R.layout.layout_google_native_ad_big,
-            null
-        )
-
-        mBinding.flNativeAdPlaceHolder.apply {
-            removeAllViews()
-            addView(view)
-            visible
-        }
-
-        show()*/
-
         if (NativeAdvancedModelHelper.getNativeAd != null && !activity.isFinishing && !isShowing && activity.isOnline) {
 
             mBinding.ivCloseAd.visible
@@ -109,6 +119,7 @@ class FullScreenNativeAdDialog(
                     mBinding.ivCloseAd.performClick()
                 }
             )
+
             testDialog = this
             isInterstitialAdShow = true
             Log.i(TAG, "Show FullScreen NativeAd Dialog: ")

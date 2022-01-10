@@ -7,6 +7,7 @@ attr native_ads_main_color
 drawable bordered_ad_button
 drawable green_ad_button
 drawable ic_ad_close_new
+drawable ic_img
 drawable native_ad_button
 drawable play_logo
 drawable progressbar_progress_drawable
@@ -22,6 +23,7 @@ id ad_stars
 id ad_store
 id blur_view
 id cl_ad_price_store
+id cl_main
 id cv_app_icon
 id cv_main_image
 id fl_native_ad_place_holder
@@ -33,6 +35,7 @@ id gl_start_title
 id iv_bg_main_image
 id iv_close_ad
 id iv_play_logo
+id iv_progress
 id ll_extra_item
 id ll_star
 id native_ad_view

@@ -2507,6 +2507,7 @@ int drawable design_snackbar_background 0x0
 int drawable green_ad_button 0x0
 int drawable ic_ad_close_new 0x0
 int drawable ic_clock_black_24dp 0x0
+int drawable ic_img 0x0
 int drawable ic_keyboard_black_24dp 0x0
 int drawable ic_mtrl_checked_circle 0x0
 int drawable ic_mtrl_chip_checked_black 0x0
@@ -2660,6 +2661,7 @@ int id chip_group 0x0
 int id chronometer 0x0
 int id circle_center 0x0
 int id cl_ad_price_store 0x0
+int id cl_main 0x0
 int id clear_text 0x0
 int id clockwise 0x0
 int id confirm_button 0x0
@@ -2744,6 +2746,7 @@ int id item_touch_helper_previous_elevation 0x0
 int id iv_bg_main_image 0x0
 int id iv_close_ad 0x0
 int id iv_play_logo 0x0
+int id iv_progress 0x0
 int id jumpToEnd 0x0
 int id jumpToStart 0x0
 int id labeled 0x0

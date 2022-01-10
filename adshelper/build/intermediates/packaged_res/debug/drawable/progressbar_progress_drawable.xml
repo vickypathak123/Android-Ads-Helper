@@ -5,14 +5,14 @@
         <clip>
             <shape>
                 <gradient
-                    android:centerColor="?attr/native_ads_main_color"
-                    android:endColor="?attr/native_ads_main_color"
+                    android:centerColor="@android:color/holo_red_light"
+                    android:endColor="@android:color/holo_red_light"
                     android:gradientRadius="20dp"
-                    android:startColor="?attr/native_ads_main_color" />
-                <!--                    android:centerColor="@android:color/holo_red_light"-->
-                <!--                    android:endColor="@android:color/holo_red_light"-->
+                    android:startColor="@android:color/holo_red_light" />
+                <!--                    android:centerColor="?attr/native_ads_main_color"-->
+                <!--                    android:endColor="?attr/native_ads_main_color"-->
                 <!--                    android:gradientRadius="20dp"-->
-                <!--                    android:startColor="@android:color/holo_red_light" />-->
+                <!--                    android:startColor="?attr/native_ads_main_color" />-->
             </shape>
         </clip>
     </item>

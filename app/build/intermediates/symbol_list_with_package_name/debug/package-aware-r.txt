@@ -2588,6 +2588,7 @@ drawable design_snackbar_background
 drawable green_ad_button
 drawable ic_ad_close_new
 drawable ic_clock_black_24dp
+drawable ic_img
 drawable ic_keyboard_black_24dp
 drawable ic_launcher_background
 drawable ic_launcher_foreground
@@ -2779,6 +2780,7 @@ id chip_group
 id chronometer
 id circle_center
 id cl_ad_price_store
+id cl_main
 id clear_text
 id clip_horizontal
 id clip_vertical
@@ -2908,6 +2910,7 @@ id iv_close_ad
 id iv_header_back
 id iv_header_right_icon
 id iv_play_logo
+id iv_progress
 id jumpToEnd
 id jumpToStart
 id labeled

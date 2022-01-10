@@ -21,16 +21,25 @@ public final class DialogFullScreenNativeAdBinding implements ViewBinding {
   private final ConstraintLayout rootView;
 
   @NonNull
+  public final ConstraintLayout clMain;
+
+  @NonNull
   public final FrameLayout flNativeAdPlaceHolder;
 
   @NonNull
   public final ImageView ivCloseAd;
 
+  @NonNull
+  public final ImageView ivProgress;
+
   private DialogFullScreenNativeAdBinding(@NonNull ConstraintLayout rootView,
-      @NonNull FrameLayout flNativeAdPlaceHolder, @NonNull ImageView ivCloseAd) {
+      @NonNull ConstraintLayout clMain, @NonNull FrameLayout flNativeAdPlaceHolder,
+      @NonNull ImageView ivCloseAd, @NonNull ImageView ivProgress) {
     this.rootView = rootView;
+    this.clMain = clMain;
     this.flNativeAdPlaceHolder = flNativeAdPlaceHolder;
     this.ivCloseAd = ivCloseAd;
+    this.ivProgress = ivProgress;
   }
 
   @Override
@@ -60,6 +69,8 @@ public final class DialogFullScreenNativeAdBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      ConstraintLayout clMain = (ConstraintLayout) rootView;
+
       id = R.id.fl_native_ad_place_holder;
       FrameLayout flNativeAdPlaceHolder = ViewBindings.findChildViewById(rootView, id);
       if (flNativeAdPlaceHolder == null) {
@@ -72,8 +83,14 @@ public final class DialogFullScreenNativeAdBinding implements ViewBinding {
         break missingId;
       }
 
-      return new DialogFullScreenNativeAdBinding((ConstraintLayout) rootView, flNativeAdPlaceHolder,
-          ivCloseAd);
+      id = R.id.iv_progress;
+      ImageView ivProgress = ViewBindings.findChildViewById(rootView, id);
+      if (ivProgress == null) {
+        break missingId;
+      }
+
+      return new DialogFullScreenNativeAdBinding((ConstraintLayout) rootView, clMain,
+          flNativeAdPlaceHolder, ivCloseAd, ivProgress);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
