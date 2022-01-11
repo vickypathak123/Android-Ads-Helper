@@ -18,7 +18,6 @@ fun blurBitmap(fContext: Context, bitmap: Bitmap): Bitmap? {
 
         val outBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
 
-//    val rs = RenderScript.create(ApplicationProvider.getApplicationContext<Context>())
         val rs = RenderScript.create(fContext)
 
         val blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs))
@@ -26,8 +25,7 @@ fun blurBitmap(fContext: Context, bitmap: Bitmap): Bitmap? {
         val allIn = Allocation.createFromBitmap(rs, bitmap)
         val allOut = Allocation.createFromBitmap(rs, outBitmap)
 
-//        blurScript.setRadius(25f)
-        blurScript.setRadius(10f)
+        blurScript.setRadius(8f)
 
         blurScript.setInput(allIn)
         blurScript.forEach(allOut)

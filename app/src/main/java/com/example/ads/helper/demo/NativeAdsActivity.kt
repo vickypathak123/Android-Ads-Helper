@@ -31,22 +31,22 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
             mBinding.flNativeAdPlaceHolderBig,
             isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
             isAdLoaded = {
-                if (isFirstTime) {
+                /*if (isFirstTime) {
                     isFirstTime = false
                     NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
                         NativeAdsSize.Medium,
                         mBinding.flNativeAdPlaceHolderMedium,
                         isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
                     )
-                }
+                }*/
             }
         )
 
-       /* NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
+        NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
             NativeAdsSize.Medium,
             mBinding.flNativeAdPlaceHolderMedium,
             isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
-        )*/
+        )
 
         GiftIconHelper.loadGiftAd(
             fContext = mActivity,

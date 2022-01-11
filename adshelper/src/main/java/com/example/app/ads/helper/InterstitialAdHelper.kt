@@ -56,6 +56,7 @@ object InterstitialAdHelper {
                             override fun onAdDismissedFullScreenContent() {
                                 super.onAdDismissedFullScreenContent()
                                 Log.i(TAG, "onAdDismissedFullScreenContent: ")
+                                lInterstitialAd = null
                                 isAnyAdShowing = false
                                 isInterstitialAdShow = false
                                 fListener.onAdClosed()
@@ -64,7 +65,6 @@ object InterstitialAdHelper {
                             override fun onAdShowedFullScreenContent() {
                                 super.onAdShowedFullScreenContent()
                                 Log.i(TAG, "onAdShowedFullScreenContent: ")
-                                lInterstitialAd = null
                             }
 
                             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
