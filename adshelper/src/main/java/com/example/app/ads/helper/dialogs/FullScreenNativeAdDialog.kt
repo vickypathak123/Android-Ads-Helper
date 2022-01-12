@@ -74,6 +74,9 @@ class FullScreenNativeAdDialog(
             mBinding.flNativeAdPlaceHolder.removeAllViews()
         }
 
+        val value = TypedValue()
+        context.theme.resolveAttribute(R.attr.native_ads_main_color, value, true)
+
         val rotate = RotateAnimation(
             0f,
             360f,
@@ -86,15 +89,18 @@ class FullScreenNativeAdDialog(
         rotate.duration = 1000
         rotate.interpolator = LinearInterpolator()
 
-        mBinding.ivProgress.startAnimation(rotate)
+        mBinding.ivProgress.apply {
+            setColorFilter(value.data)
+            startAnimation(rotate)
+        }
 
         mBinding.ivCloseAd.setOnClickListener {
             if (this != null && this.isShowing) {
                 this.dismiss()
+                NativeAdvancedModelHelper.removeListener()
+                onDialogDismiss.invoke()
+                Log.i(TAG, "Dismiss FullScreen NativeAd Dialog: ")
             }
-            NativeAdvancedModelHelper.removeListener()
-            onDialogDismiss.invoke()
-            Log.i(TAG, "Dismiss FullScreen NativeAd Dialog: ")
         }
     }
 
@@ -116,7 +122,9 @@ class FullScreenNativeAdDialog(
                     mBinding.flNativeAdPlaceHolder.visible
                 },
                 onClickAdClose = {
-                    mBinding.ivCloseAd.performClick()
+                    if (this != null && this.isShowing) {
+                        mBinding.ivCloseAd.performClick()
+                    }
                 }
             )
 
