@@ -529,6 +529,7 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         loadNativeAdvancedAd(
             fSize = mSize,
             fLayout = mLayout,
+            fCustomAdView = mCustomAdView,
             isNeedLayoutShow = mIsNeedLayoutShow,
             isAddVideoOptions = mIsAddVideoOptions,
             isAdLoaded = mIsAdLoaded,
