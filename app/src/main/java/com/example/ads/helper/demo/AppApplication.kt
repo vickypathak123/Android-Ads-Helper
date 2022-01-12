@@ -26,6 +26,8 @@ class AppApplication : AppOpenApplication(), AppOpenApplication.AppLifecycleList
 
         VasuAdsConfig.with(this)
             .isEnableOpenAd(this.getBoolean(IS_OPEN_ADS_ENABLE, true))
+            .needToTakeAllTestAdID(true)
+            .needToBlockInterstitialAd(false)
             .initialize()
 
         initMobileAds(isAppInTesting = true)

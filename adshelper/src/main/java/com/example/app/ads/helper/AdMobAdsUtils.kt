@@ -30,6 +30,7 @@ internal var admob_reward_video_ad_id: String? = null
 internal var admob_interstitial_ad_reward_id: String? = null
 internal var admob_open_ad_id: String? = null
 internal var isOpenAdEnable: Boolean = true
+internal var isBlockInterstitialAd: Boolean = false
 
 /**
  * Extension method to Get String resource for Context.

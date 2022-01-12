@@ -51,6 +51,8 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
         // All Ad-Ids are Optional
         VasuAdsConfig.with(this)
             .isEnableOpenAd(true /* Default Value */) // Pass false if you don't need to show open ad in your project
+            .needToTakeAllTestAdID(false /* Default Value */) // Pass true if you need to show Ads with Test Ad ID in your project
+            .needToBlockInterstitialAd(false /* Default Value */) // Pass true if you check fullScreenNativeAds when Interstitial Ads Failed to Load
             .setAdmobAppId("YOUR_LIVE_APP_ID")
             .setAdmobBannerAdId("YOUR_LIVE_BANNER_AD_ID")
             .setAdmobInterstitialAdId("YOUR_LIVE_INTERSTITIAL_AD_ID")

@@ -78,7 +78,7 @@ afterEvaluate {
 
                 groupId = 'com.github.vickypathak123'
                 artifactId = 'Android-Ads-Helper'
-                version = '1.1.9'
+                version = '1.2.0'
             }
         }
     }
