@@ -150,7 +150,7 @@ object InterstitialAdHelper {
             }
         }
 
-//        mInterstitialAdMob = null
+        mInterstitialAdMob = null
 
         mIsAnyAdShow = if (!isInterstitialAdShow && isNeedToShowAds && !mIsAnyAdShow) {
             if (mIsAdMobAdLoaded && mInterstitialAdMob != null) {
