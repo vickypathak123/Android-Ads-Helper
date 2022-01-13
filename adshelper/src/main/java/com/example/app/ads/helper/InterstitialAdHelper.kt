@@ -170,6 +170,7 @@ object InterstitialAdHelper {
                 if (mIsShowFullScreenNativeAd && NativeAdvancedModelHelper.getNativeAd != null && isOnline && !this.isFinishing) {
                     if (!isAnyAdShowing) {
                         isAnyAdShowing = true
+                        Log.i(TAG, "isShowInterstitialAd: Try To Open Dialog...")
                         FullScreenNativeAdDialog(this) {
                             mIsAnyAdShow = false
                             mListener?.onAdClosed(true)

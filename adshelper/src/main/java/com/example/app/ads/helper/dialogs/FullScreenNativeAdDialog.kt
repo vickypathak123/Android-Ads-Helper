@@ -109,6 +109,8 @@ class FullScreenNativeAdDialog(
 
             mBinding.ivCloseAd.visible
 
+            Log.i(TAG, "Show FullScreen NativeAd Dialog: Try To Showing Ads Dialog...")
+
             NativeAdvancedModelHelper(activity).loadNativeAdvancedAd(
                 fSize = NativeAdsSize.FullScreen,
                 fLayout = mBinding.flNativeAdPlaceHolder,
