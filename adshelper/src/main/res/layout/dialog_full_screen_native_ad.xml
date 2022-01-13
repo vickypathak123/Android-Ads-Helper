@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/iv_progress"
-        android:layout_width="?attr/actionBarSize"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:padding="10dp"
         android:src="@drawable/ic_img"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -30,8 +30,8 @@
 
     <ImageView
         android:id="@+id/iv_close_ad"
-        android:layout_width="?attr/actionBarSize"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_marginTop="17dp"
         android:layout_marginEnd="17dp"
         android:layout_marginRight="17dp"

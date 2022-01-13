@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.akshay.harsoda.permission.helper.AksPermission
@@ -147,7 +148,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
                 }
             }
             mBinding.showFullScreenNativeAd -> {
-                FullScreenNativeAdDialog(activity = mActivity).showFullScreenNativeAdDialog(mBinding.adsSwitch.isChecked)
+                if (!mActivity.isOnline) {
+                    Toast.makeText(mActivity, "check your internet connection", Toast.LENGTH_SHORT).show()
+                } else if (NativeAdvancedModelHelper.getNativeAd != null) {
+                    Toast.makeText(mActivity, "native ad not load", Toast.LENGTH_SHORT).show()
+                } else {
+                    FullScreenNativeAdDialog(activity = mActivity).showFullScreenNativeAdDialog(mBinding.adsSwitch.isChecked)
+                }
             }
             mBinding.showRewardVideoAds -> {
                 mActivity.showRewardVideoAd()
@@ -158,7 +165,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
 
             mBinding.showNativeAds -> {
 //                mActivity.isShowInterstitialAd { _ ->
-                    launchActivity(getActivityIntent<NativeAdsActivity> { putBoolean("is_add_video_options", mBinding.adsSwitch.isChecked) })
+                launchActivity(getActivityIntent<NativeAdsActivity> { putBoolean("is_add_video_options", mBinding.adsSwitch.isChecked) })
 //                }
             }
 

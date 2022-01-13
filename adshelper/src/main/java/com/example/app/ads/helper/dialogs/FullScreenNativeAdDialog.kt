@@ -132,10 +132,6 @@ class FullScreenNativeAdDialog(
             isInterstitialAdShow = true
             Log.i(TAG, "Show FullScreen NativeAd Dialog: ")
             show()
-        } else if (!activity.isOnline) {
-            Toast.makeText(activity, "check your internet connection", Toast.LENGTH_SHORT).show()
-        } else if (NativeAdvancedModelHelper.getNativeAd != null) {
-            Toast.makeText(activity, "native ad not load", Toast.LENGTH_SHORT).show()
         }
     }
 }
