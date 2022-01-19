@@ -150,7 +150,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
             mBinding.showFullScreenNativeAd -> {
                 if (!mActivity.isOnline) {
                     Toast.makeText(mActivity, "check your internet connection", Toast.LENGTH_SHORT).show()
-                } else if (NativeAdvancedModelHelper.getNativeAd != null) {
+                } else if (NativeAdvancedModelHelper.getNativeAd == null) {
                     Toast.makeText(mActivity, "native ad not load", Toast.LENGTH_SHORT).show()
                 } else {
                     FullScreenNativeAdDialog(activity = mActivity).showFullScreenNativeAdDialog(mBinding.adsSwitch.isChecked)

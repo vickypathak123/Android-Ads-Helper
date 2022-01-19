@@ -78,7 +78,7 @@ object InterstitialAdHelper {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
                     Log.i(
                         TAG,
-                        "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}"
+                        "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}\nErrorMessage::${adError.message}"
                     )
                     lInterstitialAd = null
                     fListener.onAdFailed()
