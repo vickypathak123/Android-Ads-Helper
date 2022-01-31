@@ -11,7 +11,7 @@
         <entry key="adshelper/src/main/res/layout/dialog_full_screen_native_ad.xml" value="0.33697916666666666" />
         <entry key="adshelper/src/main/res/layout/layout_google_native_ad_big.xml" value="0.556836902800659" />
         <entry key="adshelper/src/main/res/layout/layout_google_native_ad_custom_sample.xml" value="0.33" />
-        <entry key="adshelper/src/main/res/layout/layout_google_native_ad_exit_full_screen_app_store.xml" value="0.25" />
+        <entry key="adshelper/src/main/res/layout/layout_google_native_ad_exit_full_screen_app_store.xml" value="0.33" />
         <entry key="adshelper/src/main/res/layout/layout_google_native_ad_exit_full_screen_website.xml" value="0.25" />
         <entry key="adshelper/src/main/res/layout/layout_google_native_ad_medium.xml" value="0.33" />
         <entry key="adshelper/src/main/res/layout/testing.xml" value="0.33697916666666666" />

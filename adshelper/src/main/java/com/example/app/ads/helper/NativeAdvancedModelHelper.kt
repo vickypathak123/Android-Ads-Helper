@@ -2,28 +2,20 @@ package com.example.app.ads.helper
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.CountDownTimer
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.*
 import androidx.annotation.NonNull
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.example.app.ads.helper.widgets.BlurDrawable
+import androidx.core.graphics.drawable.DrawableCompat
+import com.example.app.ads.helper.demo.blurBitmap
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
-import androidx.core.graphics.drawable.DrawableCompat
-
-import android.graphics.drawable.Drawable
-import android.os.Build
-import android.util.TypedValue
-
-import androidx.appcompat.content.res.AppCompatResources
-import android.graphics.BitmapFactory
-
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import com.example.app.ads.helper.demo.blurBitmap
 
 
 /**
@@ -131,14 +123,14 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
 
             NativeAdsSize.Big -> {
                 mContext.inflater.inflate(
-                    R.layout.layout_google_native_ad_big,
+                    com.example.app.ads.helper.R.layout.layout_google_native_ad_big,
                     null
                 ) as NativeAdView
             }
 
             NativeAdsSize.Medium -> {
                 mContext.inflater.inflate(
-                    R.layout.layout_google_native_ad_medium,
+                    com.example.app.ads.helper.R.layout.layout_google_native_ad_medium,
                     null
                 ) as NativeAdView
             }
@@ -146,12 +138,12 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             NativeAdsSize.FullScreen -> {
                 if (nativeAd.starRating != null && nativeAd.price != null && nativeAd.store != null) {
                     mContext.inflater.inflate(
-                        R.layout.layout_google_native_ad_exit_full_screen_app_store,
+                        com.example.app.ads.helper.R.layout.layout_google_native_ad_exit_full_screen_app_store,
                         null
                     ) as ConstraintLayout
                 } else {
                     mContext.inflater.inflate(
-                        R.layout.layout_google_native_ad_exit_full_screen_website,
+                        com.example.app.ads.helper.R.layout.layout_google_native_ad_exit_full_screen_website,
                         null
                     ) as NativeAdView
                 }
@@ -160,16 +152,16 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             NativeAdsSize.Custom -> {
                 fCustomAdView
                     ?: mContext.inflater.inflate(
-                        R.layout.layout_google_native_ad_big,
+                        com.example.app.ads.helper.R.layout.layout_google_native_ad_big,
                         null
                     ) as NativeAdView
             }
         }
 
         val value = TypedValue()
-        mContext.theme.resolveAttribute(R.attr.native_ads_main_color, value, true)
+        mContext.theme.resolveAttribute(com.example.app.ads.helper.R.attr.native_ads_main_color, value, true)
 
-        val unwrappedDrawable = AppCompatResources.getDrawable(mContext, R.drawable.native_ad_button)
+        val unwrappedDrawable = AppCompatResources.getDrawable(mContext, com.example.app.ads.helper.R.drawable.native_ad_button)
         val wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable!!)
         DrawableCompat.setTint(wrappedDrawable, value.data)
 
@@ -256,10 +248,7 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         adView.imageView?.let { fView ->
             if (nativeAd.images.size > 0) {
                 nativeAd.images[0]?.drawable?.let { fData ->
-//                    (fView as ImageView).setImageDrawable(fData)
                     fView.visible
-
-//                    val icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_resource)
 
                     val bitmap: Bitmap = Bitmap.createBitmap(fData.intrinsicWidth, fData.intrinsicHeight, Bitmap.Config.ARGB_8888)
 
@@ -270,11 +259,6 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
                     blurBitmap(mContext, bitmap)?.let {
                         (fView as ImageView).setImageBitmap(it)
                     }
-
-
-//                    val blurView: View = adView.findViewById(R.id.blur_view)
-//                    val blurDrawable = BlurDrawable(fView, 15)
-//                    blurView.background = blurDrawable
 
                 }
             }
@@ -416,15 +400,10 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         adView.advertiserView?.let { fView ->
             fView.gone
 
-//            if (nativeAd.advertiser != null) {
             nativeAd.advertiser?.let { fData ->
                 (fView as TextView).text = fData
                 fView.visible
             }
-//            } else {
-//                (fView as TextView).text = "Google"
-//                fView.visible
-//            }
         }
 
         adView.bodyView?.let { fView ->
@@ -539,6 +518,8 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
 
     override fun onNativeAdLoaded(nativeAd: NativeAd) {
         super.onNativeAdLoaded(nativeAd)
+
+        Log.e(TAG, "onNativeAdLoaded: ")
 
         loadAdWithPerfectLayout(
             fSize = mSize,
