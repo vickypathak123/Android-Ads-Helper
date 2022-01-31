@@ -32,7 +32,7 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
 ## How To Use this Library
 
 #### Note:
-1. Your App-Application Class Compulsory Extend [AppApplication](https://github.com/vickypathak123/Android-Ads-Helper/blob/master/app/src/main/java/com/example/ads/helper/demo/AppApplication.kt) Class.
+1. Your App-Application Class Compulsory Extend [AppOpenApplication](https://github.com/vickypathak123/Android-Ads-Helper/blob/master/adshelper/src/main/java/com/example/app/ads/helper/openad/AppOpenApplication.kt) Class.
 2. Please make sure before submitting final bundle for uploading on console,
    initMobileAds(isAppInTesting = true) must be pass false.
 3. If You Don't Pass Any Ad-ID Through [VasuAdsConfig](https://github.com/vickypathak123/Android-Ads-Helper/blob/master/adshelper/src/main/java/com/example/app/ads/helper/VasuAdsConfig.kt), It will take Test ID of this ad Automatically.
