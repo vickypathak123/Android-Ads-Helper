@@ -18,7 +18,7 @@ var isNeedToShowAds = true
 var isAppForeground = false
 
 var isInterstitialAdShow = false
-internal var isAnyAdOpen = false
+var isAnyAdOpen = false
 
 var isAnyAdShowing: Boolean = false
 
