@@ -2,11 +2,13 @@ package com.example.app.ads.helper.dialogs
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Application
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.ColorFilter
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
@@ -23,6 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.lifecycle.ProcessLifecycleOwner
 
 
 class FullScreenNativeAdDialog(
@@ -43,6 +46,15 @@ class FullScreenNativeAdDialog(
             get() {
                 return testDialog != null && testDialog?.isShowing ?: false
             }
+
+        fun dismissDialog() {
+            testDialog?.let {
+                if (it.isShowing) {
+                    it.dismiss()
+                    NativeAdvancedModelHelper.removeListener()
+                }
+            }
+        }
     }
 
     init {
