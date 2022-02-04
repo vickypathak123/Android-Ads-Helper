@@ -16,7 +16,9 @@ import com.akshay.harsoda.permission.helper.utiles.OnAlertButtonClickListener
 import com.akshay.harsoda.permission.helper.utiles.getPermissionName
 import com.akshay.harsoda.permission.helper.utiles.showAlert
 import com.example.ads.helper.demo.base.BaseBindingActivity
-import com.example.ads.helper.demo.base.utils.*
+import com.example.ads.helper.demo.base.utils.getDrawableRes
+import com.example.ads.helper.demo.base.utils.getStringRes
+import com.example.ads.helper.demo.base.utils.isOnline
 import com.example.ads.helper.demo.databinding.ActivityMainBinding
 import com.example.app.ads.helper.*
 import com.example.app.ads.helper.InterstitialAdHelper.isShowInterstitialAd
@@ -249,7 +251,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
             }
         )
     }
-
 
     override fun onBackPressed() {
         if (mExitDialog != null) {

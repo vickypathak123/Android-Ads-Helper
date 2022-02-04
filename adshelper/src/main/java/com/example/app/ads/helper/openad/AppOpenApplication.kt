@@ -63,11 +63,8 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
         this.mAppLifecycleListener = fAppLifecycleListener
     }
 
-    fun setDeviceId(vararg fTestDeviceIds: String) {
-        mTestDeviceIds.addAll(fTestDeviceIds)
-    }
-
     fun initMobileAds(isAppInTesting: Boolean) {
+        com.example.app.ads.helper.isAppInTesting = isAppInTesting
         setMobileAds(isAppInTesting = isAppInTesting)
     }
 

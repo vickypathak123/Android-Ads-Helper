@@ -12,6 +12,8 @@ import android.util.Log
 import android.widget.ImageView
 import androidx.annotation.NonNull
 import com.airbnb.lottie.LottieAnimationView
+import com.example.app.ads.helper.openad.OpenAdHelper
+import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.interstitial.InterstitialAd
 
 /**
@@ -42,6 +44,14 @@ object GiftIconHelper {
 
         fivGiftIcon.gone
         fivBlastIcon.gone
+
+        if (isAppInTesting) {
+            val isTestDevice = AdRequest.Builder().build().isTestDevice(fContext)
+            Log.e(TAG, "loadNativeAdvancedAd: isTestDevice::${isTestDevice}")
+            if (!isTestDevice) {
+                return
+            }
+        }
 
         loadNewInterstitialAd(fContext, fivGiftIcon, fivBlastIcon)
 

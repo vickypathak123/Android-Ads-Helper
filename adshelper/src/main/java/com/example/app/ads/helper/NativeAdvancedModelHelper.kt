@@ -14,6 +14,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.DrawableCompat
 import com.example.app.ads.helper.demo.blurBitmap
+import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 
@@ -77,6 +78,15 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         isAdLoaded: (isNeedToRemoveCloseButton: Boolean) -> Unit = {},
         onClickAdClose: () -> Unit = {}
     ) {
+
+        if (isAppInTesting) {
+            val isTestDevice = AdRequest.Builder().build().isTestDevice(fLayout.context)
+            Log.e(TAG, "loadNativeAdvancedAd: isTestDevice::${isTestDevice}")
+            if (!isTestDevice) {
+                return
+            }
+        }
+
         Log.i(TAG, "loadAd: ")
         mSize = fSize
         mLayout = fLayout

@@ -100,6 +100,14 @@ object RewardVideoHelper {
      */
     fun loadRewardVideoAd(@NonNull fContext: Context) {
 
+        if (isAppInTesting) {
+            val isTestDevice = AdRequest.Builder().build().isTestDevice(fContext)
+            Log.e(TAG, "loadNativeAdvancedAd: isTestDevice::${isTestDevice}")
+            if (!isTestDevice) {
+                return
+            }
+        }
+
         loadRewardVideoAd(fContext, object : AdMobAdsListener {
 
             override fun onStartToLoadRewardVideoAd() {
