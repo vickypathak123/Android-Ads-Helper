@@ -250,7 +250,7 @@
                     app:layout_goneMarginStart="12dp"
                     tools:ignore="HardcodedText" />
 
-                <Button
+                <TextView
                     android:id="@+id/ad_call_to_close"
                     android:layout_width="wrap_content"
                     android:layout_height="32dp"
@@ -262,10 +262,10 @@
                     android:layout_marginBottom="12dp"
                     android:background="@drawable/bordered_ad_button"
                     android:gravity="center"
-                    android:paddingStart="8dp"
-                    android:paddingLeft="8dp"
-                    android:paddingEnd="8dp"
-                    android:paddingRight="8dp"
+                    android:paddingStart="18dp"
+                    android:paddingLeft="18dp"
+                    android:paddingEnd="18dp"
+                    android:paddingRight="18dp"
                     android:text="Close"
                     android:textAlignment="center"
                     android:textAllCaps="false"
@@ -278,7 +278,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/cv_app_icon"
                     tools:ignore="HardcodedText" />
 
-                <Button
+                <TextView
                     android:id="@+id/ad_call_to_action"
                     android:layout_width="wrap_content"
                     android:layout_height="32dp"

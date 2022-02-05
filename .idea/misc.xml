@@ -9,9 +9,9 @@
         <entry key="adshelper/src/main/res/drawable/progressbar_progress_drawable.xml" value="0.3503575076608784" />
         <entry key="adshelper/src/main/res/drawable/test.xml" value="0.3503575076608784" />
         <entry key="adshelper/src/main/res/layout/dialog_full_screen_native_ad.xml" value="0.33697916666666666" />
-        <entry key="adshelper/src/main/res/layout/layout_google_native_ad_big.xml" value="0.556836902800659" />
+        <entry key="adshelper/src/main/res/layout/layout_google_native_ad_big.xml" value="0.3074074074074074" />
         <entry key="adshelper/src/main/res/layout/layout_google_native_ad_custom_sample.xml" value="0.33" />
-        <entry key="adshelper/src/main/res/layout/layout_google_native_ad_exit_full_screen_app_store.xml" value="0.33" />
+        <entry key="adshelper/src/main/res/layout/layout_google_native_ad_exit_full_screen_app_store.xml" value="0.25" />
         <entry key="adshelper/src/main/res/layout/layout_google_native_ad_exit_full_screen_website.xml" value="0.25" />
         <entry key="adshelper/src/main/res/layout/layout_google_native_ad_medium.xml" value="0.33" />
         <entry key="adshelper/src/main/res/layout/testing.xml" value="0.33697916666666666" />

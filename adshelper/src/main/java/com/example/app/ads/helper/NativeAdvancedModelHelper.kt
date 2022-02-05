@@ -179,10 +179,12 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             if (nativeAd.starRating != null && nativeAd.price != null && nativeAd.store != null) {
 //                No Need To Update Button
             } else {
-                adView.findViewById<Button>(R.id.ad_call_to_action).background = wrappedDrawable
+//                adView.findViewById<Button>(R.id.ad_call_to_action).background = wrappedDrawable
+                adView.findViewById<TextView>(R.id.ad_call_to_action).background = wrappedDrawable
             }
         } else {
-            adView.findViewById<Button>(R.id.ad_call_to_action).background = wrappedDrawable
+//            adView.findViewById<Button>(R.id.ad_call_to_action).background = wrappedDrawable
+            adView.findViewById<TextView>(R.id.ad_call_to_action).background = wrappedDrawable
         }
 
         when (fSize) {
@@ -362,7 +364,7 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         adView.callToActionView?.let { fView ->
             fView.gone
             nativeAd.callToAction?.let { fData ->
-                (fView as Button).text = getCamelCaseString(fData)
+                (fView as TextView).text = getCamelCaseString(fData)
                 fView.isSelected = true
                 fView.visible
             }
@@ -372,7 +374,7 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             (adView.findViewById(R.id.cl_ad_price_store) as View?)?.gone
         }
 
-        (adView.findViewById(R.id.ad_call_to_close) as Button?)?.let {
+        (adView.findViewById(R.id.ad_call_to_close) as TextView?)?.let {
             it.setOnClickListener {
                 onClickAdClose.invoke()
             }
