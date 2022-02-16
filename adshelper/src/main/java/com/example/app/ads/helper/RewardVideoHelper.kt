@@ -108,26 +108,28 @@ object RewardVideoHelper {
             }
         }
 
-        loadRewardVideoAd(fContext, object : AdMobAdsListener {
+        if (mRewardedAd == null) {
+            loadRewardVideoAd(fContext, object : AdMobAdsListener {
 
-            override fun onStartToLoadRewardVideoAd() {
-                super.onStartToLoadRewardVideoAd()
-                mListener?.onStartToLoadRewardVideoAd()
-            }
+                override fun onStartToLoadRewardVideoAd() {
+                    super.onStartToLoadRewardVideoAd()
+                    mListener?.onStartToLoadRewardVideoAd()
+                }
 
-            override fun onRewardVideoAdLoaded(rewardedAd: RewardedAd) {
-                super.onRewardVideoAdLoaded(rewardedAd)
-                mRewardedAd = rewardedAd
-                mListener?.onAdLoaded()
-            }
+                override fun onRewardVideoAdLoaded(rewardedAd: RewardedAd) {
+                    super.onRewardVideoAdLoaded(rewardedAd)
+                    mRewardedAd = rewardedAd
+                    mListener?.onAdLoaded()
+                }
 
-            override fun onAdClosed(isShowFullScreenAd: Boolean) {
-                super.onAdClosed(isShowFullScreenAd)
-                mRewardedAd?.fullScreenContentCallback = null
-                mRewardedAd = null
-                mListener?.onUserEarnedReward(isUserEarnedReward = isUserEarnedReward)
-            }
-        })
+                override fun onAdClosed(isShowFullScreenAd: Boolean) {
+                    super.onAdClosed(isShowFullScreenAd)
+                    mRewardedAd?.fullScreenContentCallback = null
+                    mRewardedAd = null
+                    mListener?.onUserEarnedReward(isUserEarnedReward = isUserEarnedReward)
+                }
+            })
+        }
     }
 
     /**

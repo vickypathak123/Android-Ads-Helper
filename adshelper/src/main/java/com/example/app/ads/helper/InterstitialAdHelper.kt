@@ -34,7 +34,7 @@ object InterstitialAdHelper {
 
     private var mIsShowFullScreenNativeAd: Boolean = true
 
-    fun loadAd(@NonNull fContext: Context, @NonNull fListener: AdMobAdsListener) {
+    internal fun loadAd(@NonNull fContext: Context, @NonNull fListener: AdMobAdsListener) {
 
         var lInterstitialAd: InterstitialAd?
 
@@ -109,31 +109,34 @@ object InterstitialAdHelper {
 
         this.mIsShowFullScreenNativeAd = fIsShowFullScreenNativeAd
 
-        loadAd(fContext, object : AdMobAdsListener {
-            override fun onAdLoaded() {
-                mIsAdMobAdLoaded = true
-            }
+        if (mInterstitialAdMob == null) {
 
-            override fun onInterstitialAdLoaded(interstitialAd: InterstitialAd) {
-                super.onInterstitialAdLoaded(interstitialAd)
-                mIsAdMobAdLoaded = true
-                mInterstitialAdMob = interstitialAd
-                onAdLoaded.invoke()
-            }
+            loadAd(fContext, object : AdMobAdsListener {
+                override fun onAdLoaded() {
+                    mIsAdMobAdLoaded = true
+                }
 
-            override fun onAdFailed() {
-                mIsAdMobAdLoaded = false
-            }
+                override fun onInterstitialAdLoaded(interstitialAd: InterstitialAd) {
+                    super.onInterstitialAdLoaded(interstitialAd)
+                    mIsAdMobAdLoaded = true
+                    mInterstitialAdMob = interstitialAd
+                    onAdLoaded.invoke()
+                }
 
-            override fun onAdClosed(isShowFullScreenAd: Boolean) {
-                mIsAdMobAdLoaded = false
-                mIsAnyAdShow = false
-                mInterstitialAdMob?.fullScreenContentCallback = null
-                mInterstitialAdMob = null
-                mListener?.onAdClosed()
-            }
+                override fun onAdFailed() {
+                    mIsAdMobAdLoaded = false
+                }
 
-        })
+                override fun onAdClosed(isShowFullScreenAd: Boolean) {
+                    mIsAdMobAdLoaded = false
+                    mIsAnyAdShow = false
+                    mInterstitialAdMob?.fullScreenContentCallback = null
+                    mInterstitialAdMob = null
+                    mListener?.onAdClosed()
+                }
+
+            })
+        }
     }
 
     /**

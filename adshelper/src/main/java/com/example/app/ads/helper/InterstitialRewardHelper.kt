@@ -107,26 +107,29 @@ object InterstitialRewardHelper {
             }
         }
 
-        loadRewardedInterstitialAd(fContext, object : AdMobAdsListener {
+        if (mRewardedInterstitialAd == null) {
 
-            override fun onStartToLoadRewardedInterstitialAd() {
-                super.onStartToLoadRewardedInterstitialAd()
-                mListener?.onStartToLoadRewardedInterstitialAd()
-            }
+            loadRewardedInterstitialAd(fContext, object : AdMobAdsListener {
 
-            override fun onRewardInterstitialAdLoaded(rewardedInterstitialAd: RewardedInterstitialAd) {
-                super.onRewardInterstitialAdLoaded(rewardedInterstitialAd)
-                mRewardedInterstitialAd = rewardedInterstitialAd
-                mListener?.onAdLoaded()
-            }
+                override fun onStartToLoadRewardedInterstitialAd() {
+                    super.onStartToLoadRewardedInterstitialAd()
+                    mListener?.onStartToLoadRewardedInterstitialAd()
+                }
 
-            override fun onAdClosed(isShowFullScreenAd: Boolean) {
-                super.onAdClosed(isShowFullScreenAd)
-                mRewardedInterstitialAd?.fullScreenContentCallback = null
-                mRewardedInterstitialAd = null
-                mListener?.onUserEarnedReward(isUserEarnedReward = isUserEarnedReward)
-            }
-        })
+                override fun onRewardInterstitialAdLoaded(rewardedInterstitialAd: RewardedInterstitialAd) {
+                    super.onRewardInterstitialAdLoaded(rewardedInterstitialAd)
+                    mRewardedInterstitialAd = rewardedInterstitialAd
+                    mListener?.onAdLoaded()
+                }
+
+                override fun onAdClosed(isShowFullScreenAd: Boolean) {
+                    super.onAdClosed(isShowFullScreenAd)
+                    mRewardedInterstitialAd?.fullScreenContentCallback = null
+                    mRewardedInterstitialAd = null
+                    mListener?.onUserEarnedReward(isUserEarnedReward = isUserEarnedReward)
+                }
+            })
+        }
     }
 
     /**
@@ -143,7 +146,11 @@ object InterstitialRewardHelper {
      * @param onUserEarnedReward @see [AdMobAdsListener.onUserEarnedReward]
      * @param onAdLoaded @see [AdMobAdsListener.onAdLoaded]
      */
-    fun FragmentActivity.isShowRewardedInterstitialAd(onStartToLoadRewardedInterstitialAd: () -> Unit, onUserEarnedReward: (isUserEarnedReward: Boolean) -> Unit, onAdLoaded: () -> Unit) {
+    fun FragmentActivity.isShowRewardedInterstitialAd(
+        onStartToLoadRewardedInterstitialAd: () -> Unit,
+        onUserEarnedReward: (isUserEarnedReward: Boolean) -> Unit,
+        onAdLoaded: () -> Unit
+    ) {
         isUserEarnedReward = false
 
         mListener = object : AdMobAdsListener {
