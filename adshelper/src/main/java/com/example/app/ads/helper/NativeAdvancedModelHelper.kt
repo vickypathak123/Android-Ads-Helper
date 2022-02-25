@@ -214,15 +214,16 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
 
         fLayout.removeAllViews()
         fLayout.addView(adView)
-        if (isNeedLayoutShow) {
-            fLayout.visibility = View.VISIBLE
-            if (fSize == NativeAdsSize.FullScreen && nativeAd.starRating != null && nativeAd.price != null && nativeAd.store != null) {
-                isAdLoaded.invoke(true)
-            } else {
-                isAdLoaded.invoke(false)
-            }
+        fLayout.visibility = if (isNeedLayoutShow) {
+            View.VISIBLE
         } else {
-            fLayout.visibility = View.GONE
+            View.GONE
+        }
+
+        if (fSize == NativeAdsSize.FullScreen && nativeAd.starRating != null && nativeAd.price != null && nativeAd.store != null) {
+            isAdLoaded.invoke(true)
+        } else {
+            isAdLoaded.invoke(false)
         }
     }
 
