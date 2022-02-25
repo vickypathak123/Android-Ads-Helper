@@ -99,13 +99,13 @@ object InterstitialAdHelper {
         onAdLoaded: () -> Unit = {}
     ) {
 
-        if (isAppInTesting) {
+        /*if (isAppInTesting) {
             val isTestDevice = AdRequest.Builder().build().isTestDevice(fContext)
             Log.e(TAG, "loadNativeAdvancedAd: isTestDevice::${isTestDevice}")
             if (!isTestDevice) {
                 return
             }
-        }
+        }*/
 
         this.mIsShowFullScreenNativeAd = fIsShowFullScreenNativeAd
 
@@ -136,6 +136,8 @@ object InterstitialAdHelper {
                 }
 
             })
+        } else {
+            onAdLoaded.invoke()
         }
     }
 

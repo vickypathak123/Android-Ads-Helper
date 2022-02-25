@@ -32,13 +32,13 @@ object OpenAdHelper {
         @NonNull fListener: AdMobAdsListener
     ) {
 
-        if (isAppInTesting) {
+        /*if (isAppInTesting) {
             val isTestDevice = AdRequest.Builder().build().isTestDevice(fContext)
             Log.e(TAG, "loadNativeAdvancedAd: isTestDevice::${isTestDevice}")
             if (!isTestDevice) {
                 return
             }
-        }
+        }*/
 
 
         var lAppOpenAd: AppOpenAd?

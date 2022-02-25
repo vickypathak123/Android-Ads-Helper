@@ -100,13 +100,13 @@ object RewardVideoHelper {
      */
     fun loadRewardVideoAd(@NonNull fContext: Context) {
 
-        if (isAppInTesting) {
+       /* if (isAppInTesting) {
             val isTestDevice = AdRequest.Builder().build().isTestDevice(fContext)
             Log.e(TAG, "loadNativeAdvancedAd: isTestDevice::${isTestDevice}")
             if (!isTestDevice) {
                 return
             }
-        }
+        }*/
 
         if (mRewardedAd == null) {
             loadRewardVideoAd(fContext, object : AdMobAdsListener {
@@ -129,6 +129,8 @@ object RewardVideoHelper {
                     mListener?.onUserEarnedReward(isUserEarnedReward = isUserEarnedReward)
                 }
             })
+        } else {
+            mListener?.onAdLoaded()
         }
     }
 

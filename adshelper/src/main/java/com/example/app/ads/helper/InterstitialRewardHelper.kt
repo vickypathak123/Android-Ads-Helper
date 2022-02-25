@@ -99,13 +99,13 @@ object InterstitialRewardHelper {
      */
     fun loadRewardedInterstitialAd(@NonNull fContext: Context) {
 
-        if (isAppInTesting) {
+        /*if (isAppInTesting) {
             val isTestDevice = AdRequest.Builder().build().isTestDevice(fContext)
             Log.e(TAG, "loadNativeAdvancedAd: isTestDevice::${isTestDevice}")
             if (!isTestDevice) {
                 return
             }
-        }
+        }*/
 
         if (mRewardedInterstitialAd == null) {
 
@@ -129,6 +129,8 @@ object InterstitialRewardHelper {
                     mListener?.onUserEarnedReward(isUserEarnedReward = isUserEarnedReward)
                 }
             })
+        } else {
+            mListener?.onAdLoaded()
         }
     }
 

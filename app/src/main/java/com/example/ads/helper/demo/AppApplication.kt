@@ -30,7 +30,8 @@ class AppApplication : AppOpenApplication(), AppOpenApplication.AppLifecycleList
 //            .needToBlockInterstitialAd(false)
             .initialize()
 
-        initMobileAds(isAppInTesting = true)
+//        initMobileAds(isAppInTesting = true)
+        initMobileAds()
 
 //        OpenAdHelper.loadOpenAd(this)
     }

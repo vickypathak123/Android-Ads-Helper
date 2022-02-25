@@ -79,13 +79,13 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         onClickAdClose: () -> Unit = {}
     ) {
 
-        if (isAppInTesting) {
+        /*if (isAppInTesting) {
             val isTestDevice = AdRequest.Builder().build().isTestDevice(fLayout.context)
             Log.e(TAG, "loadNativeAdvancedAd: isTestDevice::${isTestDevice}")
             if (!isTestDevice) {
                 return
             }
-        }
+        }*/
 
         Log.i(TAG, "loadAd: ")
         mSize = fSize

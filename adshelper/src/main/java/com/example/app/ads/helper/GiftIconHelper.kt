@@ -45,13 +45,13 @@ object GiftIconHelper {
         fivGiftIcon.gone
         fivBlastIcon.gone
 
-        if (isAppInTesting) {
+        /*if (isAppInTesting) {
             val isTestDevice = AdRequest.Builder().build().isTestDevice(fContext)
             Log.e(TAG, "loadNativeAdvancedAd: isTestDevice::${isTestDevice}")
             if (!isTestDevice) {
                 return
             }
-        }
+        }*/
 
         loadNewInterstitialAd(fContext, fivGiftIcon, fivBlastIcon)
 

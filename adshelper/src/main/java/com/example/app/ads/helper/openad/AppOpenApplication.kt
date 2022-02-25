@@ -63,19 +63,31 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
         this.mAppLifecycleListener = fAppLifecycleListener
     }
 
-    fun initMobileAds(isAppInTesting: Boolean) {
-        com.example.app.ads.helper.isAppInTesting = isAppInTesting
-        setMobileAds(isAppInTesting = isAppInTesting)
+    //    fun initMobileAds(isAppInTesting: Boolean) {
+    fun initMobileAds(vararg fDeviceId: String) {
+        /*com.example.app.ads.helper.isAppInTesting = isAppInTesting
+        setMobileAds(isAppInTesting = isAppInTesting)*/
+
+        setMobileAds(fDeviceId = fDeviceId)
     }
 
-    private fun setDeviceIds(isAppInTesting: Boolean) {
-        if (isAppInTesting) {
+    //    private fun setDeviceIds(isAppInTesting: Boolean) {
+    private fun setDeviceIds(vararg fDeviceId: String) {
+        /*if (isAppInTesting) {
             mTestDeviceIds.add(getAdsTestDeviceId())
             setTestDeviceIds(*mTestDeviceIds.toTypedArray())
+        }*/
+
+        mTestDeviceIds.removeAll(mTestDeviceIds)
+        for (lID in fDeviceId) {
+            mTestDeviceIds.add(lID)
         }
+        setTestDeviceIds(*mTestDeviceIds.toTypedArray())
+
     }
 
-    private fun setMobileAds(isAppInTesting: Boolean) {
+    //    private fun setMobileAds(isAppInTesting: Boolean) {
+    private fun setMobileAds(vararg fDeviceId: String) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val processName = getProcessName(applicationContext)
@@ -83,18 +95,18 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
                 WebView.setDataDirectorySuffix(processName)
                 MobileAds.initialize(baseContext) {
                     Log.d(TAG, "onInitializationComplete.1")
-                    setDeviceIds(isAppInTesting = isAppInTesting)
+                    setDeviceIds(fDeviceId = fDeviceId)
                 }
             } else {
                 MobileAds.initialize(baseContext) {
                     Log.d(TAG, "onInitializationComplete.2")
-                    setDeviceIds(isAppInTesting = isAppInTesting)
+                    setDeviceIds(fDeviceId = fDeviceId)
                 }
             }
         } else {
             MobileAds.initialize(baseContext) {
                 Log.d(TAG, "onInitializationComplete.3")
-                setDeviceIds(isAppInTesting = isAppInTesting)
+                setDeviceIds(fDeviceId = fDeviceId)
             }
         }
     }
@@ -112,7 +124,7 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
         return null
     }
 
-    @SuppressLint("HardwareIds")
+    /*@SuppressLint("HardwareIds")
     private fun getAdsTestDeviceId(): String {
         return try {
             val androidId: String = Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
@@ -137,7 +149,7 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
         } catch (e: NoSuchAlgorithmException) {
         }
         return null
-    }
+    }*/
 
     //<editor-fold desc="For Application Lifecycle">
     override fun onPause(owner: LifecycleOwner) {
