@@ -28,17 +28,17 @@ class OpenAdManager(
     override fun onActivityDestroyed(activity: Activity) {
         mCurrentActivity = null
 
-        if (FullScreenNativeAdDialog.isDialogShowing) {
-            FullScreenNativeAdDialog.dismissDialog()
-        }
+//        if (FullScreenNativeAdDialog.isDialogShowing) {
+//            FullScreenNativeAdDialog.dismissDialog()
+//        }
     }
 
     override fun onActivityStopped(activity: Activity) {
         mCurrentActivity = null
 
-        if (FullScreenNativeAdDialog.isDialogShowing) {
-            FullScreenNativeAdDialog.dismissDialog()
-        }
+//        if (FullScreenNativeAdDialog.isDialogShowing) {
+//            FullScreenNativeAdDialog.dismissDialog()
+//        }
     }
 
     override fun onActivityStarted(activity: Activity) {
