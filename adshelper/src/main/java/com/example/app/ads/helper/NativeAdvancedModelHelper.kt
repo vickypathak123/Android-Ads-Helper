@@ -54,6 +54,7 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
     private var mIsAddVideoOptions: Boolean = false
     private var mIsAdLoaded: (isNeedToRemoveCloseButton: Boolean) -> Unit = {}
     private var mOnClickAdClose: () -> Unit = {}
+    private var mOnAdClosed: () -> Unit = {}
 
     /**
      * Call this method when you need to load your Native Advanced AD
@@ -76,7 +77,8 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         isNeedLayoutShow: Boolean = true,
         isAddVideoOptions: Boolean = true,
         isAdLoaded: (isNeedToRemoveCloseButton: Boolean) -> Unit = {},
-        onClickAdClose: () -> Unit = {}
+        onClickAdClose: () -> Unit = {},
+        onAdClosed: () -> Unit = {}
     ) {
 
         /*if (isAppInTesting) {
@@ -95,6 +97,7 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         mIsAddVideoOptions = isAddVideoOptions
         mIsAdLoaded = isAdLoaded
         mOnClickAdClose = onClickAdClose
+        mOnAdClosed = onAdClosed
 
         mCloseTimer?.cancel()
 
@@ -518,6 +521,8 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
 
         mLayout.removeAllViews()
 
+        mOnAdClosed.invoke()
+
         loadNativeAdvancedAd(
             fSize = mSize,
             fLayout = mLayout,
@@ -525,7 +530,8 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             isNeedLayoutShow = mIsNeedLayoutShow,
             isAddVideoOptions = mIsAddVideoOptions,
             isAdLoaded = mIsAdLoaded,
-            onClickAdClose = mOnClickAdClose
+            onClickAdClose = mOnClickAdClose,
+            onAdClosed = mOnAdClosed
         )
     }
 
