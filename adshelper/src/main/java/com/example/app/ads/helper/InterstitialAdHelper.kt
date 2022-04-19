@@ -3,10 +3,12 @@
 package com.example.app.ads.helper
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.annotation.NonNull
+import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
-import com.example.app.ads.helper.dialogs.FullScreenNativeAdDialog
+import com.example.app.ads.helper.activity.FullScreenNativeAdDialogActivity
 import com.example.app.ads.helper.openad.OpenAdHelper
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
@@ -185,10 +187,15 @@ object InterstitialAdHelper {
                     if (!isAnyAdShowing) {
                         isAnyAdShowing = true
                         Log.i(TAG, "isShowInterstitialAd: Try To Open Dialog...")
-                        FullScreenNativeAdDialog(this) {
+
+                        onDialogActivityDismiss = {
+                            Log.e(TAG, "isShowInterstitialAd: Dialog Activity Dismiss")
                             mIsAnyAdShow = false
                             mListener?.onAdClosed(true)
-                        }.showFullScreenNativeAdDialog(true)
+                        }
+
+                        FullScreenNativeAdDialogActivity.lunchFullScreenAd(this)
+
                         true
                     } else {
                         false

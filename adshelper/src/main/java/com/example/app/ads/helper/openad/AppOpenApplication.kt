@@ -15,7 +15,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
-import com.example.app.ads.helper.dialogs.FullScreenNativeAdDialog
+import com.example.app.ads.helper.activity.FullScreenNativeAdDialogActivity
 import com.example.app.ads.helper.isAppForeground
 import com.example.app.ads.helper.isOpenAdEnable
 import com.example.app.ads.helper.isAnyAdOpen
@@ -190,7 +190,7 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
                                 if (isAnyAdOpen) {
                                     isAnyAdOpen = false
                                 } else {
-                                    if (!FullScreenNativeAdDialog.isDialogShowing && !isInterstitialAdShow) {
+                                    if (fCurrentActivity !is FullScreenNativeAdDialogActivity && !isInterstitialAdShow) {
                                         if (lListener.onResumeApp(fCurrentActivity)) {
                                             lOpenAdManager.showOpenAd()
                                         }

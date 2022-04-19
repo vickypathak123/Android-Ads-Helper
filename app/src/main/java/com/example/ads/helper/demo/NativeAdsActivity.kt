@@ -26,27 +26,27 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
 
 //        InterstitialAdHelper.loadInterstitialAd(fContext = mActivity)
 
-        NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
-            NativeAdsSize.Big,
-            mBinding.flNativeAdPlaceHolderBig,
-            isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
-            isAdLoaded = {
-                /*if (isFirstTime) {
-                    isFirstTime = false
-                    NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
-                        NativeAdsSize.Medium,
-                        mBinding.flNativeAdPlaceHolderMedium,
-                        isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
-                    )
-                }*/
-            }
-        )
+//        NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
+//            NativeAdsSize.Big,
+//            mBinding.flNativeAdPlaceHolderBig,
+//            isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
+//            isAdLoaded = {
+//                /*if (isFirstTime) {
+//                    isFirstTime = false
+//                    NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
+//                        NativeAdsSize.Medium,
+//                        mBinding.flNativeAdPlaceHolderMedium,
+//                        isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
+//                    )
+//                }*/
+//            }
+//        )
 
-        NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
-            NativeAdsSize.Medium,
-            mBinding.flNativeAdPlaceHolderMedium,
-            isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
-        )
+//        NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
+//            NativeAdsSize.Medium,
+//            mBinding.flNativeAdPlaceHolderMedium,
+//            isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
+//        )
 
         GiftIconHelper.loadGiftAd(
             fContext = mActivity,

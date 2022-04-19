@@ -26,7 +26,7 @@ import com.example.app.ads.helper.InterstitialRewardHelper.isShowRewardedInterst
 import com.example.app.ads.helper.InterstitialRewardHelper.showRewardedInterstitialAd
 import com.example.app.ads.helper.RewardVideoHelper.isShowRewardVideoAd
 import com.example.app.ads.helper.RewardVideoHelper.showRewardVideoAd
-import com.example.app.ads.helper.dialogs.FullScreenNativeAdDialog
+import com.example.app.ads.helper.activity.FullScreenNativeAdDialogActivity
 
 
 class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
@@ -155,7 +155,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
                 } else if (NativeAdvancedModelHelper.getNativeAd == null) {
                     Toast.makeText(mActivity, "native ad not load", Toast.LENGTH_SHORT).show()
                 } else {
-                    FullScreenNativeAdDialog(activity = mActivity).showFullScreenNativeAdDialog(mBinding.adsSwitch.isChecked)
+//                    FullScreenNativeAdDialog(activity = mActivity).showFullScreenNativeAdDialog(mBinding.adsSwitch.isChecked)
+
+                    FullScreenNativeAdDialogActivity.lunchFullScreenAd(mActivity)
                 }
             }
             mBinding.showRewardVideoAds -> {
@@ -166,9 +168,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
             }
 
             mBinding.showNativeAds -> {
-//                mActivity.isShowInterstitialAd { _ ->
+                mActivity.isShowInterstitialAd { _ ->
                 launchActivity(getActivityIntent<NativeAdsActivity> { putBoolean("is_add_video_options", mBinding.adsSwitch.isChecked) })
-//                }
+                }
             }
 
             mBinding.showCustomNativeAds -> {

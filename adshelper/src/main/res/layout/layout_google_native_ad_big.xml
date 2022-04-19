@@ -99,6 +99,8 @@
                 android:id="@+id/ad_advertiser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textColor="?attr/native_ads_body_text_color"
                 android:textSize="13sp"
                 android:textStyle="bold" />

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import android.util.Log
-import com.example.app.ads.helper.dialogs.FullScreenNativeAdDialog
 import com.example.app.ads.helper.isAppForeground
 import com.example.app.ads.helper.openad.OpenAdHelper.isShowOpenAd
 import com.google.android.gms.ads.AdActivity
@@ -29,11 +28,11 @@ class OpenAdManager(
     override fun onActivityDestroyed(activity: Activity) {
         mCurrentActivity = null
 
-        if (!isAppForeground) {
-            if (FullScreenNativeAdDialog.isDialogShowing) {
-                FullScreenNativeAdDialog.dismissDialog()
-            }
-        }
+//        if (!isAppForeground) {
+//            if (FullScreenNativeAdDialog.isDialogShowing) {
+//                FullScreenNativeAdDialog.dismissDialog()
+//            }
+//        }
 
     }
 

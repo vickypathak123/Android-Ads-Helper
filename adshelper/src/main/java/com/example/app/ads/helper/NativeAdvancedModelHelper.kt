@@ -281,11 +281,14 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         }
 
         adView.advertiserView?.let { fView ->
-            fView.gone
-            nativeAd.advertiser?.let { fData ->
-                (fView as TextView).text = fData
-                fView.visible
-            }
+//            fView.gone
+//            nativeAd.advertiser?.let { fData ->
+//                (fView as TextView).text = fData
+//                fView.visible
+//            }
+
+            (fView as TextView).text = "https://console.firebase.google.com/u/1/project/limad-cee0a/crashlytics/app/android:com.voice.changer.sound.effects.girl.call/issues/a37ec01225493d400f597d3167074505?time=last-hour&versions=1.6%20(6)&deviceCategories=Google%EF%BF%BFPixel%204a&sessionEventKey=625A3A7202C600015BDE2CFC3388A942_1665488023663832404"
+            fView.visible
         }
 
         adView.bodyView?.let { fView ->
@@ -332,15 +335,15 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             fView.gone
             (adView.findViewById(R.id.txt_rating) as TextView?)?.gone
 
-            nativeAd.starRating?.let { fData ->
-                (fView as RatingBar).rating = fData.toFloat()
-                fView.visible
-
-                (adView.findViewById(R.id.txt_rating) as TextView?)?.let { txtRating ->
-                    txtRating.text = fData.toFloat().toString()
-                    txtRating.visible
-                }
-            }
+//            nativeAd.starRating?.let { fData ->
+//                (fView as RatingBar).rating = fData.toFloat()
+//                fView.visible
+//
+//                (adView.findViewById(R.id.txt_rating) as TextView?)?.let { txtRating ->
+//                    txtRating.text = fData.toFloat().toString()
+//                    txtRating.visible
+//                }
+//            }
         }
 
         adView.iconView?.let { fView ->
@@ -414,12 +417,16 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         }
 
         adView.advertiserView?.let { fView ->
-            fView.gone
+//            fView.gone
+//
+//            nativeAd.advertiser?.let { fData ->
+//                (fView as TextView).text = fData
+//                fView.visible
+//            }
 
-            nativeAd.advertiser?.let { fData ->
-                (fView as TextView).text = fData
-                fView.visible
-            }
+            (fView as TextView).text = "https://console.firebase.google.com/u/1/project/limad-cee0a/crashlytics/app/android:com.voice.changer.sound.effects.girl.call/issues/a37ec01225493d400f597d3167074505?time=last-hour&versions=1.6%20(6)&deviceCategories=Google%EF%BF%BFPixel%204a&sessionEventKey=625A3A7202C600015BDE2CFC3388A942_1665488023663832404"
+            fView.visible
+
         }
 
         adView.bodyView?.let { fView ->
@@ -458,10 +465,10 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
 
         adView.starRatingView?.let { fView ->
             fView.gone
-            nativeAd.starRating?.let { fData ->
-                (fView as RatingBar).rating = fData.toFloat()
-                fView.visible
-            }
+//            nativeAd.starRating?.let { fData ->
+//                (fView as RatingBar).rating = fData.toFloat()
+//                fView.visible
+//            }
         }
 
         adView.iconView?.let { fView ->

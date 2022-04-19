@@ -57,6 +57,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="ad_advertiser"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@android:color/holo_red_light"
             app:layout_constraintBottom_toTopOf="@id/txt_body_title"

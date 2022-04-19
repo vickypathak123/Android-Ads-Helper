@@ -133,3 +133,5 @@ internal fun setTestDeviceIds(vararg fDeviceId: String) {
 enum class NativeAdsSize {
     Big, Medium, FullScreen, Custom
 }
+
+internal var onDialogActivityDismiss: () -> Unit = {}
