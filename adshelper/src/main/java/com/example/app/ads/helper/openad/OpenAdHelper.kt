@@ -155,4 +155,12 @@ object OpenAdHelper {
             }
         }
     }
+
+    fun destroy() {
+        adLoadTime = 0
+        isOpenAdShowing = false
+        isAdLoading = false
+        mListener = null
+        mAppOpenAd = null
+    }
 }

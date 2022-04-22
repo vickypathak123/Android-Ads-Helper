@@ -3,13 +3,10 @@
 package com.example.app.ads.helper
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import androidx.annotation.NonNull
-import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
 import com.example.app.ads.helper.activity.FullScreenNativeAdDialogActivity
-import com.example.app.ads.helper.openad.OpenAdHelper
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -211,5 +208,13 @@ object InterstitialAdHelper {
         if (!mIsAnyAdShow) {
             mListener?.onAdClosed(false)
         }
+    }
+
+    fun destroy() {
+        mListener = null
+        mIsAdMobAdLoaded = false
+        mIsAnyAdShow = false
+        mIsShowFullScreenNativeAd = true
+        mInterstitialAdMob = null
     }
 }

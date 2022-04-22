@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
 import androidx.fragment.app.FragmentActivity
-import com.example.app.ads.helper.openad.OpenAdHelper
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -196,5 +195,11 @@ object RewardVideoHelper {
                 isInterstitialAdShow = true
             }
         }
+    }
+
+    fun destroy() {
+        mListener = null
+        isUserEarnedReward = false
+        mRewardedAd = null
     }
 }
