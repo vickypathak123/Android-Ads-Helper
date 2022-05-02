@@ -9,6 +9,8 @@ import com.example.ads.helper.demo.databinding.ActivitySplashBinding
 import com.example.app.ads.helper.openad.OpenAdHelper
 import com.example.app.ads.helper.openad.OpenAdHelper.isShowOpenAd
 import com.example.ads.helper.demo.base.utils.isOnline
+import com.example.app.ads.helper.InterstitialAdHelper
+import com.example.app.ads.helper.InterstitialAdHelper.isShowInterstitialAd
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
@@ -46,11 +48,21 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
             startTimer(3000)
 
             if (this.getBoolean(IS_OPEN_ADS_ENABLE, true)) {
-                OpenAdHelper.loadOpenAd(mActivity, onAdLoad = {
-                    Log.e(TAG, "onOpenAdLoad: ")
+
+                InterstitialAdHelper.loadInterstitialAd(
+                    fContext = mActivity,
+                    fIsShowFullScreenNativeAd = false
+                ) {
+                    Log.e(TAG, "onInterstitialAdLoad: ")
                     mTimer?.cancel()
                     openActivityWithAd()
-                })
+                }
+
+//                OpenAdHelper.loadOpenAd(mActivity, onAdLoad = {
+//                    Log.e(TAG, "onOpenAdLoad: ")
+//                    mTimer?.cancel()
+//                    openActivityWithAd()
+//                })
             }
 
         } else {
@@ -69,7 +81,12 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
         mTimer?.cancel()
         mTimer = null
 
-        if (OpenAdHelper.isAdAvailable()) {
+        mActivity.isShowInterstitialAd{
+            Log.e(TAG, "openActivityWithAd: Call With or With-Out Interstitial Ad")
+            startNextActivity()
+        }
+
+        /*if (OpenAdHelper.isAdAvailable()) {
             Log.e(TAG, "openActivityWithAd: Call With Open Ad")
             mActivity.isShowOpenAd {
                 startNextActivity()
@@ -77,7 +94,7 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
         } else {
             Log.e(TAG, "openActivityWithAd: Call With Out Open Ad")
             startNextActivity()
-        }
+        }*/
     }
 
     private fun startNextActivity() {

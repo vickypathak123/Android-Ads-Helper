@@ -155,7 +155,9 @@ object InterstitialAdHelper {
                 Log.i(TAG, "onAdClosed: ")
                 isInterstitialAdShow = false
                 mIsAnyAdShow = false
-                onAdClosed.invoke(isShowFullScreenAd)
+                if (isAppForeground) {
+                    onAdClosed.invoke(isShowFullScreenAd)
+                }
                 if (!isBackAds) {
                     Log.e(TAG, "onAdClosed: Load New Ad")
                     loadInterstitialAd(this@isShowInterstitialAd)
