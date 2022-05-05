@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.multidex.MultiDex
 import com.example.app.ads.helper.VasuAdsConfig
 import com.example.app.ads.helper.openad.AppOpenApplication
-import com.example.app.ads.helper.openad.OpenAdHelper
 
 class AppApplication : AppOpenApplication(), AppOpenApplication.AppLifecycleListener {
 
@@ -20,12 +19,12 @@ class AppApplication : AppOpenApplication(), AppOpenApplication.AppLifecycleList
     override fun onCreate() {
         super.onCreate()
 
-        setAppLifecycleListener(this)
+//        setAppLifecycleListener(this)
 
         Log.e(TAG, "onCreate: IS_OPEN_ADS_ENABLE::${this.getBoolean(IS_OPEN_ADS_ENABLE, true)}")
 
         VasuAdsConfig.with(this)
-            .isEnableOpenAd(this.getBoolean(IS_OPEN_ADS_ENABLE, true))
+//            .isEnableOpenAd(this.getBoolean(IS_OPEN_ADS_ENABLE, true))
 //            .needToTakeAllTestAdID(true)
 //            .needToBlockInterstitialAd(true)
             .initialize()

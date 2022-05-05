@@ -26,7 +26,14 @@ class CustomNativeAdsActivity : BaseBindingActivity<ActivityCustomNativeAdsBindi
     override fun initAds() {
         super.initAds()
 
-        InterstitialAdHelper.loadInterstitialAd(fContext = mActivity)
+        InterstitialAdHelper.loadInterstitialAd(
+            fContext = mActivity,
+            fIsShowFullScreenNativeAd = true /* Default Value */,
+            onAdLoaded = {
+                // Call When Open Ad Loaded Successfully
+                // Perform your Action
+            }
+        )
 
         NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
             fSize = NativeAdsSize.Custom,

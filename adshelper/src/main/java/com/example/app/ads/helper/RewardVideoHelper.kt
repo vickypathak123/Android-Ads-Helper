@@ -180,6 +180,8 @@ object RewardVideoHelper {
      *
      * Use of this Method
      * activity.showRewardVideoAd()
+     *
+     * @param isAdShow call when ad showing
      */
     fun FragmentActivity.showRewardVideoAd(isAdShow: () -> Unit = {}) {
         isUserEarnedReward = false

@@ -60,15 +60,17 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
      * Call this method when you need to load your Native Advanced AD
      * you need to call this method only once in any activity or fragment
      *
-     * this method will load your Native Advanced AD with 4 different size like [NativeAdsSize.Medium], [NativeAdsSize.Big], [NativeAdsSize.FullScreen]
+     * this method will load your Native Advanced AD with 4 different size like [NativeAdsSize.Medium], [NativeAdsSize.Big], [NativeAdsSize.FullScreen], [NativeAdsSize.FullScreen]
      * for Native Advanced AD Size @see [NativeAdsSize] once
      *
      * @param fSize it indicate your Ad Size
      * @param fLayout FrameLayout for add NativeAd View
+     * @param fCustomAdView your native ad custom layout
      * @param isNeedLayoutShow [by Default value = true] pass false if you do not need to show AD at a time when it's loaded successfully
      * @param isAddVideoOptions [by Default value = true] pass false if you don't need to add video option
      * @param isAdLoaded lambda function call when ad isLoaded
      * @param onClickAdClose lambda function call when user click close button of ad
+     * @param onAdClosed lambda function call after ad closed
      */
     fun loadNativeAdvancedAd(
         @NonNull fSize: NativeAdsSize,

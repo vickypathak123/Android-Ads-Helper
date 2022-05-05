@@ -94,6 +94,13 @@ object OpenAdHelper {
         )
     }
 
+    /**
+     * Call this method when you need to load your Open AD
+     * you need to call this method only once in your launcher activity or your application class
+     *
+     * @param fContext this is a reference to your activity context
+     * @param onAdLoad callback after ad successfully loaded
+     */
     fun loadOpenAd(@NonNull fContext: Context, @NonNull onAdLoad: () -> Unit = {}) {
         if (isAdAvailable()) {
             onAdLoad.invoke()
@@ -130,6 +137,9 @@ object OpenAdHelper {
         return dateDifference < numMilliSecondsPerHour
     }
 
+    /**
+     * this method will check openAd is Available or not
+     */
     fun isAdAvailable(): Boolean {
         return isOpenAdEnable && mAppOpenAd != null && wasLoadTimeLessThanNHoursAgo()
     }

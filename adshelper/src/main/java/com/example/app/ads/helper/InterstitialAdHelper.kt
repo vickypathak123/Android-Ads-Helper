@@ -91,6 +91,8 @@ object InterstitialAdHelper {
      * you need to call this method only once in any activity or fragment
      *
      * @param fContext this is a reference to your activity context
+     * @param fIsShowFullScreenNativeAd pass false if you don't need native ad if interstitial ads not loaded
+     * @param onAdLoaded callback after ad successfully loaded
      */
     fun loadInterstitialAd(
         @NonNull fContext: Context,
@@ -146,7 +148,9 @@ object InterstitialAdHelper {
      *
      * Use of this Method
      * activity.isShowInterstitialAd {[your code which has run after AD show or if AD fails to show]}
+     * call this method with [FragmentActivity] instance
      *
+     * @param isBackAds pass true if you don't need to load ad after ad-close
      * @param onAdClosed this is a call back of your ad close, it will call also if your ad was not showing to the user
      */
     fun FragmentActivity.isShowInterstitialAd(isBackAds: Boolean = false, @NonNull onAdClosed: (isShowFullScreenAd: Boolean) -> Unit) {
