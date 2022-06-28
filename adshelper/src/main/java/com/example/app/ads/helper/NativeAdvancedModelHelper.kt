@@ -52,9 +52,11 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
     private var mCustomAdView: View? = null
     private var mIsNeedLayoutShow: Boolean = true
     private var mIsAddVideoOptions: Boolean = false
+    private var mIsSetDefaultButtonColor: Boolean = true
     private var mIsAdLoaded: (isNeedToRemoveCloseButton: Boolean) -> Unit = {}
     private var mOnClickAdClose: () -> Unit = {}
     private var mOnAdClosed: () -> Unit = {}
+    private var mOnAdFailed: () -> Unit = {}
 
     /**
      * Call this method when you need to load your Native Advanced AD
@@ -78,9 +80,11 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         fCustomAdView: View? = null,
         isNeedLayoutShow: Boolean = true,
         isAddVideoOptions: Boolean = true,
+        isSetDefaultButtonColor: Boolean = true,
         isAdLoaded: (isNeedToRemoveCloseButton: Boolean) -> Unit = {},
         onClickAdClose: () -> Unit = {},
-        onAdClosed: () -> Unit = {}
+        onAdClosed: () -> Unit = {},
+        onAdFailed: () -> Unit = {}
     ) {
 
         /*if (isAppInTesting) {
@@ -100,6 +104,8 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         mIsAdLoaded = isAdLoaded
         mOnClickAdClose = onClickAdClose
         mOnAdClosed = onAdClosed
+        mOnAdFailed = onAdFailed
+        mIsSetDefaultButtonColor = isSetDefaultButtonColor
 
         mCloseTimer?.cancel()
 
@@ -127,6 +133,7 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         @NonNull nativeAd: NativeAd,
         fCustomAdView: View? = null,
         isNeedLayoutShow: Boolean = true,
+        isSetDefaultButtonColor: Boolean = true,
         isAdLoaded: (isNeedToRemoveCloseButton: Boolean) -> Unit = {},
         onClickAdClose: () -> Unit
     ) {
@@ -173,21 +180,24 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             }
         }
 
-        val value = TypedValue()
-        mContext.theme.resolveAttribute(com.example.app.ads.helper.R.attr.native_ads_main_color, value, true)
 
-        val unwrappedDrawable = AppCompatResources.getDrawable(mContext, com.example.app.ads.helper.R.drawable.native_ad_button)
-        val wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable!!)
-        DrawableCompat.setTint(wrappedDrawable, value.data)
+        if (isSetDefaultButtonColor) {
+            val value = TypedValue()
+            mContext.theme.resolveAttribute(com.example.app.ads.helper.R.attr.native_ads_main_color, value, true)
 
-        if (fSize == NativeAdsSize.FullScreen) {
-            if (nativeAd.starRating != null && nativeAd.price != null && nativeAd.store != null) {
+            val unwrappedDrawable = AppCompatResources.getDrawable(mContext, com.example.app.ads.helper.R.drawable.native_ad_button)
+            val wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable!!)
+            DrawableCompat.setTint(wrappedDrawable, value.data)
+
+            if (fSize == NativeAdsSize.FullScreen) {
+                if (nativeAd.starRating != null && nativeAd.price != null && nativeAd.store != null) {
 //                No Need To Update Button
+                } else {
+                    adView.findViewById<TextView>(R.id.ad_call_to_action).background = wrappedDrawable
+                }
             } else {
                 adView.findViewById<TextView>(R.id.ad_call_to_action).background = wrappedDrawable
             }
-        } else {
-            adView.findViewById<TextView>(R.id.ad_call_to_action).background = wrappedDrawable
         }
 
         when (fSize) {
@@ -538,8 +548,16 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             isAddVideoOptions = mIsAddVideoOptions,
             isAdLoaded = mIsAdLoaded,
             onClickAdClose = mOnClickAdClose,
-            onAdClosed = mOnAdClosed
+            isSetDefaultButtonColor = mIsSetDefaultButtonColor,
+            onAdClosed = mOnAdClosed,
+            onAdFailed = mOnAdFailed
         )
+    }
+
+    override fun onAdFailed() {
+        super.onAdFailed()
+        Log.e(TAG, "onAdFailed: loadGridTypeNativeAd")
+        mOnAdFailed.invoke()
     }
 
     override fun onNativeAdLoaded(nativeAd: NativeAd) {
@@ -554,6 +572,7 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             fCustomAdView = mCustomAdView,
             isNeedLayoutShow = mIsNeedLayoutShow,
             isAdLoaded = mIsAdLoaded,
+            isSetDefaultButtonColor = mIsSetDefaultButtonColor,
             onClickAdClose = mOnClickAdClose
         )
     }

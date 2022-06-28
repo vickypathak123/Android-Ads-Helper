@@ -114,6 +114,11 @@ internal object NativeAdvancedHelper {
                             TAG,
                             "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}"
                         )
+
+                        mTime = null
+                        mNativeAd = null
+
+                        fListener.onAdFailed()
                     }
 
                     override fun onAdClicked() {

@@ -61,7 +61,7 @@ dependencies {
     //</editor-fold>
 
     //<editor-fold desc="The Google SDK for Google Ads">
-    implementation "com.google.android.gms:play-services-ads:20.5.0"
+    implementation "com.google.android.gms:play-services-ads:20.6.0"
     //</editor-fold>
 
     //<editor-fold desc="Lottie Animation">
