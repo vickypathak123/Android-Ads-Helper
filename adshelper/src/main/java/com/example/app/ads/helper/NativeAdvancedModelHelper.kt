@@ -506,7 +506,18 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         adView.callToActionView?.let { fView ->
             fView.gone
             nativeAd.callToAction?.let { fData ->
-                (fView as Button).text = getCamelCaseString(fData)
+                when (fView) {
+                    is Button -> {
+                        fView.text = getCamelCaseString(fData)
+                    }
+                    is androidx.appcompat.widget.AppCompatTextView -> {
+                        fView.text = getCamelCaseString(fData)
+                    }
+                    is TextView -> {
+                        fView.text = getCamelCaseString(fData)
+                    }
+                }
+
                 fView.isSelected = true
                 fView.visible
             }
