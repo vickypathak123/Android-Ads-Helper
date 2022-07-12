@@ -27,6 +27,7 @@ import com.example.app.ads.helper.InterstitialRewardHelper.showRewardedInterstit
 import com.example.app.ads.helper.RewardVideoHelper.isShowRewardVideoAd
 import com.example.app.ads.helper.RewardVideoHelper.showRewardVideoAd
 import com.example.app.ads.helper.activity.FullScreenNativeAdDialogActivity
+import com.google.android.gms.ads.nativead.NativeAdOptions
 
 
 class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
@@ -43,54 +44,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
 
     override fun initAds() {
         super.initAds()
-
-        InterstitialAdHelper.loadInterstitialAd(fContext = mActivity)
-        RewardVideoHelper.loadRewardVideoAd(fContext = mActivity)
-        InterstitialRewardHelper.loadRewardedInterstitialAd(fContext = mActivity)
-    }
-
-    override fun initView() {
-        super.initView()
-
-        mBinding.layoutHeader.ivHeaderBack.setImageDrawable(mActivity.getDrawableRes(R.drawable.ic_new_header_back))
-        mBinding.layoutHeader.ivHeaderRightIcon.setImageDrawable(mActivity.getDrawableRes(R.drawable.ic_share_blue))
-
-        mExitDialog = ExitDialog(mActivity)
-    }
-
-    override fun initViewListener() {
-        super.initViewListener()
-
-        mBinding.openAdsSwitch.isChecked = mActivity.getBoolean(IS_OPEN_ADS_ENABLE, true)
-
-        mBinding.adsSwitch.setOnCheckedChangeListener { _, _ ->
-            if (NativeAdvancedModelHelper.getNativeAd != null) {
-                NativeAdvancedModelHelper.destroy()
-            }
-        }
-
-        mBinding.openAdsSwitch.setOnCheckedChangeListener { _, isChecked ->
-            mActivity.save(IS_OPEN_ADS_ENABLE, isChecked)
-            Handler(Looper.getMainLooper()).postDelayed({
-                Log.e(TAG, "initViewListener: IS_OPEN_ADS_ENABLE::${mActivity.getBoolean(IS_OPEN_ADS_ENABLE, true)}")
-                triggerRebirth(mActivity)
-            }, 500)
-        }
-
-        mBinding.adsSwitch.isChecked = true
-
-        setClickListener(
-            mBinding.layoutHeader.ivHeaderBack,
-            mBinding.layoutHeader.ivHeaderRightIcon,
-            mBinding.showInterstitialAds,
-            mBinding.showFullScreenNativeAd,
-            mBinding.showRewardVideoAds,
-            mBinding.showRewardInterstitialAds,
-            mBinding.showNativeAds,
-            mBinding.showCustomNativeAds,
-            mBinding.showRunTimePermission,
-            mBinding.showDialogs,
-        )
 
         //<editor-fold desc="Reward Video Ad Work">
         mBinding.showRewardVideoAds.alpha = 0.5f
@@ -133,6 +86,73 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
             }
         )
         //</editor-fold>
+
+
+        InterstitialAdHelper.loadInterstitialAd(fContext = mActivity)
+        RewardVideoHelper.loadRewardVideoAd(fContext = mActivity)
+        InterstitialRewardHelper.loadRewardedInterstitialAd(fContext = mActivity)
+
+        loadNativeAds()
+    }
+
+    private fun loadNativeAds() {
+
+//        NativeAdvancedModelHelper.destroy()
+
+        NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
+            fSize = NativeAdsSize.Big,
+            fLayout = mBinding.flNativeAdPlaceHolderBig,
+            adChoicesPlacement = NativeAdOptions.ADCHOICES_TOP_RIGHT,
+            isAddVideoOptions = mBinding.adsSwitch.isChecked,
+        )
+    }
+
+    override fun initView() {
+        super.initView()
+
+        mBinding.openAdsSwitch.isChecked = mActivity.getBoolean(IS_OPEN_ADS_ENABLE, true)
+        mBinding.adsSwitch.isChecked = true
+
+        mBinding.layoutHeader.ivHeaderBack.setImageDrawable(mActivity.getDrawableRes(R.drawable.ic_new_header_back))
+        mBinding.layoutHeader.ivHeaderRightIcon.setImageDrawable(mActivity.getDrawableRes(R.drawable.ic_share_blue))
+
+        mExitDialog = ExitDialog(mActivity)
+    }
+
+    override fun initViewListener() {
+        super.initViewListener()
+
+        mBinding.adsSwitch.setOnCheckedChangeListener { _, _ ->
+            if (NativeAdvancedModelHelper.getNativeAd != null) {
+                NativeAdvancedModelHelper.destroy()
+            }
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                mBinding.flNativeAdPlaceHolderBig.removeAllViews()
+                loadNativeAds()
+            }, 1000)
+        }
+
+        mBinding.openAdsSwitch.setOnCheckedChangeListener { _, isChecked ->
+            mActivity.save(IS_OPEN_ADS_ENABLE, isChecked)
+            Handler(Looper.getMainLooper()).postDelayed({
+                Log.e(TAG, "initViewListener: IS_OPEN_ADS_ENABLE::${mActivity.getBoolean(IS_OPEN_ADS_ENABLE, true)}")
+                triggerRebirth(mActivity)
+            }, 500)
+        }
+
+        setClickListener(
+            mBinding.layoutHeader.ivHeaderBack,
+            mBinding.layoutHeader.ivHeaderRightIcon,
+            mBinding.showInterstitialAds,
+            mBinding.showFullScreenNativeAd,
+            mBinding.showRewardVideoAds,
+            mBinding.showRewardInterstitialAds,
+            mBinding.showNativeAds,
+            mBinding.showCustomNativeAds,
+            mBinding.showRunTimePermission,
+            mBinding.showDialogs,
+        )
     }
 
 
@@ -155,8 +175,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
                 } else if (NativeAdvancedModelHelper.getNativeAd == null) {
                     Toast.makeText(mActivity, "native ad not load", Toast.LENGTH_SHORT).show()
                 } else {
-//                    FullScreenNativeAdDialog(activity = mActivity).showFullScreenNativeAdDialog(mBinding.adsSwitch.isChecked)
-
                     FullScreenNativeAdDialogActivity.lunchFullScreenAd(mActivity)
                 }
             }
@@ -168,9 +186,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
             }
 
             mBinding.showNativeAds -> {
-                mActivity.isShowInterstitialAd { _ ->
-                launchActivity(getActivityIntent<NativeAdsActivity> { putBoolean("is_add_video_options", mBinding.adsSwitch.isChecked) })
-                }
+//                mActivity.isShowInterstitialAd { _ ->
+                    launchActivity(getActivityIntent<NativeAdsActivity> { putBoolean("is_add_video_options", mBinding.adsSwitch.isChecked) })
+//                }
             }
 
             mBinding.showCustomNativeAds -> {

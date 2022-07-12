@@ -6,11 +6,14 @@ import android.os.CountDownTimer
 import android.util.Log
 import com.example.ads.helper.demo.base.BaseBindingActivity
 import com.example.ads.helper.demo.databinding.ActivitySplashBinding
-import com.example.app.ads.helper.openad.OpenAdHelper
-import com.example.app.ads.helper.openad.OpenAdHelper.isShowOpenAd
 import com.example.ads.helper.demo.base.utils.isOnline
 import com.example.app.ads.helper.InterstitialAdHelper
 import com.example.app.ads.helper.InterstitialAdHelper.isShowInterstitialAd
+import com.example.app.ads.helper.InterstitialRewardHelper
+import com.example.app.ads.helper.NativeAdvancedModelHelper
+import com.example.app.ads.helper.RewardVideoHelper
+import com.example.app.ads.helper.openad.OpenAdHelper
+import com.example.app.ads.helper.openad.OpenAdHelper.isShowOpenAd
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
@@ -39,6 +42,14 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
     override fun initView() {
         super.initView()
 
+        //<editor-fold desc="Destroy All Ads in splash once">
+        OpenAdHelper.destroy()
+        InterstitialAdHelper.destroy()
+        NativeAdvancedModelHelper.destroy()
+        RewardVideoHelper.destroy()
+        InterstitialRewardHelper.destroy()
+        //</editor-fold>
+
         setAdDelay()
     }
 
@@ -48,7 +59,12 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
             startTimer(3000)
 
             if (this.getBoolean(IS_OPEN_ADS_ENABLE, true)) {
-
+                OpenAdHelper.loadOpenAd(mActivity, onAdLoad = {
+                    Log.e(TAG, "onOpenAdLoad: ")
+                    mTimer?.cancel()
+                    openActivityWithAd()
+                })
+            } else {
                 InterstitialAdHelper.loadInterstitialAd(
                     fContext = mActivity,
                     fIsShowFullScreenNativeAd = false
@@ -57,12 +73,6 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
                     mTimer?.cancel()
                     openActivityWithAd()
                 }
-
-//                OpenAdHelper.loadOpenAd(mActivity, onAdLoad = {
-//                    Log.e(TAG, "onOpenAdLoad: ")
-//                    mTimer?.cancel()
-//                    openActivityWithAd()
-//                })
             }
 
         } else {
@@ -76,25 +86,27 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
         mTimer?.start()
     }
 
-    private fun openActivityWithAd() {
+    internal fun openActivityWithAd() {
 
         mTimer?.cancel()
         mTimer = null
 
-        mActivity.isShowInterstitialAd{
-            Log.e(TAG, "openActivityWithAd: Call With or With-Out Interstitial Ad")
-            startNextActivity()
-        }
-
-        /*if (OpenAdHelper.isAdAvailable()) {
-            Log.e(TAG, "openActivityWithAd: Call With Open Ad")
-            mActivity.isShowOpenAd {
+        if (this.getBoolean(IS_OPEN_ADS_ENABLE, true)) {
+            if (OpenAdHelper.isAdAvailable()) {
+                Log.e(TAG, "openActivityWithAd: Call With Open Ad")
+                mActivity.isShowOpenAd {
+                    startNextActivity()
+                }
+            } else {
+                Log.e(TAG, "openActivityWithAd: Call With Out Open Ad")
                 startNextActivity()
             }
         } else {
-            Log.e(TAG, "openActivityWithAd: Call With Out Open Ad")
-            startNextActivity()
-        }*/
+            mActivity.isShowInterstitialAd {
+                Log.e(TAG, "openActivityWithAd: Call With or With-Out Interstitial Ad")
+                startNextActivity()
+            }
+        }
     }
 
     private fun startNextActivity() {

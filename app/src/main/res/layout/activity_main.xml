@@ -187,4 +187,14 @@
         app:layout_constraintStart_toEndOf="@+id/show_run_time_permission"
         app:layout_constraintTop_toTopOf="@+id/show_run_time_permission" />
 
+
+    <FrameLayout
+        android:id="@+id/fl_native_ad_place_holder_big"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,17 +25,16 @@ object VasuAdsConfig {
 class SetAdsID(private val mContext: Context) : Serializable {
 
     private var admobAppId: String = mContext.getStringRes(R.string.admob_app_id)
-    private var admobBannerAdId: String = mContext.getStringRes(R.string.admob_banner_ad_id)
-    private var admobInterstitialAdId: String =
-        mContext.getStringRes(R.string.admob_interstitial_ad_id)
-    private var admobNativeAdvancedAdId: String =
-        mContext.getStringRes(R.string.admob_native_advanced_ad_id)
-    private var admobRewardVideoAdId: String =
-        mContext.getStringRes(R.string.admob_reward_video_ad_id)
-    private var admobInterstitialAdRewardId: String =
-        mContext.getStringRes(R.string.admob_interstitial_ad_reward_id)
-    private var admobOpenAdId: String =
-        mContext.getStringRes(R.string.admob_open_ad_id)
+
+    private var admobInterstitialAdId: ArrayList<String> = ArrayList()
+
+    private var admobNativeAdvancedAdId: ArrayList<String> = ArrayList()
+
+    private var admobRewardVideoAdId: ArrayList<String> = ArrayList()
+
+    private var admobInterstitialAdRewardId: ArrayList<String> = ArrayList()
+
+    private var admobOpenAdId: ArrayList<String> = ArrayList()
 
     private var mIsEnable: Boolean = isOpenAdEnable
 
@@ -48,40 +47,39 @@ class SetAdsID(private val mContext: Context) : Serializable {
         this.admobAppId = fAdmobAppId
     }
 
-    @JvmName("setAdmobBannerAdId")
-    @NonNull
-    fun setAdmobBannerAdId(fAdmobBannerAdId: String) = this@SetAdsID.apply {
-        this.admobBannerAdId = fAdmobBannerAdId
-    }
-
     @JvmName("setAdmobInterstitialAdId")
     @NonNull
-    fun setAdmobInterstitialAdId(fAdmobInterstitialAdId: String) = this@SetAdsID.apply {
-        this.admobInterstitialAdId = fAdmobInterstitialAdId
+    fun setAdmobInterstitialAdId(vararg fAdmobInterstitialAdIds: String) = this@SetAdsID.apply {
+        this.admobInterstitialAdId.clearAll()
+        this.admobInterstitialAdId.addAll(fAdmobInterstitialAdIds)
     }
 
     @JvmName("setAdmobNativeAdvancedAdId")
     @NonNull
-    fun setAdmobNativeAdvancedAdId(fAdmobNativeAdvancedAdId: String) = this@SetAdsID.apply {
-        this.admobNativeAdvancedAdId = fAdmobNativeAdvancedAdId
+    fun setAdmobNativeAdvancedAdId(vararg fAdmobNativeAdvancedAdIds: String) = this@SetAdsID.apply {
+        this.admobNativeAdvancedAdId.clearAll()
+        this.admobNativeAdvancedAdId.addAll(fAdmobNativeAdvancedAdIds)
     }
 
     @JvmName("setAdmobRewardVideoAdId")
     @NonNull
-    fun setAdmobRewardVideoAdId(fAdmobRewardVideoAdId: String) = this@SetAdsID.apply {
-        this.admobRewardVideoAdId = fAdmobRewardVideoAdId
+    fun setAdmobRewardVideoAdId(vararg fAdmobRewardVideoAdIds: String) = this@SetAdsID.apply {
+        this.admobRewardVideoAdId.clearAll()
+        this.admobRewardVideoAdId.addAll(fAdmobRewardVideoAdIds)
     }
 
     @JvmName("setAdmobInterstitialAdRewardId")
     @NonNull
-    fun setAdmobInterstitialAdRewardId(fAdmobInterstitialAdRewardId: String) = this@SetAdsID.apply {
-        this.admobInterstitialAdRewardId = fAdmobInterstitialAdRewardId
+    fun setAdmobInterstitialAdRewardId(vararg fAdmobInterstitialAdRewardIds: String) = this@SetAdsID.apply {
+        this.admobInterstitialAdRewardId.clearAll()
+        this.admobInterstitialAdRewardId.addAll(fAdmobInterstitialAdRewardIds)
     }
 
     @JvmName("setAdmobOpenAdId")
     @NonNull
-    fun setAdmobOpenAdId(fAdmobOpenAdId: String) = this@SetAdsID.apply {
-        this.admobOpenAdId = fAdmobOpenAdId
+    fun setAdmobOpenAdId(vararg fAdmobOpenAdIds: String) = this@SetAdsID.apply {
+        this.admobOpenAdId.clearAll()
+        this.admobOpenAdId.addAll(fAdmobOpenAdIds)
     }
 
     @JvmName("isEnableOpenAd")
@@ -105,26 +103,36 @@ class SetAdsID(private val mContext: Context) : Serializable {
 
     @JvmName("initialize")
     fun initialize() {
+        admob_interstitial_ad_id.clearAll()
+        admob_native_advanced_ad_id.clearAll()
+        admob_reward_video_ad_id.clearAll()
+        admob_interstitial_ad_reward_id.clearAll()
+        admob_open_ad_id.clearAll()
+
         if (isTakeAllTestAdID) {
             admob_app_id = mContext.getStringRes(R.string.admob_app_id)
-            admob_banner_ad_id = mContext.getStringRes(R.string.admob_banner_ad_id)
-            admob_interstitial_ad_id = mContext.getStringRes(R.string.admob_interstitial_ad_id)
-            admob_native_advanced_ad_id = mContext.getStringRes(R.string.admob_native_advanced_ad_id)
-            admob_reward_video_ad_id = mContext.getStringRes(R.string.admob_reward_video_ad_id)
-            admob_interstitial_ad_reward_id = mContext.getStringRes(R.string.admob_interstitial_ad_reward_id)
-            admob_open_ad_id = mContext.getStringRes(R.string.admob_open_ad_id)
+
+            admob_interstitial_ad_id.add(mContext.getStringRes(R.string.admob_interstitial_ad_id))
+            admob_native_advanced_ad_id.add(mContext.getStringRes(R.string.admob_native_advanced_ad_id))
+            admob_reward_video_ad_id.add(mContext.getStringRes(R.string.admob_reward_video_ad_id))
+            admob_interstitial_ad_reward_id.add(mContext.getStringRes(R.string.admob_interstitial_ad_reward_id))
+            admob_open_ad_id.add(mContext.getStringRes(R.string.admob_open_ad_id))
         } else {
             admob_app_id = this.admobAppId
-            admob_banner_ad_id = this.admobBannerAdId
-            admob_interstitial_ad_id = this.admobInterstitialAdId
-            admob_native_advanced_ad_id = this.admobNativeAdvancedAdId
-            admob_reward_video_ad_id = this.admobRewardVideoAdId
-            admob_interstitial_ad_reward_id = this.admobInterstitialAdRewardId
-            admob_open_ad_id = this.admobOpenAdId
+
+            admob_interstitial_ad_id.addAll(this.admobInterstitialAdId)
+            admob_native_advanced_ad_id.addAll(this.admobNativeAdvancedAdId)
+            admob_reward_video_ad_id.addAll(this.admobRewardVideoAdId)
+            admob_interstitial_ad_reward_id.addAll(this.admobInterstitialAdRewardId)
+            admob_open_ad_id.addAll(this.admobOpenAdId)
         }
 
         isOpenAdEnable = this.mIsEnable
         isBlockInterstitialAd = this.mIsBlockInterstitialAd
     }
+}
 
+internal fun ArrayList<String>.clearAll() {
+    this.clear()
+    this.removeAll(this.toSet())
 }

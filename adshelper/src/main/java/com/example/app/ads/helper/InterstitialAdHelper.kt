@@ -33,57 +33,89 @@ object InterstitialAdHelper {
 
     private var mIsShowFullScreenNativeAd: Boolean = true
 
+    private var mAdIdPosition: Int = -1
+
+    private fun getInterstitialAdID(): String? {
+
+        mAdIdPosition = if (mAdIdPosition < admob_interstitial_ad_id.size) {
+            if (mAdIdPosition == -1) {
+                0
+            } else {
+                (mAdIdPosition + 1)
+            }
+        } else {
+            0
+        }
+
+        return if (mAdIdPosition >= 0 && mAdIdPosition < admob_interstitial_ad_id.size) {
+            admob_interstitial_ad_id[mAdIdPosition]
+        } else {
+            mAdIdPosition = -1
+            null
+        }
+    }
+
     internal fun loadAd(@NonNull fContext: Context, @NonNull fListener: AdMobAdsListener) {
 
-        var lInterstitialAd: InterstitialAd?
+        getInterstitialAdID()?.let { adsID ->
 
-        InterstitialAd.load(
-            fContext,
-            admob_interstitial_ad_id ?: fContext.getStringRes(R.string.admob_interstitial_ad_id),
-            AdRequest.Builder().build(),
-            object : InterstitialAdLoadCallback() {
+            var lInterstitialAd: InterstitialAd?
 
-                override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                    Log.i(TAG, "onAdLoaded: ")
-
-                    lInterstitialAd = interstitialAd
-                    fListener.onInterstitialAdLoaded(interstitialAd = interstitialAd)
-
-                    lInterstitialAd?.fullScreenContentCallback =
-                        object : FullScreenContentCallback() {
-
-                            override fun onAdDismissedFullScreenContent() {
-                                super.onAdDismissedFullScreenContent()
-                                Log.i(TAG, "onAdDismissedFullScreenContent: ")
-                                lInterstitialAd = null
-                                isAnyAdShowing = false
-                                isInterstitialAdShow = false
-                                fListener.onAdClosed()
-                            }
-
-                            override fun onAdShowedFullScreenContent() {
-                                super.onAdShowedFullScreenContent()
-                                Log.i(TAG, "onAdShowedFullScreenContent: ")
-                            }
-
-                            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                                super.onAdFailedToShowFullScreenContent(adError)
-                                Log.i(TAG, "onAdFailedToShowFullScreenContent: \nErrorMessage::${adError.message}\nErrorCode::${adError.code}")
-                            }
-
-                        }
-                }
-
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.i(
-                        TAG,
-                        "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}\nErrorMessage::${adError.message}"
-                    )
-                    lInterstitialAd = null
-                    fListener.onAdFailed()
-                }
+            if (BuildConfig.DEBUG) {
+                Log.i(TAG, "loadAd: AdsID -> $adsID")
             }
-        )
+
+            InterstitialAd.load(
+                fContext,
+                adsID,
+                AdRequest.Builder().build(),
+                object : InterstitialAdLoadCallback() {
+
+                    override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                        Log.i(TAG, "onAdLoaded: ")
+                        mAdIdPosition = -1
+                        lInterstitialAd = interstitialAd
+                        fListener.onInterstitialAdLoaded(interstitialAd = interstitialAd)
+
+                        lInterstitialAd?.fullScreenContentCallback =
+                            object : FullScreenContentCallback() {
+
+                                override fun onAdDismissedFullScreenContent() {
+                                    super.onAdDismissedFullScreenContent()
+                                    Log.i(TAG, "onAdDismissedFullScreenContent: ")
+                                    lInterstitialAd = null
+                                    isAnyAdShowing = false
+                                    isInterstitialAdShow = false
+                                    fListener.onAdClosed()
+                                }
+
+                                override fun onAdShowedFullScreenContent() {
+                                    super.onAdShowedFullScreenContent()
+                                    Log.i(TAG, "onAdShowedFullScreenContent: ")
+                                }
+
+                                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                                    super.onAdFailedToShowFullScreenContent(adError)
+                                    Log.e(TAG, "onAdFailedToShowFullScreenContent: \nErrorMessage::${adError.message}\nErrorCode::${adError.code}")
+                                }
+
+                            }
+                    }
+
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        Log.e(TAG, "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}\nErrorMessage::${adError.message}")
+
+                        lInterstitialAd = null
+                        if ((mAdIdPosition + 1) >= admob_interstitial_ad_id.size) {
+                            mAdIdPosition = -1
+                            fListener.onAdFailed()
+                        } else {
+                            loadAd(fContext, fListener)
+                        }
+                    }
+                }
+            )
+        }
     }
 
     /**
@@ -99,14 +131,6 @@ object InterstitialAdHelper {
         fIsShowFullScreenNativeAd: Boolean = true,
         onAdLoaded: () -> Unit = {}
     ) {
-
-        /*if (isAppInTesting) {
-            val isTestDevice = AdRequest.Builder().build().isTestDevice(fContext)
-            Log.e(TAG, "loadNativeAdvancedAd: isTestDevice::${isTestDevice}")
-            if (!isTestDevice) {
-                return
-            }
-        }*/
 
         this.mIsShowFullScreenNativeAd = fIsShowFullScreenNativeAd
 
@@ -135,7 +159,6 @@ object InterstitialAdHelper {
                     mInterstitialAdMob = null
                     mListener?.onAdClosed()
                 }
-
             })
         } else {
             onAdLoaded.invoke()
@@ -144,7 +167,7 @@ object InterstitialAdHelper {
 
     /**
      * Call this method when you need to show Interstitial AD
-     * also this method call our offline native dialog AD [FullScreenNativeAdDialog] when Interstitial Ad fails and give call bake on same way
+     * also this method call our offline native dialog AD [FullScreenNativeAdDialogActivity] when Interstitial Ad fails and give call bake on same way
      *
      * Use of this Method
      * activity.isShowInterstitialAd {[your code which has run after AD show or if AD fails to show]}
@@ -217,6 +240,7 @@ object InterstitialAdHelper {
     }
 
     fun destroy() {
+        mAdIdPosition = -1
         mListener = null
         mIsAdMobAdLoaded = false
         mIsAnyAdShow = false

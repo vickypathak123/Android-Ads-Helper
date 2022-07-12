@@ -69,8 +69,6 @@ class ExitDialog(private val mContext: Activity): Dialog(mContext) {
                     mBinding.flNativeAdPlaceHolderBig.visible
                 }
             )
-
-//            isInterstitialAdShow = true
             show()
         }
     }

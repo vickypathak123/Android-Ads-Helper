@@ -20,14 +20,17 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:hardwareAccelerated="true"
         android:theme="@style/Theme.AdsHelper"
         tools:ignore="LockedOrientationActivity">
         <activity
             android:name=".CustomNativeAdsActivity"
+            android:hardwareAccelerated="true"
             android:exported="false" />
         <activity
             android:name=".NativeAdsActivity"
-            android:exported="true" >
+            android:exported="true"
+            android:hardwareAccelerated="true">
 <!--            <intent-filter>-->
 <!--                <action android:name="android.intent.action.MAIN" />-->
 
@@ -37,14 +40,17 @@
         <activity
             android:name=".SecondActivity"
             android:exported="false"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:exported="false"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SplashActivity"
             android:exported="true"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTranslucent"
             android:windowSoftInputMode="adjustNothing">

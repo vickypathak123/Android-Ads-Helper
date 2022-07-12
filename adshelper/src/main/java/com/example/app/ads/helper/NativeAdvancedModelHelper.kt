@@ -13,9 +13,9 @@ import androidx.annotation.NonNull
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.DrawableCompat
-import com.example.app.ads.helper.demo.blurBitmap
-import com.google.android.gms.ads.AdRequest
+import com.example.app.ads.helper.blurEffect.BlurImage
 import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.google.android.gms.ads.nativead.NativeAdView
 
 
@@ -28,7 +28,7 @@ import com.google.android.gms.ads.nativead.NativeAdView
  */
 class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListener {
 
-    private val TAG = "Admob_${javaClass.simpleName}"
+    private val mTAG = "Admob_${javaClass.simpleName}"
 
     companion object {
         val getNativeAd: NativeAd?
@@ -47,8 +47,14 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
 
     private var mCloseTimer: AdsCloseTimer? = null
 
+    private var isFirstTime: Boolean = true
+
     private var mSize: NativeAdsSize = NativeAdsSize.Medium
     private var mLayout: FrameLayout = FrameLayout(mContext)
+
+    @NativeAdOptions.AdChoicesPlacement
+    private var mAdChoicesPlacement: Int = NativeAdOptions.ADCHOICES_TOP_RIGHT
+
     private var mCustomAdView: View? = null
     private var mIsNeedLayoutShow: Boolean = true
     private var mIsAddVideoOptions: Boolean = false
@@ -62,21 +68,25 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
      * Call this method when you need to load your Native Advanced AD
      * you need to call this method only once in any activity or fragment
      *
-     * this method will load your Native Advanced AD with 4 different size like [NativeAdsSize.Medium], [NativeAdsSize.Big], [NativeAdsSize.FullScreen], [NativeAdsSize.FullScreen]
+     * this method will load your Native Advanced AD with 4 different size like [NativeAdsSize.Medium], [NativeAdsSize.Big], [NativeAdsSize.FullScreen], [NativeAdsSize.Custom]
      * for Native Advanced AD Size @see [NativeAdsSize] once
      *
      * @param fSize it indicate your Ad Size
      * @param fLayout FrameLayout for add NativeAd View
+     * @param adChoicesPlacement Ads I icon place @see [NativeAdOptions.ADCHOICES_TOP_RIGHT], [NativeAdOptions.ADCHOICES_TOP_LEFT], [NativeAdOptions.ADCHOICES_BOTTOM_RIGHT], [NativeAdOptions.ADCHOICES_BOTTOM_LEFT]
      * @param fCustomAdView your native ad custom layout
      * @param isNeedLayoutShow [by Default value = true] pass false if you do not need to show AD at a time when it's loaded successfully
      * @param isAddVideoOptions [by Default value = true] pass false if you don't need to add video option
+     * @param isSetDefaultButtonColor [by Default value = true] pass false if you don't need to change in ad action button
      * @param isAdLoaded lambda function call when ad isLoaded
      * @param onClickAdClose lambda function call when user click close button of ad
      * @param onAdClosed lambda function call after ad closed
+     * @param onAdFailed lambda function call after ad failed to load
      */
     fun loadNativeAdvancedAd(
         @NonNull fSize: NativeAdsSize,
         @NonNull fLayout: FrameLayout,
+        @NativeAdOptions.AdChoicesPlacement adChoicesPlacement: Int = NativeAdOptions.ADCHOICES_TOP_RIGHT,
         fCustomAdView: View? = null,
         isNeedLayoutShow: Boolean = true,
         isAddVideoOptions: Boolean = true,
@@ -87,17 +97,9 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         onAdFailed: () -> Unit = {}
     ) {
 
-        /*if (isAppInTesting) {
-            val isTestDevice = AdRequest.Builder().build().isTestDevice(fLayout.context)
-            Log.e(TAG, "loadNativeAdvancedAd: isTestDevice::${isTestDevice}")
-            if (!isTestDevice) {
-                return
-            }
-        }*/
-
-        Log.i(TAG, "loadAd: ")
         mSize = fSize
         mLayout = fLayout
+        mAdChoicesPlacement = adChoicesPlacement
         mCustomAdView = fCustomAdView
         mIsNeedLayoutShow = isNeedLayoutShow
         mIsAddVideoOptions = isAddVideoOptions
@@ -118,10 +120,44 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         )
         mCloseTimer?.start()
 
+        if (isFirstTime) {
+            isFirstTime = false
+
+            mLayout.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+                override fun onViewAttachedToWindow(v: View?) {
+                    Log.e(mTAG, "onViewAttachedToWindow: ")
+                }
+
+                override fun onViewDetachedFromWindow(v: View?) {
+
+                    Log.e(mTAG, "onViewDetachedFromWindow: ")
+
+                    Log.e(
+                        mTAG, "onViewDetachedFromWindow: " +
+                                "\nClassName-> ${mContext.localClassName}, " +
+                                "\nmContext hasWindowFocus-> ${mContext.hasWindowFocus()}, " +
+                                "\nmLayout.isAttachedToWindow::-> ${mLayout.isAttachedToWindow}, " +
+                                "\n"
+                    )
+
+                    if (!(mContext.hasWindowFocus() && mLayout.isAttachedToWindow)) {
+
+                        val triple: Triple<Activity, AdMobAdsListener, NativeAdsSize> = Triple(mContext, this@NativeAdvancedModelHelper, mSize)
+                        if (NativeAdvancedHelper.mListenerList.contains(triple)) {
+                            NativeAdvancedHelper.mListenerList.remove(triple)
+                        }
+                    }
+
+                    NativeAdvancedHelper.callOldAdView()
+                }
+            })
+        }
+
         NativeAdvancedHelper.loadNativeAdvancedAd(
             fContext = mContext,
             isAddVideoOptions = isAddVideoOptions,
             fSize = fSize,
+            adChoicesPlacement = adChoicesPlacement,
             fListener = this,
         )
     }
@@ -145,14 +181,14 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
 
             NativeAdsSize.Big -> {
                 mContext.inflater.inflate(
-                    com.example.app.ads.helper.R.layout.layout_google_native_ad_big,
+                    R.layout.layout_google_native_ad_big,
                     null
                 ) as NativeAdView
             }
 
             NativeAdsSize.Medium -> {
                 mContext.inflater.inflate(
-                    com.example.app.ads.helper.R.layout.layout_google_native_ad_medium,
+                    R.layout.layout_google_native_ad_medium,
                     null
                 ) as NativeAdView
             }
@@ -160,12 +196,12 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             NativeAdsSize.FullScreen -> {
                 if (nativeAd.starRating != null && nativeAd.price != null && nativeAd.store != null) {
                     mContext.inflater.inflate(
-                        com.example.app.ads.helper.R.layout.layout_google_native_ad_exit_full_screen_app_store,
+                        R.layout.layout_google_native_ad_exit_full_screen_app_store,
                         null
                     ) as ConstraintLayout
                 } else {
                     mContext.inflater.inflate(
-                        com.example.app.ads.helper.R.layout.layout_google_native_ad_exit_full_screen_website,
+                        R.layout.layout_google_native_ad_exit_full_screen_website,
                         null
                     ) as NativeAdView
                 }
@@ -174,7 +210,7 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             NativeAdsSize.Custom -> {
                 fCustomAdView
                     ?: mContext.inflater.inflate(
-                        com.example.app.ads.helper.R.layout.layout_google_native_ad_big,
+                        R.layout.layout_google_native_ad_big,
                         null
                     ) as NativeAdView
             }
@@ -183,9 +219,9 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
 
         if (isSetDefaultButtonColor) {
             val value = TypedValue()
-            mContext.theme.resolveAttribute(com.example.app.ads.helper.R.attr.native_ads_main_color, value, true)
+            mContext.theme.resolveAttribute(R.attr.native_ads_main_color, value, true)
 
-            val unwrappedDrawable = AppCompatResources.getDrawable(mContext, com.example.app.ads.helper.R.drawable.native_ad_button)
+            val unwrappedDrawable = AppCompatResources.getDrawable(mContext, R.drawable.native_ad_button)
             val wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable!!)
             DrawableCompat.setTint(wrappedDrawable, value.data)
 
@@ -227,6 +263,7 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
 
         fLayout.removeAllViews()
         fLayout.addView(adView)
+
         fLayout.visibility = if (isNeedLayoutShow) {
             View.VISIBLE
         } else {
@@ -260,8 +297,9 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             fView.gone
             if (nativeAd.mediaContent != null) {
                 nativeAd.mediaContent?.let { fData ->
-                    Log.e(TAG, "populateFullScreenNativeAdView: Set Media View")
+                    Log.e(mTAG, "populateFullScreenNativeAdView: Set Media View")
                     fView.setMediaContent(fData)
+                    fView.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
                     fView.visible
                 }
             } else {
@@ -282,10 +320,10 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
                     fData.setBounds(0, 0, canvas.width, canvas.height)
                     fData.draw(canvas)
 
-                    blurBitmap(mContext, bitmap)?.let {
-                        (fView as ImageView).setImageBitmap(it)
-                    }
-
+                    BlurImage().load(bitmap)
+                        .radius(3f)
+                        .withCPU()
+                        .into((fView as ImageView))
                 }
             }
         }
@@ -296,9 +334,6 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
                 (fView as TextView).text = fData
                 fView.visible
             }
-
-//            (fView as TextView).text = "https://console.firebase.google.com/u/1/project/limad-cee0a/crashlytics/app/android:com.voice.changer.sound.effects.girl.call/issues/a37ec01225493d400f597d3167074505?time=last-hour&versions=1.6%20(6)&deviceCategories=Google%EF%BF%BFPixel%204a&sessionEventKey=625A3A7202C600015BDE2CFC3388A942_1665488023663832404"
-//            fView.visible
         }
 
         adView.bodyView?.let { fView ->
@@ -415,8 +450,9 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             fView.gone
             if (nativeAd.mediaContent != null) {
                 nativeAd.mediaContent?.let { fData ->
-                    Log.e(TAG, "populateNativeAdView: Set Media View")
+                    Log.e(mTAG, "populateNativeAdView: Set Media View")
                     fView.setMediaContent(fData)
+                    fView.setImageScaleType(ImageView.ScaleType.FIT_CENTER)
                     fView.visible
                 }
             } else {
@@ -433,10 +469,6 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
                 (fView as TextView).text = fData
                 fView.visible
             }
-
-//            (fView as TextView).text = "https://console.firebase.google.com/u/1/project/limad-cee0a/crashlytics/app/android:com.voice.changer.sound.effects.girl.call/issues/a37ec01225493d400f597d3167074505?time=last-hour&versions=1.6%20(6)&deviceCategories=Google%EF%BF%BFPixel%204a&sessionEventKey=625A3A7202C600015BDE2CFC3388A942_1665488023663832404"
-//            fView.visible
-
         }
 
         adView.bodyView?.let { fView ->
@@ -545,7 +577,7 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
 
     override fun onAdClosed(isShowFullScreenAd: Boolean) {
         super.onAdClosed(isShowFullScreenAd)
-        Log.i(TAG, "onAdClosed: ")
+        Log.i(mTAG, "onAdClosed: ")
 
         mLayout.removeAllViews()
 
@@ -554,6 +586,7 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         loadNativeAdvancedAd(
             fSize = mSize,
             fLayout = mLayout,
+            adChoicesPlacement = mAdChoicesPlacement,
             fCustomAdView = mCustomAdView,
             isNeedLayoutShow = mIsNeedLayoutShow,
             isAddVideoOptions = mIsAddVideoOptions,
@@ -567,14 +600,13 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
 
     override fun onAdFailed() {
         super.onAdFailed()
-        Log.e(TAG, "onAdFailed: loadGridTypeNativeAd")
         mOnAdFailed.invoke()
     }
 
     override fun onNativeAdLoaded(nativeAd: NativeAd) {
         super.onNativeAdLoaded(nativeAd)
 
-        Log.e(TAG, "onNativeAdLoaded: ")
+        Log.e(mTAG, "onNativeAdLoaded: ")
 
         loadAdWithPerfectLayout(
             fSize = mSize,
@@ -588,8 +620,27 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         )
     }
 
+    override fun onStartToLoadRewardVideoAd() {
+        super.onStartToLoadRewardVideoAd()
+
+        if (mContext.hasWindowFocus() && mLayout.isAttachedToWindow) {
+            NativeAdvancedHelper.mNativeAd?.let { nativeAd ->
+                loadAdWithPerfectLayout(
+                    fSize = mSize,
+                    fLayout = mLayout,
+                    nativeAd = nativeAd,
+                    fCustomAdView = mCustomAdView,
+                    isNeedLayoutShow = mIsNeedLayoutShow,
+                    isAdLoaded = mIsAdLoaded,
+                    isSetDefaultButtonColor = mIsSetDefaultButtonColor,
+                    onClickAdClose = mOnClickAdClose
+                )
+            }
+        }
+    }
+
     inner class AdsCloseTimer(
-        private val millisInFuture: Long,
+        millisInFuture: Long,
         countDownInterval: Long,
         private val onFinish: () -> Unit
     ) : CountDownTimer(millisInFuture, countDownInterval) {

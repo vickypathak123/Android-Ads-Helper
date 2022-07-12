@@ -1,11 +1,11 @@
 package com.example.app.ads.helper.activity
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
-import android.view.Window
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
@@ -15,9 +15,10 @@ import androidx.fragment.app.FragmentActivity
 import com.example.app.ads.helper.*
 import com.example.app.ads.helper.databinding.DialogFullScreenNativeAdBinding
 
+
 class FullScreenNativeAdDialogActivity : AppCompatActivity() {
 
-    lateinit var mBinding: DialogFullScreenNativeAdBinding
+    private lateinit var mBinding: DialogFullScreenNativeAdBinding
 
     private val mActivity: FragmentActivity
         get() {
@@ -34,15 +35,7 @@ class FullScreenNativeAdDialogActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(null)
 
-        with(window) {
-            addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
-            setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-            }
-        }
+        setTheme(R.style.call_screen_theme)
 
         this.mBinding = DialogFullScreenNativeAdBinding.inflate(layoutInflater)
         setContentView(this.mBinding.root)

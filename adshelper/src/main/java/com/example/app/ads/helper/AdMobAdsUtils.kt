@@ -22,15 +22,18 @@ var isAnyAdOpen = false
 
 var isAnyAdShowing: Boolean = false
 
-/*internal var isAppInTesting: Boolean = false*/
-
 internal var admob_app_id: String? = null
-internal var admob_banner_ad_id: String? = null
-internal var admob_interstitial_ad_id: String? = null
-internal var admob_native_advanced_ad_id: String? = null
-internal var admob_reward_video_ad_id: String? = null
-internal var admob_interstitial_ad_reward_id: String? = null
-internal var admob_open_ad_id: String? = null
+
+internal var admob_interstitial_ad_id: ArrayList<String> = ArrayList()
+
+internal var admob_native_advanced_ad_id: ArrayList<String> = ArrayList()
+
+internal var admob_reward_video_ad_id: ArrayList<String> = ArrayList()
+
+internal var admob_interstitial_ad_reward_id: ArrayList<String> = ArrayList()
+
+internal var admob_open_ad_id: ArrayList<String> = ArrayList()
+
 internal var isOpenAdEnable: Boolean = true
 internal var isBlockInterstitialAd: Boolean = false
 
@@ -115,6 +118,8 @@ internal inline val Context.isOnline: Boolean
  *
  * Find This Log in your logcat for get your devise test id
  * I/Ads: Use RequestConfiguration.Builder.setTestDeviceIds("TEST_DEVICE_ID","TEST_DEVICE_ID")
+ *
+ * @param fDeviceId pass multiple your "TEST_DEVICE_ID"
  */
 internal fun setTestDeviceIds(vararg fDeviceId: String) {
 

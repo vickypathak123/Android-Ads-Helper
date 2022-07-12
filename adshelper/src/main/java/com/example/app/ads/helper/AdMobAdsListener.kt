@@ -14,7 +14,7 @@ import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
  *
  * AdMobAdsListener.kt - Simple interface which has notified your AD process
  */
-public interface AdMobAdsListener {
+interface AdMobAdsListener {
 
     /**
      * This method is called when your AD data was loaded successfully
@@ -28,6 +28,7 @@ public interface AdMobAdsListener {
 
     /**
      * This method is called when your AD was closed after successfully showing to the user
+     * @param isShowFullScreenAd [by Default value = false] it's true when fullscreen native ad show and close
      */
     fun onAdClosed(isShowFullScreenAd: Boolean = false) {}
 

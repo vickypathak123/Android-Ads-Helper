@@ -32,63 +32,92 @@ object RewardVideoHelper {
 
     private var mListener: AdMobAdsListener? = null
 
-    private fun loadRewardVideoAd(
+    private var mAdIdPosition: Int = -1
+
+    private fun getRewardVideoAdID(): String? {
+
+        mAdIdPosition = if (mAdIdPosition < admob_reward_video_ad_id.size) {
+            if (mAdIdPosition == -1) {
+                0
+            } else {
+                (mAdIdPosition + 1)
+            }
+        } else {
+            0
+        }
+
+        return if (mAdIdPosition >= 0 && mAdIdPosition < admob_reward_video_ad_id.size) {
+            admob_reward_video_ad_id[mAdIdPosition]
+        } else {
+            mAdIdPosition = -1
+            null
+        }
+    }
+
+    internal fun loadRewardVideoAd(
         @NonNull fContext: Context,
         @NonNull fListener: AdMobAdsListener
     ) {
-        var lRewardedAd: RewardedAd?
-
         fListener.onStartToLoadRewardVideoAd()
 
-        RewardedAd.load(
-            fContext,
-            admob_reward_video_ad_id ?: fContext.getStringRes(R.string.admob_reward_video_ad_id),
-            AdRequest.Builder().build(),
-            object : RewardedAdLoadCallback() {
+        getRewardVideoAdID()?.let { adsID ->
 
-                override fun onAdLoaded(rewardedAd: RewardedAd) {
-                    Log.i(TAG, "onAdLoaded: ")
+            var lRewardedAd: RewardedAd?
 
-                    lRewardedAd = rewardedAd
-                    fListener.onRewardVideoAdLoaded(rewardedAd = rewardedAd)
+            if (BuildConfig.DEBUG) {
+                Log.i(TAG, "loadAd: AdsID -> $adsID")
+            }
 
-                    lRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+            RewardedAd.load(
+                fContext,
+                adsID,
+                AdRequest.Builder().build(),
+                object : RewardedAdLoadCallback() {
 
-                        override fun onAdDismissedFullScreenContent() {
-                            super.onAdDismissedFullScreenContent()
-                            Log.i(TAG, "onAdDismissedFullScreenContent: ")
-                            isInterstitialAdShow = false
-                            isAnyAdShowing = false
-                            fListener.onAdClosed()
+                    override fun onAdLoaded(rewardedAd: RewardedAd) {
+                        Log.i(TAG, "onAdLoaded: ")
+                        mAdIdPosition = -1
+                        lRewardedAd = rewardedAd
+                        fListener.onRewardVideoAdLoaded(rewardedAd = rewardedAd)
+
+                        lRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+
+                            override fun onAdDismissedFullScreenContent() {
+                                super.onAdDismissedFullScreenContent()
+                                Log.i(TAG, "onAdDismissedFullScreenContent: ")
+                                isInterstitialAdShow = false
+                                isAnyAdShowing = false
+                                fListener.onAdClosed()
+                            }
+
+                            override fun onAdShowedFullScreenContent() {
+                                super.onAdShowedFullScreenContent()
+                                Log.i(TAG, "onAdShowedFullScreenContent: ")
+                                lRewardedAd = null
+                            }
+
+                            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                                super.onAdFailedToShowFullScreenContent(adError)
+                                Log.e(TAG, "onAdFailedToShowFullScreenContent: \nErrorMessage::${adError.message}\nErrorCode::${adError.code}")
+                            }
+
                         }
+                    }
 
-                        override fun onAdShowedFullScreenContent() {
-                            super.onAdShowedFullScreenContent()
-                            Log.i(TAG, "onAdShowedFullScreenContent: ")
-                            lRewardedAd = null
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        Log.e(TAG, "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}")
+
+                        lRewardedAd = null
+                        if ((mAdIdPosition + 1) >= admob_reward_video_ad_id.size) {
+                            mAdIdPosition = -1
+                            fListener.onAdFailed()
+                        } else {
+                            loadRewardVideoAd(fContext, fListener)
                         }
-
-                        override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                            super.onAdFailedToShowFullScreenContent(adError)
-                            Log.i(
-                                TAG,
-                                "onAdFailedToShowFullScreenContent: \nErrorMessage::${adError.message}\nErrorCode::${adError.code}"
-                            )
-                        }
-
                     }
                 }
-
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.i(
-                        TAG,
-                        "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}"
-                    )
-                    lRewardedAd = null
-                    fListener.onAdFailed()
-                }
-            }
-        )
+            )
+        }
     }
 
     /**
@@ -98,14 +127,6 @@ object RewardVideoHelper {
      * @param fContext this is a reference to your activity or fragment context
      */
     fun loadRewardVideoAd(@NonNull fContext: Context) {
-
-       /* if (isAppInTesting) {
-            val isTestDevice = AdRequest.Builder().build().isTestDevice(fContext)
-            Log.e(TAG, "loadNativeAdvancedAd: isTestDevice::${isTestDevice}")
-            if (!isTestDevice) {
-                return
-            }
-        }*/
 
         if (mRewardedAd == null) {
             loadRewardVideoAd(fContext, object : AdMobAdsListener {
@@ -200,6 +221,7 @@ object RewardVideoHelper {
     }
 
     fun destroy() {
+        mAdIdPosition = -1
         mListener = null
         isUserEarnedReward = false
         mRewardedAd = null

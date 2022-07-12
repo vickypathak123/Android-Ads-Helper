@@ -5,8 +5,6 @@ import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
 import com.example.app.ads.helper.*
-import com.example.app.ads.helper.admob_open_ad_id
-import com.example.app.ads.helper.getStringRes
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -27,71 +25,92 @@ object OpenAdHelper {
 
     private var mListener: AdMobAdsListener? = null
 
-    private fun loadOpenAd(
+    private var mAdIdPosition: Int = -1
+
+    private fun getOpenID(): String? {
+
+        mAdIdPosition = if (mAdIdPosition < admob_open_ad_id.size) {
+            if (mAdIdPosition == -1) {
+                0
+            } else {
+                (mAdIdPosition + 1)
+            }
+        } else {
+            0
+        }
+
+        return if (mAdIdPosition >= 0 && mAdIdPosition < admob_open_ad_id.size) {
+            admob_open_ad_id[mAdIdPosition]
+        } else {
+            mAdIdPosition = -1
+            null
+        }
+    }
+
+    internal fun loadOpenAd(
         @NonNull fContext: Context,
         @NonNull fListener: AdMobAdsListener
     ) {
 
-        /*if (isAppInTesting) {
-            val isTestDevice = AdRequest.Builder().build().isTestDevice(fContext)
-            Log.e(TAG, "loadNativeAdvancedAd: isTestDevice::${isTestDevice}")
-            if (!isTestDevice) {
-                return
+        getOpenID()?.let { adsID ->
+
+            var lAppOpenAd: AppOpenAd?
+
+            if (BuildConfig.DEBUG) {
+                Log.i(TAG, "loadAd: AdsID -> $adsID")
             }
-        }*/
 
+            AppOpenAd.load(
+                fContext,
+                adsID,
+                AdRequest.Builder().build(),
+                AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
+                object : AppOpenAd.AppOpenAdLoadCallback() {
 
-        var lAppOpenAd: AppOpenAd?
+                    override fun onAdLoaded(appOpenAd: AppOpenAd) {
+                        super.onAdLoaded(appOpenAd)
+                        Log.i(TAG, "onAdLoaded: ")
+                        mAdIdPosition = -1
+                        lAppOpenAd = appOpenAd
+                        adLoadTime = Date().time
+                        fListener.onAppOpenAdLoaded(appOpenAd = appOpenAd)
 
-        AppOpenAd.load(
-            fContext,
-            admob_open_ad_id ?: fContext.getStringRes(R.string.admob_open_ad_id),
-            AdRequest.Builder().build(),
-            AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
-            object : AppOpenAd.AppOpenAdLoadCallback() {
+                        lAppOpenAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                            override fun onAdDismissedFullScreenContent() {
+                                super.onAdDismissedFullScreenContent()
+                                Log.i(TAG, "onAdClosed: ")
+                                isOpenAdShowing = false
+                                fListener.onAdClosed()
+                            }
 
-                override fun onAdLoaded(appOpenAd: AppOpenAd) {
-                    super.onAdLoaded(appOpenAd)
-                    Log.i(TAG, "onAdLoaded: ")
-                    lAppOpenAd = appOpenAd
-                    adLoadTime = Date().time
-                    fListener.onAppOpenAdLoaded(appOpenAd = appOpenAd)
+                            override fun onAdShowedFullScreenContent() {
+                                super.onAdShowedFullScreenContent()
+                                isOpenAdShowing = true
+                                lAppOpenAd = null
+                            }
 
-                    lAppOpenAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-                        override fun onAdDismissedFullScreenContent() {
-                            super.onAdDismissedFullScreenContent()
-                            Log.i(TAG, "onAdClosed: ")
-                            isOpenAdShowing = false
-                            fListener.onAdClosed()
+                            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                                super.onAdFailedToShowFullScreenContent(adError)
+                                Log.e(TAG, "onAdFailedToShowFullScreenContent: \nErrorMessage::${adError.message}\nErrorCode::${adError.code}")
+                            }
                         }
+                    }
 
-                        override fun onAdShowedFullScreenContent() {
-                            super.onAdShowedFullScreenContent()
-                            isOpenAdShowing = true
-                            lAppOpenAd = null
-                        }
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        super.onAdFailedToLoad(adError)
+                        Log.e(TAG, "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}")
 
-                        override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                            super.onAdFailedToShowFullScreenContent(adError)
-                            Log.i(
-                                TAG,
-                                "onAdFailedToShowFullScreenContent: \nErrorMessage::${adError.message}\nErrorCode::${adError.code}"
-                            )
+                        lAppOpenAd = null
+                        if ((mAdIdPosition + 1) >= admob_open_ad_id.size) {
+                            mAdIdPosition = -1
+                            fListener.onAdFailed()
+                        } else {
+                            loadOpenAd(fContext, fListener)
                         }
                     }
                 }
-
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    super.onAdFailedToLoad(adError)
-                    Log.i(
-                        TAG,
-                        "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}"
-                    )
-                    lAppOpenAd = null
-                    fListener.onAdFailed()
-                }
-            }
-        )
+            )
+        }
     }
 
     /**
@@ -151,7 +170,6 @@ object OpenAdHelper {
                     onAdClosed.invoke()
                 }
             }
-            Log.i(TAG, "isShowOpenAd: isAdAvailable()::${isAdAvailable()}")
             if (isAdAvailable()) {
                 if (!isAnyAdShowing) {
                     isAnyAdShowing = true
@@ -167,6 +185,7 @@ object OpenAdHelper {
     }
 
     fun destroy() {
+        mAdIdPosition = -1
         adLoadTime = 0
         isOpenAdShowing = false
         isAdLoading = false

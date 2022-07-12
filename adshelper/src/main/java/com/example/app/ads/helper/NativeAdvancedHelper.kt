@@ -3,7 +3,6 @@
 package com.example.app.ads.helper
 
 import android.app.Activity
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
@@ -12,6 +11,8 @@ import androidx.annotation.NonNull
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
+import com.google.android.gms.ads.nativead.NativeAdOptions.ADCHOICES_TOP_LEFT
+import com.google.android.gms.ads.nativead.NativeAdOptions.ADCHOICES_TOP_RIGHT
 
 /**
  * @author Akshay Harsoda
@@ -43,6 +44,36 @@ internal object NativeAdvancedHelper {
         mListenerList.addAll(lList)
     }
 
+    internal fun callOldAdView() {
+        for (lListener in mListenerList) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                lListener.second.onStartToLoadRewardVideoAd()
+            }, 500)
+        }
+    }
+
+    private var mAdIdPosition: Int = -1
+
+    private fun getNativeAdvancedAdID(): String? {
+
+        mAdIdPosition = if (mAdIdPosition < admob_native_advanced_ad_id.size) {
+            if (mAdIdPosition == -1) {
+                0
+            } else {
+                (mAdIdPosition + 1)
+            }
+        } else {
+            0
+        }
+
+        return if (mAdIdPosition >= 0 && mAdIdPosition < admob_native_advanced_ad_id.size) {
+            admob_native_advanced_ad_id[mAdIdPosition]
+        } else {
+            mAdIdPosition = -1
+            null
+        }
+    }
+
     /**
      * Call this method when you need to load your Native Advanced AD
      * you need to call this method only once in any activity or fragment
@@ -55,6 +86,7 @@ internal object NativeAdvancedHelper {
         @NonNull fContext: Activity,
         isAddVideoOptions: Boolean = true,
         fSize: NativeAdsSize,
+        @NativeAdOptions.AdChoicesPlacement adChoicesPlacement: Int,
         fListener: AdMobAdsListener
     ) {
         removeFinishedList()
@@ -67,82 +99,108 @@ internal object NativeAdvancedHelper {
 
             if (mTime == null) {
 
-                mTime = SystemClock.uptimeMillis()
+                getNativeAdvancedAdID()?.let { adsID ->
 
-                Log.e(TAG, "loadNativeAdvancedAd: New Ad Loading...")
+                    mTime = SystemClock.uptimeMillis()
 
-                val builder =
-                    AdLoader.Builder(
-                        fContext,
-                        admob_native_advanced_ad_id
-                            ?: fContext.getStringRes(R.string.admob_native_advanced_ad_id)
-                    )
+                    Log.e(TAG, "loadNativeAdvancedAd: New Ad Loading...")
 
-                builder.forNativeAd { unifiedNativeAd ->
+                    if (BuildConfig.DEBUG) {
+                        Log.i(TAG, "loadNativeAdvancedAd: AdsID -> $adsID")
+                    }
 
-                    for (lListener in mListenerList) {
-                        if (mNativeAd == null) {
-                            Log.i(TAG, "loadAd: new live Ad -> ${unifiedNativeAd.headline}")
-                            mNativeAd = unifiedNativeAd
-                            lListener.second.onNativeAdLoaded(unifiedNativeAd)
-                        } else {
-                            mNativeAd?.let {
-                                Log.i(TAG, "loadAd: new live Ad -> old stored Ad")
-                                lListener.second.onNativeAdLoaded(it)
+                    val builder = AdLoader.Builder(fContext, adsID)
+
+                    builder.forNativeAd { unifiedNativeAd ->
+
+                        mAdIdPosition = -1
+
+                        for (lListener in mListenerList) {
+                            if (mNativeAd == null) {
+                                Log.i(TAG, "loadAd: new live Ad -> ${unifiedNativeAd.headline}")
+                                mNativeAd = unifiedNativeAd
+                                lListener.second.onNativeAdLoaded(unifiedNativeAd)
+                            } else {
+                                mNativeAd?.let {
+                                    Log.i(TAG, "loadAd: new live Ad -> old stored Ad")
+                                    lListener.second.onNativeAdLoaded(it)
+                                }
                             }
                         }
                     }
-                }
 
-                if (isAddVideoOptions) {
-                    val videoOptions = VideoOptions.Builder()
-                        .setStartMuted(false)
-                        .build()
+                    val adOptionsBuilder: NativeAdOptions.Builder = NativeAdOptions.Builder()
 
-                    val adOptions: NativeAdOptions = NativeAdOptions.Builder()
-                        .setVideoOptions(videoOptions)
-                        .setMediaAspectRatio(NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_SQUARE)
-                        .build()
+                    adOptionsBuilder.setAdChoicesPlacement(adChoicesPlacement)
 
-                    builder.withNativeAdOptions(adOptions)
-                }
 
-                val adLoader = builder.withAdListener(object : AdListener() {
+                    if (isAddVideoOptions) {
+                        val videoOptions = VideoOptions.Builder()
+                            .setStartMuted(false)
+                            .build()
 
-                    override fun onAdFailedToLoad(adError: LoadAdError) {
-                        Log.i(
-                            TAG,
-                            "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}"
-                        )
-
-                        mTime = null
-                        mNativeAd = null
-
-                        fListener.onAdFailed()
+                        adOptionsBuilder.setVideoOptions(videoOptions)
+                        adOptionsBuilder.setMediaAspectRatio(NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_SQUARE)
                     }
 
-                    override fun onAdClicked() {
-                        super.onAdClicked()
-                        isAnyAdOpen = true
-                        isAnyAdShowing = true
-                    }
+                    builder.withNativeAdOptions(adOptionsBuilder.build())
 
-                    override fun onAdClosed() {
-                        super.onAdClosed()
-                        isAnyAdShowing = false
-                        if (fContext.isOnline) {
+                    val adLoader = builder.withAdListener(object : AdListener() {
+
+                        val fHandler: Handler = Handler(Looper.getMainLooper())
+
+                        val fRunnable: Runnable = object : Runnable {
+                            override fun run() {
+                                if (isAppForeground) {
+                                    onAdClosed()
+                                } else {
+                                    fHandler.postDelayed(this, 1000)
+                                }
+                            }
+                        }
+
+                        override fun onAdFailedToLoad(adError: LoadAdError) {
+                            Log.e(TAG, "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}")
+
                             mTime = null
                             mNativeAd = null
-                            for (lListener in mListenerList) {
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    lListener.second.onAdClosed()
-                                }, 500)
+
+                            if ((mAdIdPosition + 1) >= admob_native_advanced_ad_id.size) {
+                                mAdIdPosition = -1
+                                fListener.onAdFailed()
+                            } else {
+                                loadNativeAdvancedAd(fContext, isAddVideoOptions, fSize, adChoicesPlacement, fListener)
+//                                loadNativeAdvancedAd(fContext, isAddVideoOptions, fSize, fListener)
                             }
                         }
-                    }
-                }).build()
 
-                adLoader.loadAd(AdRequest.Builder().build())
+                        override fun onAdClicked() {
+                            super.onAdClicked()
+                            isAnyAdOpen = true
+                            isAnyAdShowing = true
+                            fHandler.postDelayed(fRunnable, 1000)
+                        }
+
+                        override fun onAdClosed() {
+                            super.onAdClosed()
+                            Log.i(TAG, "onAdClosed: ")
+                            isAnyAdShowing = false
+
+                            fHandler.removeCallbacks(fRunnable)
+                            if (fContext.isOnline) {
+                                mTime = null
+                                mNativeAd = null
+                                for (lListener in mListenerList) {
+                                    Handler(Looper.getMainLooper()).postDelayed({
+                                        lListener.second.onAdClosed()
+                                    }, 500)
+                                }
+                            }
+                        }
+                    }).build()
+
+                    adLoader.loadAd(AdRequest.Builder().build())
+                }
             }
         } else {
             Log.i(TAG, "loadAd: old stored Ad")
@@ -153,6 +211,7 @@ internal object NativeAdvancedHelper {
     }
 
     internal fun destroy() {
+        mAdIdPosition = -1
         mListenerList.removeAll(mListenerList.toSet())
         mNativeAd?.destroy()
         mTime = null

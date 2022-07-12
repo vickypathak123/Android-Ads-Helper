@@ -15,7 +15,9 @@
         <entry key="adshelper/src/main/res/layout/layout_google_native_ad_exit_full_screen_website.xml" value="0.25" />
         <entry key="adshelper/src/main/res/layout/layout_google_native_ad_medium.xml" value="0.33" />
         <entry key="adshelper/src/main/res/layout/testing.xml" value="0.33697916666666666" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.205" />
         <entry key="app/src/main/res/drawable/bg_rounded_bottom_sheet.xml" value="0.24" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.205" />
         <entry key="app/src/main/res/drawable/img_border1.xml" value="0.3572916666666667" />
         <entry key="app/src/main/res/drawable/img_border3.xml" value="0.3572916666666667" />
         <entry key="app/src/main/res/layout/activity_custom_native_ads.xml" value="0.33697916666666666" />
@@ -28,6 +30,8 @@
         <entry key="app/src/main/res/layout/dialog_select_language.xml" value="0.33697916666666666" />
         <entry key="app/src/main/res/layout/item_select_language.xml" value="0.33697916666666666" />
         <entry key="app/src/main/res/layout/view_gift_ad.xml" value="0.33697916666666666" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.205" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.205" />
       </map>
     </option>
   </component>

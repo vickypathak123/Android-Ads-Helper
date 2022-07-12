@@ -5,15 +5,11 @@ package com.example.app.ads.helper
 import android.animation.Animator
 import android.app.Activity
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.os.SystemClock
 import android.util.Log
 import android.widget.ImageView
 import androidx.annotation.NonNull
 import com.airbnb.lottie.LottieAnimationView
-import com.example.app.ads.helper.openad.OpenAdHelper
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.interstitial.InterstitialAd
 
 /**
@@ -45,14 +41,6 @@ object GiftIconHelper {
         fivGiftIcon.gone
         fivBlastIcon.gone
 
-        /*if (isAppInTesting) {
-            val isTestDevice = AdRequest.Builder().build().isTestDevice(fContext)
-            Log.e(TAG, "loadNativeAdvancedAd: isTestDevice::${isTestDevice}")
-            if (!isTestDevice) {
-                return
-            }
-        }*/
-
         loadNewInterstitialAd(fContext, fivGiftIcon, fivBlastIcon)
 
         fivGiftIcon.setOnClickListener {
@@ -66,8 +54,6 @@ object GiftIconHelper {
             fivGiftIcon.gone
             fivBlastIcon.visible
 
-            Log.i(TAG, "loadGiftAd: Gift Click For Ad Showing")
-
             fivBlastIcon.addAnimatorListener(object : Animator.AnimatorListener {
                 override fun onAnimationRepeat(animation: Animator?) {
 
@@ -77,13 +63,10 @@ object GiftIconHelper {
                     fivGiftIcon.gone
                     fivBlastIcon.gone
                     if (!fContext.isNewInterstitialAdLoad) {
-//                        if (isInterstitialAdLoaded && interstitial != null) {
-                        Log.i(TAG, "onAnimationEnd: Load New Ads")
                         isInterstitialAdLoaded = false
                         interstitial = null
                         isInterstitialAdShow = false
                         loadNewInterstitialAd(fContext, fivGiftIcon, fivBlastIcon)
-//                        }
                     }
                 }
 
@@ -100,52 +83,51 @@ object GiftIconHelper {
         }
     }
 
-    private fun loadNewInterstitialAd(@NonNull fContext: Context, @NonNull fivGiftIcon: ImageView, @NonNull fivBlastIcon: ImageView) {
+    internal fun loadNewInterstitialAd(@NonNull fContext: Context, @NonNull fivGiftIcon: ImageView, @NonNull fivBlastIcon: ImageView) {
         fivGiftIcon.gone
         fivBlastIcon.gone
-//        Handler(Looper.getMainLooper()).postDelayed({
-            InterstitialAdHelper.loadAd(fContext, object : AdMobAdsListener {
 
-                override fun onAdLoaded() {
-                    Log.e(TAG, "Gift Ad onAdLoaded: ")
-                    isInterstitialAdLoaded = true
-                    fivGiftIcon.visible
-                    fivBlastIcon.gone
-                }
+        InterstitialAdHelper.loadAd(fContext, object : AdMobAdsListener {
 
-                override fun onInterstitialAdLoaded(interstitialAd: InterstitialAd) {
-                    super.onInterstitialAdLoaded(interstitialAd)
-                    Log.e(TAG, "Gift Ad onInterstitialAdLoaded: ")
-                    interstitial = interstitialAd
-                    isInterstitialAdLoaded = true
-                    fivGiftIcon.visible
-                    fivBlastIcon.gone
-                }
+            override fun onAdLoaded() {
+                Log.e(TAG, "Gift Ad onAdLoaded: ")
+                isInterstitialAdLoaded = true
+                fivGiftIcon.visible
+                fivBlastIcon.gone
+            }
 
-                override fun onAdFailed() {
-                    Log.e(TAG, "Gift Ad onAdFailed: ")
-                    isInterstitialAdLoaded = false
-                    fivGiftIcon.gone
-                    fivBlastIcon.gone
-                    loadNewInterstitialAd(fContext, fivGiftIcon, fivBlastIcon)
-                }
+            override fun onInterstitialAdLoaded(interstitialAd: InterstitialAd) {
+                super.onInterstitialAdLoaded(interstitialAd)
+                Log.e(TAG, "Gift Ad onInterstitialAdLoaded: ")
+                interstitial = interstitialAd
+                isInterstitialAdLoaded = true
+                fivGiftIcon.visible
+                fivBlastIcon.gone
+            }
 
-                override fun onAdClosed(isShowFullScreenAd: Boolean) {
-                    Log.e(TAG, "Gift Ad onAdClosed: ")
-                    isAnyAdShowing = false
-                    isInterstitialAdLoaded = false
-                    isInterstitialAdShow = false
-                    fivBlastIcon.gone
-                    fivGiftIcon.gone
-                    interstitial?.fullScreenContentCallback = null
-                    interstitial = null
-                    loadNewInterstitialAd(fContext, fivGiftIcon, fivBlastIcon)
-                }
-            })
-//        }, 500)
+            override fun onAdFailed() {
+                Log.e(TAG, "Gift Ad onAdFailed: ")
+                isInterstitialAdLoaded = false
+                fivGiftIcon.gone
+                fivBlastIcon.gone
+                loadNewInterstitialAd(fContext, fivGiftIcon, fivBlastIcon)
+            }
+
+            override fun onAdClosed(isShowFullScreenAd: Boolean) {
+                Log.e(TAG, "Gift Ad onAdClosed: ")
+                isAnyAdShowing = false
+                isInterstitialAdLoaded = false
+                isInterstitialAdShow = false
+                fivBlastIcon.gone
+                fivGiftIcon.gone
+                interstitial?.fullScreenContentCallback = null
+                interstitial = null
+                loadNewInterstitialAd(fContext, fivGiftIcon, fivBlastIcon)
+            }
+        })
     }
 
-    private val Activity.isNewInterstitialAdLoad: Boolean
+    internal val Activity.isNewInterstitialAdLoad: Boolean
         get() {
             return if (!isInterstitialAdShow && isInterstitialAdLoaded && interstitial != null) {
                 if (!isAnyAdShowing) {

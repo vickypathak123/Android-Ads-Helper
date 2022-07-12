@@ -32,62 +32,90 @@ object InterstitialRewardHelper {
 
     private var mListener: AdMobAdsListener? = null
 
-    private fun loadRewardedInterstitialAd(@NonNull fContext: Context, @NonNull fListener: AdMobAdsListener) {
-        var lRewardedInterstitialAd: RewardedInterstitialAd?
+    private var mAdIdPosition: Int = -1
 
+    private fun getRewardedInterstitialAdID(): String? {
+
+        mAdIdPosition = if (mAdIdPosition < admob_interstitial_ad_reward_id.size) {
+            if (mAdIdPosition == -1) {
+                0
+            } else {
+                (mAdIdPosition + 1)
+            }
+        } else {
+            0
+        }
+
+        return if (mAdIdPosition >= 0 && mAdIdPosition < admob_interstitial_ad_reward_id.size) {
+            admob_interstitial_ad_reward_id[mAdIdPosition]
+        } else {
+            mAdIdPosition = -1
+            null
+        }
+    }
+
+    internal fun loadRewardedInterstitialAd(@NonNull fContext: Context, @NonNull fListener: AdMobAdsListener) {
         fListener.onStartToLoadRewardedInterstitialAd()
 
-        RewardedInterstitialAd.load(
-            fContext,
-            admob_interstitial_ad_reward_id ?: fContext.getStringRes(R.string.admob_interstitial_ad_reward_id),
-            AdRequest.Builder().build(),
-            object : RewardedInterstitialAdLoadCallback() {
+        getRewardedInterstitialAdID()?.let { adsID ->
+            var lRewardedInterstitialAd: RewardedInterstitialAd?
 
-                override fun onAdLoaded(rewardedInterstitialAd: RewardedInterstitialAd) {
-                    super.onAdLoaded(rewardedInterstitialAd)
+            if (BuildConfig.DEBUG) {
+                Log.i(TAG, "loadAd: AdsID -> $adsID")
+            }
 
-                    Log.i(TAG, "onAdLoaded: ")
+            RewardedInterstitialAd.load(
+                fContext,
+                adsID,
+                AdRequest.Builder().build(),
+                object : RewardedInterstitialAdLoadCallback() {
 
-                    lRewardedInterstitialAd = rewardedInterstitialAd
-                    fListener.onRewardInterstitialAdLoaded(rewardedInterstitialAd = rewardedInterstitialAd)
+                    override fun onAdLoaded(rewardedInterstitialAd: RewardedInterstitialAd) {
+                        super.onAdLoaded(rewardedInterstitialAd)
+                        mAdIdPosition = -1
+                        Log.i(TAG, "onAdLoaded: ")
 
-                    lRewardedInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                        lRewardedInterstitialAd = rewardedInterstitialAd
+                        fListener.onRewardInterstitialAdLoaded(rewardedInterstitialAd = rewardedInterstitialAd)
 
-                        override fun onAdDismissedFullScreenContent() {
-                            super.onAdDismissedFullScreenContent()
-                            Log.i(TAG, "onAdDismissedFullScreenContent: ")
-                            isInterstitialAdShow = false
-                            isAnyAdShowing = false
-                            fListener.onAdClosed()
+                        lRewardedInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+
+                            override fun onAdDismissedFullScreenContent() {
+                                super.onAdDismissedFullScreenContent()
+                                Log.i(TAG, "onAdDismissedFullScreenContent: ")
+                                isInterstitialAdShow = false
+                                isAnyAdShowing = false
+                                fListener.onAdClosed()
+                            }
+
+                            override fun onAdShowedFullScreenContent() {
+                                super.onAdShowedFullScreenContent()
+                                Log.i(TAG, "onAdShowedFullScreenContent: ")
+                                lRewardedInterstitialAd = null
+                            }
+
+                            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                                super.onAdFailedToShowFullScreenContent(adError)
+                                Log.e(TAG, "onAdFailedToShowFullScreenContent: \nErrorMessage::${adError.message}\nErrorCode::${adError.code}")
+                            }
+
                         }
+                    }
 
-                        override fun onAdShowedFullScreenContent() {
-                            super.onAdShowedFullScreenContent()
-                            Log.i(TAG, "onAdShowedFullScreenContent: ")
-                            lRewardedInterstitialAd = null
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        Log.e(TAG, "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}")
+
+                        lRewardedInterstitialAd = null
+                        if ((mAdIdPosition + 1) >= admob_interstitial_ad_reward_id.size) {
+                            mAdIdPosition = -1
+                            fListener.onAdFailed()
+                        } else {
+                            loadRewardedInterstitialAd(fContext, fListener)
                         }
-
-                        override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                            super.onAdFailedToShowFullScreenContent(adError)
-                            Log.i(
-                                TAG,
-                                "onAdFailedToShowFullScreenContent: \nErrorMessage::${adError.message}\nErrorCode::${adError.code}"
-                            )
-                        }
-
                     }
                 }
-
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.i(
-                        TAG,
-                        "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}"
-                    )
-                    lRewardedInterstitialAd = null
-                    fListener.onAdFailed()
-                }
-            }
-        )
+            )
+        }
     }
 
     /**
@@ -97,14 +125,6 @@ object InterstitialRewardHelper {
      * @param fContext this is a reference to your activity or fragment context
      */
     fun loadRewardedInterstitialAd(@NonNull fContext: Context) {
-
-        /*if (isAppInTesting) {
-            val isTestDevice = AdRequest.Builder().build().isTestDevice(fContext)
-            Log.e(TAG, "loadNativeAdvancedAd: isTestDevice::${isTestDevice}")
-            if (!isTestDevice) {
-                return
-            }
-        }*/
 
         if (mRewardedInterstitialAd == null) {
 
@@ -197,6 +217,7 @@ object InterstitialRewardHelper {
     }
 
     fun destroy() {
+        mAdIdPosition = -1
         mListener = null
         isUserEarnedReward = false
         mRewardedInterstitialAd = null

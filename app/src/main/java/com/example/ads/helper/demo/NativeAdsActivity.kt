@@ -11,8 +11,6 @@ import com.example.app.ads.helper.InterstitialAdHelper.isShowInterstitialAd
 
 class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
 
-    private var isFirstTime: Boolean = true
-
     override fun getActivityContext(): AppCompatActivity {
         return this@NativeAdsActivity
     }
@@ -24,29 +22,19 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
     override fun initAds() {
         super.initAds()
 
-//        InterstitialAdHelper.loadInterstitialAd(fContext = mActivity)
+        InterstitialAdHelper.loadInterstitialAd(fContext = mActivity)
 
-//        NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
-//            NativeAdsSize.Big,
-//            mBinding.flNativeAdPlaceHolderBig,
-//            isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
-//            isAdLoaded = {
-//                /*if (isFirstTime) {
-//                    isFirstTime = false
-//                    NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
-//                        NativeAdsSize.Medium,
-//                        mBinding.flNativeAdPlaceHolderMedium,
-//                        isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
-//                    )
-//                }*/
-//            }
-//        )
+        NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
+            NativeAdsSize.Big,
+            mBinding.flNativeAdPlaceHolderBig,
+            isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
+        )
 
-//        NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
-//            NativeAdsSize.Medium,
-//            mBinding.flNativeAdPlaceHolderMedium,
-//            isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
-//        )
+        NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
+            NativeAdsSize.Medium,
+            mBinding.flNativeAdPlaceHolderMedium,
+            isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
+        )
 
         GiftIconHelper.loadGiftAd(
             fContext = mActivity,
@@ -81,8 +69,8 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
 
 
     override fun onBackPressed() {
-//        mActivity.isShowInterstitialAd(isBackAds = true) { _ ->
+        mActivity.isShowInterstitialAd(isBackAds = true) { _ ->
             finish()
-//        }
+        }
     }
 }

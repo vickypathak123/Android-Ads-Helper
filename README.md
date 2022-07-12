@@ -179,12 +179,38 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
          * onClickAdClose -> lambda function call when user click close button of ad
          * onAdClosed -> lambda function call after ad closed
          */
+
+        /**
+         * Call this method when you need to load your Native Advanced AD
+         * you need to call this method only once in any activity or fragment
+         *
+         * this method will load your Native Advanced AD with 4 different size
+         * like NativeAdsSize.Medium, NativeAdsSize.Big, NativeAdsSize.FullScreen, NativeAdsSize.Custom
+         * 
+         * you can set your ads 'I' icon place through pass this type of parameter
+         * like NativeAdOptions.ADCHOICES_TOP_RIGHT, NativeAdOptions.ADCHOICES_TOP_LEFT, NativeAdOptions.ADCHOICES_BOTTOM_RIGHT, NativeAdOptions.ADCHOICES_BOTTOM_LEFT
+         *
+         * mContext -> this is a reference to your activity or fragment context
+         * fSize ->  it indicate your Ad Size
+         * fLayout -> FrameLayout for add NativeAd View
+         * adChoicesPlacement -> Ads 'I' icon place 
+         * fCustomAdView -> your native ad custom layout
+         * isNeedLayoutShow -> [by Default value = true] pass false if you do not need to show AD at a time when it's loaded successfully
+         * isAddVideoOptions -> [by Default value = true] pass false if you don't need to add video option
+         * isSetDefaultButtonColor -> [by Default value = true] pass false if you don't need to change in ad action button
+         * isAdLoaded -> lambda function call when ad isLoaded
+         * onClickAdClose -> lambda function call when user click close button of ad
+         * onAdClosed -> lambda function call after ad closed
+         * onAdFailed -> lambda function call after ad failed to load
+         */
         NativeAdvancedModelHelper(mContext = mActivity).loadNativeAdvancedAd(
            fSize = NativeAdsSize.FullScreen,
            fLayout = mBinding.flNativeAdPlaceHolder,
+           adChoicesPlacement = NativeAdOptions.ADCHOICES_TOP_RIGHT,
            fCustomAdView = null,
            isNeedLayoutShow = true,
            isAddVideoOptions = true,
+           isSetDefaultButtonColor = true,
            isAdLoaded = {
               // Perform your Action
            },
@@ -192,6 +218,9 @@ Android Ads code that is required in every app of Vasundhara Infotech [Vasundhar
               // Perform your Action
            },
            onAdClosed = {
+              // Perform your Action
+           },
+           onAdFailed = {
               // Perform your Action
            }
         )
