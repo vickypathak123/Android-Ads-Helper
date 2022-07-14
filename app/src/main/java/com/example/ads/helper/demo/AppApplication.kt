@@ -28,7 +28,7 @@ class AppApplication : AppOpenApplication(), AppOpenApplication.AppLifecycleList
         VasuAdsConfig.with(this)
             .isEnableOpenAd(this.getBoolean(IS_OPEN_ADS_ENABLE, true))
 //            .isEnableOpenAd(false)
-//            .needToTakeAllTestAdID(true)
+            .needToTakeAllTestAdID(true)
 //            .needToBlockInterstitialAd(true)
             .setAdmobNativeAdvancedAdId("ca-app-pub-3940256099942544/1044960115")
 //            .setAdmobNativeAdvancedAdId(this.getStringRes(R.string.admob_native_advanced_ad_id))

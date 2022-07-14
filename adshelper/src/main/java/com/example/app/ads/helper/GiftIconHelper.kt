@@ -6,7 +6,6 @@ import android.animation.Animator
 import android.app.Activity
 import android.content.Context
 import android.os.SystemClock
-import android.util.Log
 import android.widget.ImageView
 import androidx.annotation.NonNull
 import com.airbnb.lottie.LottieAnimationView
@@ -90,7 +89,7 @@ object GiftIconHelper {
         InterstitialAdHelper.loadAd(fContext, object : AdMobAdsListener {
 
             override fun onAdLoaded() {
-                Log.e(TAG, "Gift Ad onAdLoaded: ")
+                logI(tag = TAG, message = "onAdLoaded: Gift Icon Ad")
                 isInterstitialAdLoaded = true
                 fivGiftIcon.visible
                 fivBlastIcon.gone
@@ -98,7 +97,7 @@ object GiftIconHelper {
 
             override fun onInterstitialAdLoaded(interstitialAd: InterstitialAd) {
                 super.onInterstitialAdLoaded(interstitialAd)
-                Log.e(TAG, "Gift Ad onInterstitialAdLoaded: ")
+                logI(tag = TAG, message = "onInterstitialAdLoaded: Gift Icon Ad")
                 interstitial = interstitialAd
                 isInterstitialAdLoaded = true
                 fivGiftIcon.visible
@@ -106,7 +105,7 @@ object GiftIconHelper {
             }
 
             override fun onAdFailed() {
-                Log.e(TAG, "Gift Ad onAdFailed: ")
+                logE(tag = TAG, message = "onAdFailed: Gift Icon Ad")
                 isInterstitialAdLoaded = false
                 fivGiftIcon.gone
                 fivBlastIcon.gone
@@ -114,7 +113,7 @@ object GiftIconHelper {
             }
 
             override fun onAdClosed(isShowFullScreenAd: Boolean) {
-                Log.e(TAG, "Gift Ad onAdClosed: ")
+                logI(tag = TAG, message = "onAdClosed: Gift Icon Ad")
                 isAnyAdShowing = false
                 isInterstitialAdLoaded = false
                 isInterstitialAdShow = false
@@ -131,7 +130,7 @@ object GiftIconHelper {
         get() {
             return if (!isInterstitialAdShow && isInterstitialAdLoaded && interstitial != null) {
                 if (!isAnyAdShowing) {
-                    Log.i(TAG, "Gift Ad Show: ")
+                    logI(tag = TAG, message = "onAdShowed: Gift Icon Ad")
                     isAnyAdShowing = true
                     isInterstitialAdShow = true
                     isAnyAdOpen = true

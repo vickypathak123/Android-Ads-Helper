@@ -6,13 +6,10 @@ import android.app.Activity
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import android.util.Log
 import androidx.annotation.NonNull
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
-import com.google.android.gms.ads.nativead.NativeAdOptions.ADCHOICES_TOP_LEFT
-import com.google.android.gms.ads.nativead.NativeAdOptions.ADCHOICES_TOP_RIGHT
 
 /**
  * @author Akshay Harsoda
@@ -103,11 +100,8 @@ internal object NativeAdvancedHelper {
 
                     mTime = SystemClock.uptimeMillis()
 
-                    Log.e(TAG, "loadNativeAdvancedAd: New Ad Loading...")
-
-                    if (BuildConfig.DEBUG) {
-                        Log.i(TAG, "loadNativeAdvancedAd: AdsID -> $adsID")
-                    }
+                    logI(tag = TAG, message = "loadNativeAdvancedAd: AdsID -> $adsID")
+                    logI(tag = TAG, message = "loadNativeAdvancedAd: New Ad Loading...")
 
                     val builder = AdLoader.Builder(fContext, adsID)
 
@@ -117,12 +111,12 @@ internal object NativeAdvancedHelper {
 
                         for (lListener in mListenerList) {
                             if (mNativeAd == null) {
-                                Log.i(TAG, "loadAd: new live Ad -> ${unifiedNativeAd.headline}")
+                                logI(tag = TAG, message = "loadNativeAdvancedAd: new live Ad -> ${unifiedNativeAd.headline}")
                                 mNativeAd = unifiedNativeAd
                                 lListener.second.onNativeAdLoaded(unifiedNativeAd)
                             } else {
                                 mNativeAd?.let {
-                                    Log.i(TAG, "loadAd: new live Ad -> old stored Ad")
+                                    logI(tag = TAG, message = "loadNativeAdvancedAd: new live Ad -> old stored Ad")
                                     lListener.second.onNativeAdLoaded(it)
                                 }
                             }
@@ -147,12 +141,16 @@ internal object NativeAdvancedHelper {
 
                     val adLoader = builder.withAdListener(object : AdListener() {
 
+                        var isAdClosedCalled: Boolean = false
+
                         val fHandler: Handler = Handler(Looper.getMainLooper())
 
                         val fRunnable: Runnable = object : Runnable {
                             override fun run() {
                                 if (isAppForeground) {
-                                    onAdClosed()
+                                    if (!isAdClosedCalled) {
+                                        onAdClosed()
+                                    }
                                 } else {
                                     fHandler.postDelayed(this, 1000)
                                 }
@@ -160,7 +158,7 @@ internal object NativeAdvancedHelper {
                         }
 
                         override fun onAdFailedToLoad(adError: LoadAdError) {
-                            Log.e(TAG, "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}")
+                            logE(tag = TAG, message = "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}")
 
                             mTime = null
                             mNativeAd = null
@@ -170,7 +168,6 @@ internal object NativeAdvancedHelper {
                                 fListener.onAdFailed()
                             } else {
                                 loadNativeAdvancedAd(fContext, isAddVideoOptions, fSize, adChoicesPlacement, fListener)
-//                                loadNativeAdvancedAd(fContext, isAddVideoOptions, fSize, fListener)
                             }
                         }
 
@@ -178,12 +175,16 @@ internal object NativeAdvancedHelper {
                             super.onAdClicked()
                             isAnyAdOpen = true
                             isAnyAdShowing = true
-                            fHandler.postDelayed(fRunnable, 1000)
+                            isAdClosedCalled = false
+                            onStartAdTimer = {
+                                fHandler.postDelayed(fRunnable, 1000)
+                            }
                         }
 
                         override fun onAdClosed() {
                             super.onAdClosed()
-                            Log.i(TAG, "onAdClosed: ")
+                            logI(tag = TAG, message = "onAdClosed: ")
+                            isAdClosedCalled = true
                             isAnyAdShowing = false
 
                             fHandler.removeCallbacks(fRunnable)
@@ -203,7 +204,7 @@ internal object NativeAdvancedHelper {
                 }
             }
         } else {
-            Log.i(TAG, "loadAd: old stored Ad")
+            logI(tag = TAG, message = "loadNativeAdvancedAd: new live Ad -> old stored Ad")
             mNativeAd?.let {
                 fListener.onNativeAdLoaded(it)
             }
@@ -216,5 +217,11 @@ internal object NativeAdvancedHelper {
         mNativeAd?.destroy()
         mTime = null
         mNativeAd = null
+    }
+
+    private var onStartAdTimer: () -> Unit = {}
+
+    fun startAdClickTimer() {
+        onStartAdTimer.invoke()
     }
 }

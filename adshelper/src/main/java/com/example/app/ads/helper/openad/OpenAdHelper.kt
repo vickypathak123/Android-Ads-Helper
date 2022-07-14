@@ -2,7 +2,6 @@ package com.example.app.ads.helper.openad
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
 import androidx.annotation.NonNull
 import com.example.app.ads.helper.*
 import com.google.android.gms.ads.AdError
@@ -56,9 +55,7 @@ object OpenAdHelper {
 
             var lAppOpenAd: AppOpenAd?
 
-            if (BuildConfig.DEBUG) {
-                Log.i(TAG, "loadAd: AdsID -> $adsID")
-            }
+            logI(tag = TAG, message = "loadOpenAd: AdsID -> $adsID")
 
             AppOpenAd.load(
                 fContext,
@@ -69,7 +66,7 @@ object OpenAdHelper {
 
                     override fun onAdLoaded(appOpenAd: AppOpenAd) {
                         super.onAdLoaded(appOpenAd)
-                        Log.i(TAG, "onAdLoaded: ")
+                        logI(tag = TAG, message = "onAdLoaded: ")
                         mAdIdPosition = -1
                         lAppOpenAd = appOpenAd
                         adLoadTime = Date().time
@@ -78,7 +75,7 @@ object OpenAdHelper {
                         lAppOpenAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                             override fun onAdDismissedFullScreenContent() {
                                 super.onAdDismissedFullScreenContent()
-                                Log.i(TAG, "onAdClosed: ")
+                                logI(tag = TAG, message = "onAdClosed: ")
                                 isOpenAdShowing = false
                                 fListener.onAdClosed()
                             }
@@ -91,14 +88,14 @@ object OpenAdHelper {
 
                             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                                 super.onAdFailedToShowFullScreenContent(adError)
-                                Log.e(TAG, "onAdFailedToShowFullScreenContent: \nErrorMessage::${adError.message}\nErrorCode::${adError.code}")
+                                logE(tag = TAG, message = "onAdFailedToShowFullScreenContent: \nErrorMessage::${adError.message}\nErrorCode::${adError.code}")
                             }
                         }
                     }
 
                     override fun onAdFailedToLoad(adError: LoadAdError) {
                         super.onAdFailedToLoad(adError)
-                        Log.e(TAG, "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}")
+                        logE(tag = TAG, message = "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}")
 
                         lAppOpenAd = null
                         if ((mAdIdPosition + 1) >= admob_open_ad_id.size) {
@@ -173,7 +170,7 @@ object OpenAdHelper {
             if (isAdAvailable()) {
                 if (!isAnyAdShowing) {
                     isAnyAdShowing = true
-                    Log.i(TAG, "isShowOpenAd: Showing Open Ad")
+                    logI(tag = TAG, message = "isShowOpenAd: Showing Open Ad")
                     mAppOpenAd?.show(this)
                 } else {
                     onAdClosed.invoke()

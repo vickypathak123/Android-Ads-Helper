@@ -1,7 +1,6 @@
 package com.example.app.ads.helper
 
 import android.content.Context
-import android.util.Log
 import androidx.annotation.NonNull
 import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.ads.AdError
@@ -60,9 +59,7 @@ object InterstitialRewardHelper {
         getRewardedInterstitialAdID()?.let { adsID ->
             var lRewardedInterstitialAd: RewardedInterstitialAd?
 
-            if (BuildConfig.DEBUG) {
-                Log.i(TAG, "loadAd: AdsID -> $adsID")
-            }
+            logI(tag = TAG, message = "loadRewardedInterstitialAd: AdsID -> $adsID")
 
             RewardedInterstitialAd.load(
                 fContext,
@@ -73,7 +70,7 @@ object InterstitialRewardHelper {
                     override fun onAdLoaded(rewardedInterstitialAd: RewardedInterstitialAd) {
                         super.onAdLoaded(rewardedInterstitialAd)
                         mAdIdPosition = -1
-                        Log.i(TAG, "onAdLoaded: ")
+                        logI(tag = TAG, message = "onAdLoaded: ")
 
                         lRewardedInterstitialAd = rewardedInterstitialAd
                         fListener.onRewardInterstitialAdLoaded(rewardedInterstitialAd = rewardedInterstitialAd)
@@ -82,7 +79,7 @@ object InterstitialRewardHelper {
 
                             override fun onAdDismissedFullScreenContent() {
                                 super.onAdDismissedFullScreenContent()
-                                Log.i(TAG, "onAdDismissedFullScreenContent: ")
+                                logI(tag = TAG, message = "onAdDismissedFullScreenContent: ")
                                 isInterstitialAdShow = false
                                 isAnyAdShowing = false
                                 fListener.onAdClosed()
@@ -90,20 +87,20 @@ object InterstitialRewardHelper {
 
                             override fun onAdShowedFullScreenContent() {
                                 super.onAdShowedFullScreenContent()
-                                Log.i(TAG, "onAdShowedFullScreenContent: ")
+                                logI(tag = TAG, message = "onAdShowedFullScreenContent: ")
                                 lRewardedInterstitialAd = null
                             }
 
                             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                                 super.onAdFailedToShowFullScreenContent(adError)
-                                Log.e(TAG, "onAdFailedToShowFullScreenContent: \nErrorMessage::${adError.message}\nErrorCode::${adError.code}")
+                                logE(tag = TAG, message = "onAdFailedToShowFullScreenContent: \nErrorMessage::${adError.message}\nErrorCode::${adError.code}")
                             }
 
                         }
                     }
 
                     override fun onAdFailedToLoad(adError: LoadAdError) {
-                        Log.e(TAG, "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}")
+                        logE(tag = TAG, message = "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}")
 
                         lRewardedInterstitialAd = null
                         if ((mAdIdPosition + 1) >= admob_interstitial_ad_reward_id.size) {

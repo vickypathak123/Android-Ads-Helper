@@ -1,12 +1,9 @@
 package com.example.app.ads.helper.activity
 
 import android.content.Intent
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
-import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
@@ -35,7 +32,7 @@ class FullScreenNativeAdDialogActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(null)
 
-        setTheme(R.style.call_screen_theme)
+        setTheme(R.style.theme_full_screen_native_ad_dialog_activity)
 
         this.mBinding = DialogFullScreenNativeAdBinding.inflate(layoutInflater)
         setContentView(this.mBinding.root)

@@ -1,11 +1,9 @@
 package com.example.app.ads.helper
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.CountDownTimer
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.*
@@ -125,15 +123,13 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
 
             mLayout.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
                 override fun onViewAttachedToWindow(v: View?) {
-                    Log.e(mTAG, "onViewAttachedToWindow: ")
+                    logI(tag = mTAG, message = "onViewAttachedToWindow: ")
                 }
 
                 override fun onViewDetachedFromWindow(v: View?) {
-
-                    Log.e(mTAG, "onViewDetachedFromWindow: ")
-
-                    Log.e(
-                        mTAG, "onViewDetachedFromWindow: " +
+                    logI(
+                        tag = mTAG,
+                        message = "onViewDetachedFromWindow: " +
                                 "\nClassName-> ${mContext.localClassName}, " +
                                 "\nmContext hasWindowFocus-> ${mContext.hasWindowFocus()}, " +
                                 "\nmLayout.isAttachedToWindow::-> ${mLayout.isAttachedToWindow}, " +
@@ -162,7 +158,7 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         )
     }
 
-    @SuppressLint("InflateParams")
+
     private fun loadAdWithPerfectLayout(
         @NonNull fSize: NativeAdsSize,
         @NonNull fLayout: FrameLayout,
@@ -180,39 +176,24 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
         val adView = when (fSize) {
 
             NativeAdsSize.Big -> {
-                mContext.inflater.inflate(
-                    R.layout.layout_google_native_ad_big,
-                    null
-                ) as NativeAdView
+                mContext.inflater.inflate(R.layout.layout_google_native_ad_big, fLayout, false) as NativeAdView
             }
 
             NativeAdsSize.Medium -> {
-                mContext.inflater.inflate(
-                    R.layout.layout_google_native_ad_medium,
-                    null
-                ) as NativeAdView
+                mContext.inflater.inflate(R.layout.layout_google_native_ad_medium, fLayout, false) as NativeAdView
             }
 
             NativeAdsSize.FullScreen -> {
                 if (nativeAd.starRating != null && nativeAd.price != null && nativeAd.store != null) {
                     mContext.inflater.inflate(
-                        R.layout.layout_google_native_ad_exit_full_screen_app_store,
-                        null
-                    ) as ConstraintLayout
+                        R.layout.layout_google_native_ad_exit_full_screen_app_store, fLayout, false) as ConstraintLayout
                 } else {
-                    mContext.inflater.inflate(
-                        R.layout.layout_google_native_ad_exit_full_screen_website,
-                        null
-                    ) as NativeAdView
+                    mContext.inflater.inflate(R.layout.layout_google_native_ad_exit_full_screen_website, fLayout, false) as NativeAdView
                 }
             }
 
             NativeAdsSize.Custom -> {
-                fCustomAdView
-                    ?: mContext.inflater.inflate(
-                        R.layout.layout_google_native_ad_big,
-                        null
-                    ) as NativeAdView
+                fCustomAdView ?: mContext.inflater.inflate(R.layout.layout_google_native_ad_big, fLayout, false) as NativeAdView
             }
         }
 
@@ -297,7 +278,7 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             fView.gone
             if (nativeAd.mediaContent != null) {
                 nativeAd.mediaContent?.let { fData ->
-                    Log.e(mTAG, "populateFullScreenNativeAdView: Set Media View")
+                    logI(tag = mTAG, message = "populateFullScreenNativeAdView: Set Media View")
                     fView.setMediaContent(fData)
                     fView.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
                     fView.visible
@@ -450,7 +431,7 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             fView.gone
             if (nativeAd.mediaContent != null) {
                 nativeAd.mediaContent?.let { fData ->
-                    Log.e(mTAG, "populateNativeAdView: Set Media View")
+                    logI(tag = mTAG, message = "populateNativeAdView: Set Media View")
                     fView.setMediaContent(fData)
                     fView.setImageScaleType(ImageView.ScaleType.FIT_CENTER)
                     fView.visible
@@ -577,7 +558,6 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
 
     override fun onAdClosed(isShowFullScreenAd: Boolean) {
         super.onAdClosed(isShowFullScreenAd)
-        Log.i(mTAG, "onAdClosed: ")
 
         mLayout.removeAllViews()
 
@@ -605,8 +585,6 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
 
     override fun onNativeAdLoaded(nativeAd: NativeAd) {
         super.onNativeAdLoaded(nativeAd)
-
-        Log.e(mTAG, "onNativeAdLoaded: ")
 
         loadAdWithPerfectLayout(
             fSize = mSize,

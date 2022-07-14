@@ -21,7 +21,7 @@
         <item name="android:windowExitAnimation">@android:anim/slide_out_right</item>
     </style>
 
-    <style name="call_screen_theme" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="theme_full_screen_native_ad_dialog_activity" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges

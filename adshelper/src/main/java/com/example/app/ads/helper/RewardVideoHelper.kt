@@ -1,7 +1,6 @@
 package com.example.app.ads.helper
 
 import android.content.Context
-import android.util.Log
 import androidx.annotation.NonNull
 import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.ads.AdError
@@ -65,7 +64,7 @@ object RewardVideoHelper {
             var lRewardedAd: RewardedAd?
 
             if (BuildConfig.DEBUG) {
-                Log.i(TAG, "loadAd: AdsID -> $adsID")
+                logI(tag = TAG, message = "loadRewardVideoAd: AdsID -> $adsID")
             }
 
             RewardedAd.load(
@@ -75,7 +74,7 @@ object RewardVideoHelper {
                 object : RewardedAdLoadCallback() {
 
                     override fun onAdLoaded(rewardedAd: RewardedAd) {
-                        Log.i(TAG, "onAdLoaded: ")
+                        logI(tag = TAG, message = "onAdLoaded: ")
                         mAdIdPosition = -1
                         lRewardedAd = rewardedAd
                         fListener.onRewardVideoAdLoaded(rewardedAd = rewardedAd)
@@ -84,7 +83,7 @@ object RewardVideoHelper {
 
                             override fun onAdDismissedFullScreenContent() {
                                 super.onAdDismissedFullScreenContent()
-                                Log.i(TAG, "onAdDismissedFullScreenContent: ")
+                                logI(tag = TAG, message = "onAdDismissedFullScreenContent: ")
                                 isInterstitialAdShow = false
                                 isAnyAdShowing = false
                                 fListener.onAdClosed()
@@ -92,20 +91,20 @@ object RewardVideoHelper {
 
                             override fun onAdShowedFullScreenContent() {
                                 super.onAdShowedFullScreenContent()
-                                Log.i(TAG, "onAdShowedFullScreenContent: ")
+                                logI(tag = TAG, message = "onAdShowedFullScreenContent: ")
                                 lRewardedAd = null
                             }
 
                             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                                 super.onAdFailedToShowFullScreenContent(adError)
-                                Log.e(TAG, "onAdFailedToShowFullScreenContent: \nErrorMessage::${adError.message}\nErrorCode::${adError.code}")
+                                logE(tag = TAG, message = "onAdFailedToShowFullScreenContent: \nErrorMessage::${adError.message}\nErrorCode::${adError.code}")
                             }
 
                         }
                     }
 
                     override fun onAdFailedToLoad(adError: LoadAdError) {
-                        Log.e(TAG, "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}")
+                        logE(tag = TAG, message = "onAdFailedToLoad: Ad failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}")
 
                         lRewardedAd = null
                         if ((mAdIdPosition + 1) >= admob_reward_video_ad_id.size) {

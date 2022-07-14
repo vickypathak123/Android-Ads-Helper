@@ -6,7 +6,6 @@ import android.content.Context
 import android.os.Build
 import android.os.Process
 import android.os.SystemClock
-import android.util.Log
 import android.webkit.WebView
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -28,8 +27,6 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
     private val mMinPauseDuration = 100
 
     private var mOpenAdManager: OpenAdManager? = null
-
-    private val mTestDeviceIds: ArrayList<String> = ArrayList()
 
     interface AppLifecycleListener {
         fun onResumeApp(fCurrentActivity: Activity): Boolean
@@ -59,13 +56,8 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
     }
 
     private fun setDeviceIds(vararg fDeviceId: String) {
-
-        mTestDeviceIds.removeAll(mTestDeviceIds.toSet())
-        for (lID in fDeviceId) {
-            mTestDeviceIds.add(lID)
-        }
-        setTestDeviceIds(*mTestDeviceIds.toTypedArray())
-
+        logD(tag = mTAG, message = "setDeviceIds: MobileAds Initialization Complete")
+        setTestDeviceIds(*fDeviceId)
     }
 
     private fun setMobileAds(vararg fDeviceId: String) {
@@ -75,18 +67,15 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
             if (processName != null && packageName != processName) {
                 WebView.setDataDirectorySuffix(processName)
                 MobileAds.initialize(baseContext) {
-                    Log.d(mTAG, "onInitializationComplete.1")
                     setDeviceIds(fDeviceId = fDeviceId)
                 }
             } else {
                 MobileAds.initialize(baseContext) {
-                    Log.d(mTAG, "onInitializationComplete.2")
                     setDeviceIds(fDeviceId = fDeviceId)
                 }
             }
         } else {
             MobileAds.initialize(baseContext) {
-                Log.d(mTAG, "onInitializationComplete.3")
                 setDeviceIds(fDeviceId = fDeviceId)
             }
         }
@@ -108,21 +97,23 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
     //<editor-fold desc="For Application Lifecycle">
     override fun onPause(owner: LifecycleOwner) {
         super.onPause(owner)
-        Log.i(mTAG, "onPause: ")
+        logI(tag = mTAG, message = "onPause: ")
         mLastPauseTime = SystemClock.elapsedRealtime()
         isPause = true
     }
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
-        Log.i(mTAG, "onStart: onAppForegrounded: ")
         isAppForeground = true
+        logI(tag = mTAG, message = "onAppForegrounded: isAppForeground::$isAppForeground")
     }
 
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
-        Log.i(mTAG, "onStop: onAppBackgrounded: ")
         isAppForeground = false
+        logI(tag = mTAG, message = "onAppBackgrounded: isAppForeground::$isAppForeground")
+
+        NativeAdvancedHelper.startAdClickTimer()
 
         if (SystemClock.elapsedRealtime() - mLastPauseTime < mMinPauseDuration) {
             if (isPause) {
@@ -133,7 +124,7 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
 
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
-        Log.i(mTAG, "onResume")
+        logI(tag = mTAG, message = "onResume: ")
         if (isOpenAdEnable) {
             mAppLifecycleListener?.let { lListener ->
                 mOpenAdManager?.let { lOpenAdManager ->
