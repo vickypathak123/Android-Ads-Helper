@@ -2,6 +2,7 @@ package com.example.app.ads.helper
 
 import android.content.Context
 import androidx.annotation.NonNull
+import com.example.app.ads.helper.purchase.ProductPurchaseHelper
 import java.io.Serializable
 
 /**
@@ -41,6 +42,10 @@ class SetAdsID(private val mContext: Context) : Serializable {
     private var isTakeAllTestAdID: Boolean = false
     private var mIsBlockInterstitialAd: Boolean = false
 
+    private val mLifeTimeProductKeyList: ArrayList<String> = ArrayList()
+    private val mSubscriptionKeyList: ArrayList<String> = ArrayList()
+
+    //<editor-fold desc="Set Ads ID">
     @JvmName("setAdmobAppId")
     @NonNull
     fun setAdmobAppId(fAdmobAppId: String) = this@SetAdsID.apply {
@@ -81,7 +86,9 @@ class SetAdsID(private val mContext: Context) : Serializable {
         this.admobOpenAdId.clearAll()
         this.admobOpenAdId.addAll(fAdmobOpenAdIds)
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Manage Ads Flag">
     @JvmName("isEnableOpenAd")
     @NonNull
     fun isEnableOpenAd(fIsEnable: Boolean) = this@SetAdsID.apply {
@@ -98,6 +105,21 @@ class SetAdsID(private val mContext: Context) : Serializable {
     @NonNull
     fun needToBlockInterstitialAd(fIsEnable: Boolean) = this@SetAdsID.apply {
         this.mIsBlockInterstitialAd = fIsEnable
+    }
+    //</editor-fold>
+
+    @JvmName("setLifeTimeProductKey")
+    @NonNull
+    fun setLifeTimeProductKey(vararg keys: String) = this@SetAdsID.apply  {
+        mLifeTimeProductKeyList.clearAll()
+        mLifeTimeProductKeyList.addAll(keys.filter { it.isNotEmpty() })
+    }
+
+    @JvmName("setSubscriptionKey")
+    @NonNull
+    fun setSubscriptionKey(vararg keys: String) = this@SetAdsID.apply  {
+        mSubscriptionKeyList.clearAll()
+        mSubscriptionKeyList.addAll(keys.filter { it.isNotEmpty() })
     }
 
 
@@ -126,6 +148,9 @@ class SetAdsID(private val mContext: Context) : Serializable {
             admob_interstitial_ad_reward_id.addAll(this.admobInterstitialAdRewardId)
             admob_open_ad_id.addAll(this.admobOpenAdId)
         }
+
+        ProductPurchaseHelper.setLifeTimeProductKey(*mLifeTimeProductKeyList.toTypedArray())
+        ProductPurchaseHelper.setSubscriptionKey(*mSubscriptionKeyList.toTypedArray())
 
         isOpenAdEnable = this.mIsEnable
         isBlockInterstitialAd = this.mIsBlockInterstitialAd

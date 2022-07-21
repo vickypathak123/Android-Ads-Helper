@@ -54,14 +54,16 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     //</editor-fold>
 
+    implementation "com.android.billingclient:billing-ktx:5.0.0"
+
     //<editor-fold desc="Kotlin Co-routines">
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
     implementation "org.jetbrains.anko:anko:0.10.8"
     //</editor-fold>
 
     //<editor-fold desc="The Google SDK for Google Ads">
-    implementation "com.google.android.gms:play-services-ads:21.0.0"
+    implementation "com.google.android.gms:play-services-ads:21.1.0"
     //</editor-fold>
 
     //<editor-fold desc="Lottie Animation">

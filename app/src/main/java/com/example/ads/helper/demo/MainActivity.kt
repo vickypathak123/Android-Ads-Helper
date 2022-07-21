@@ -15,6 +15,8 @@ import com.akshay.harsoda.permission.helper.AksPermission
 import com.akshay.harsoda.permission.helper.utiles.OnAlertButtonClickListener
 import com.akshay.harsoda.permission.helper.utiles.getPermissionName
 import com.akshay.harsoda.permission.helper.utiles.showAlert
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.Purchase
 import com.example.ads.helper.demo.base.BaseBindingActivity
 import com.example.ads.helper.demo.base.utils.getDrawableRes
 import com.example.ads.helper.demo.base.utils.getStringRes
@@ -27,10 +29,11 @@ import com.example.app.ads.helper.InterstitialRewardHelper.showRewardedInterstit
 import com.example.app.ads.helper.RewardVideoHelper.isShowRewardVideoAd
 import com.example.app.ads.helper.RewardVideoHelper.showRewardVideoAd
 import com.example.app.ads.helper.activity.FullScreenNativeAdDialogActivity
+import com.example.app.ads.helper.purchase.ProductPurchaseHelper
 import com.google.android.gms.ads.nativead.NativeAdOptions
 
 
-class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
+class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ProductPurchaseHelper.ProductPurchaseListener {
 
     private var mExitDialog: ExitDialog? = null
 
@@ -110,6 +113,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
     override fun initView() {
         super.initView()
 
+        ProductPurchaseHelper.initBillingClient(mActivity, this)
+
         mBinding.openAdsSwitch.isChecked = mActivity.getBoolean(IS_OPEN_ADS_ENABLE, true)
         mBinding.adsSwitch.isChecked = true
 
@@ -187,7 +192,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
 
             mBinding.showNativeAds -> {
 //                mActivity.isShowInterstitialAd { _ ->
-                    launchActivity(getActivityIntent<NativeAdsActivity> { putBoolean("is_add_video_options", mBinding.adsSwitch.isChecked) })
+                launchActivity(getActivityIntent<NativeAdsActivity> { putBoolean("is_add_video_options", mBinding.adsSwitch.isChecked) })
 //                }
             }
 
@@ -282,5 +287,26 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
                 }
             }
         }
+    }
+
+    override fun onPurchasedSuccess(purchase: Purchase) {
+
+    }
+
+    override fun onProductAlreadyOwn() {
+
+    }
+
+    override fun onBillingSetupFinished(billingResult: BillingResult) {
+        ProductPurchaseHelper.initProductsKeys(
+            context = mActivity,
+            onInitializationComplete = {
+                Log.e(TAG, "onBillingSetupFinished:")
+            }
+        )
+    }
+
+    override fun onBillingKeyNotFound(productId: String) {
+
     }
 }

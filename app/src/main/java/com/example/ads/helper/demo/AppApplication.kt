@@ -30,6 +30,7 @@ class AppApplication : AppOpenApplication(), AppOpenApplication.AppLifecycleList
 //            .isEnableOpenAd(false)
             .needToTakeAllTestAdID(true)
 //            .needToBlockInterstitialAd(true)
+            .setLifeTimeProductKey("android.test.purchased")
             .setAdmobNativeAdvancedAdId("ca-app-pub-3940256099942544/1044960115")
 //            .setAdmobNativeAdvancedAdId(this.getStringRes(R.string.admob_native_advanced_ad_id))
             .setAdmobOpenAdId(this.getStringRes(R.string.admob_open_ad_id))
