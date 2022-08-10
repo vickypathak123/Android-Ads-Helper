@@ -144,7 +144,6 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
             android:scaleType="fitXY"
-            app:layout_constraintDimensionRatio="3:1"
             app:layout_constraintBottom_toTopOf="@id/ad_call_to_action"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
