@@ -132,6 +132,7 @@ object OpenAdHelper {
 
                 override fun onAdClosed(isShowFullScreenAd: Boolean) {
                     super.onAdClosed(isShowFullScreenAd)
+                    isAnyAdOpen = false
                     isAnyAdShowing = false
                     mAppOpenAd?.fullScreenContentCallback = null
                     mAppOpenAd = null

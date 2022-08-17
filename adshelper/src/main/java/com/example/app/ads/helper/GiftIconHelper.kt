@@ -114,6 +114,7 @@ object GiftIconHelper {
 
             override fun onAdClosed(isShowFullScreenAd: Boolean) {
                 logI(tag = TAG, message = "onAdClosed: Gift Icon Ad")
+                isAnyAdOpen = false
                 isAnyAdShowing = false
                 isInterstitialAdLoaded = false
                 isInterstitialAdShow = false

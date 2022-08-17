@@ -152,6 +152,7 @@ object InterstitialAdHelper {
                 override fun onAdClosed(isShowFullScreenAd: Boolean) {
                     mIsAdMobAdLoaded = false
                     mIsAnyAdShow = false
+                    isAnyAdOpen = false
                     mInterstitialAdMob?.fullScreenContentCallback = null
                     mInterstitialAdMob = null
                     mListener?.onAdClosed()

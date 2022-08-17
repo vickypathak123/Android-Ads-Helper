@@ -558,7 +558,7 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
 
     override fun onAdClosed(isShowFullScreenAd: Boolean) {
         super.onAdClosed(isShowFullScreenAd)
-
+        isAnyAdOpen = false
         mLayout.removeAllViews()
 
         mOnAdClosed.invoke()

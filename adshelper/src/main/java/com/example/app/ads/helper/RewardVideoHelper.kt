@@ -143,6 +143,7 @@ object RewardVideoHelper {
 
                 override fun onAdClosed(isShowFullScreenAd: Boolean) {
                     super.onAdClosed(isShowFullScreenAd)
+                    isAnyAdOpen = false
                     mRewardedAd?.fullScreenContentCallback = null
                     mRewardedAd = null
                     mListener?.onUserEarnedReward(isUserEarnedReward = isUserEarnedReward)
