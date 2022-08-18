@@ -6,6 +6,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Parcelable
 import android.os.SystemClock
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.Keep
 import androidx.annotation.NonNull
@@ -218,6 +219,33 @@ object ProductPurchaseHelper {
 
     private suspend fun initSubscription(context: Context, onComplete: () -> Unit) {
         if (subscriptionKeyList.isNotEmpty()) {
+            val historyParams = QueryPurchaseHistoryParams.newBuilder()
+                .setProductType(BillingClient.ProductType.SUBS)
+                .build()
+
+            if (mBillingClient != null && mBillingClient?.isReady == true) {
+                mBillingClient?.let { billingClient ->
+                    val purchasesHistoryResult = billingClient.queryPurchaseHistory(historyParams)
+                    if (purchasesHistoryResult.billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                        purchasesHistoryResult.purchaseHistoryRecordList?.let { listOfHistoryProducts ->
+                            val idList = listOfHistoryProducts.flatMap { it.products } as ArrayList<String>
+                            initSubscription(context = context, historyList = idList, onComplete = onComplete)
+                        } ?: initSubscription(context = context, historyList = ArrayList(), onComplete = onComplete)
+                    } else {
+                        initSubscription(context = context, historyList = ArrayList(), onComplete = onComplete)
+                    }
+                }
+            } else {
+                Log.e(TAG, "initSubscription: =>> The billing client is not ready")
+                onComplete.invoke()
+            }
+        } else {
+            onComplete.invoke()
+        }
+    }
+
+    private suspend fun initSubscription(context: Context, historyList: ArrayList<String>, onComplete: () -> Unit) {
+        if (subscriptionKeyList.isNotEmpty()) {
             val params = QueryProductDetailsParams.newBuilder()
                 .setProductList(
                     subscriptionKeyList.map { productId ->
@@ -234,6 +262,7 @@ object ProductPurchaseHelper {
                 methodName = "initSubscription",
                 params = params,
                 productType = BillingClient.ProductType.SUBS,
+                historyList = historyList,
                 onComplete = onComplete
             )
         } else {
@@ -246,6 +275,7 @@ object ProductPurchaseHelper {
         methodName: String,
         @NotNull params: QueryProductDetailsParams,
         @NonNull productType: String,
+        historyList: ArrayList<String> = ArrayList(),
         onComplete: () -> Unit
     ) {
         if (mBillingClient != null && mBillingClient?.isReady == true) {
@@ -330,7 +360,12 @@ object ProductPurchaseHelper {
                                     "Not Found"
                                 }
                                 BillingClient.ProductType.SUBS -> {
-                                    val pricingList = productDetail.subscriptionOfferDetails?.get(0)?.pricingPhases?.pricingPhaseList?.filter { it.formattedPrice.equals("Free", ignoreCase = true) }
+                                    val index = if (historyList.contains(productID)) {
+                                        (productDetail.subscriptionOfferDetails?.size ?: 1) - 1
+                                    } else {
+                                        0
+                                    }
+                                    val pricingList = productDetail.subscriptionOfferDetails?.get(index)?.pricingPhases?.pricingPhaseList?.filter { it.formattedPrice.equals("Free", ignoreCase = true) }
                                     if (pricingList?.isNotEmpty() == true) {
                                         pricingList[0]?.billingPeriod?.getFullBillingPeriod() ?: "Not Found"
                                     } else {
