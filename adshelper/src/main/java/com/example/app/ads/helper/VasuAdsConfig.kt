@@ -41,6 +41,7 @@ class SetAdsID(private val mContext: Context) : Serializable {
 
     private var isTakeAllTestAdID: Boolean = false
     private var mIsBlockInterstitialAd: Boolean = false
+    private var mIsDebugMode: Boolean = false
 
     private val mLifeTimeProductKeyList: ArrayList<String> = ArrayList()
     private val mSubscriptionKeyList: ArrayList<String> = ArrayList()
@@ -122,6 +123,12 @@ class SetAdsID(private val mContext: Context) : Serializable {
         mSubscriptionKeyList.addAll(keys.filter { it.isNotEmpty() })
     }
 
+    @JvmName("isDebugModeEnable")
+    @NonNull
+    fun isDebugModeEnable(fIsDebugMode: Boolean) = this@SetAdsID.apply  {
+        mIsDebugMode = fIsDebugMode
+    }
+
 
     @JvmName("initialize")
     fun initialize() {
@@ -154,6 +161,7 @@ class SetAdsID(private val mContext: Context) : Serializable {
 
         isOpenAdEnable = this.mIsEnable
         isBlockInterstitialAd = this.mIsBlockInterstitialAd
+        isDebugMode = this.mIsDebugMode
     }
 }
 

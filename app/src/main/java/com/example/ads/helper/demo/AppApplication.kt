@@ -37,6 +37,7 @@ class AppApplication : AppOpenApplication(), AppOpenApplication.AppLifecycleList
             .setAdmobInterstitialAdId(this.getStringRes(R.string.admob_interstitial_ad_id))
             .setAdmobInterstitialAdRewardId(this.getStringRes(R.string.admob_interstitial_ad_reward_id))
             .setAdmobRewardVideoAdId(this.getStringRes(R.string.admob_reward_video_ad_id))
+            .isDebugModeEnable(true)
             .initialize()
 
         initMobileAds("FE593321B70E310B9A65C2FB1A8763E4")

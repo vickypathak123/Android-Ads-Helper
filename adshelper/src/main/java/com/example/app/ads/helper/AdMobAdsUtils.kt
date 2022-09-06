@@ -36,6 +36,7 @@ internal var admob_open_ad_id: ArrayList<String> = ArrayList()
 
 internal var isOpenAdEnable: Boolean = true
 internal var isBlockInterstitialAd: Boolean = false
+internal var isDebugMode: Boolean = false
 
 /**
  * Extension method to Get String resource for Context.
