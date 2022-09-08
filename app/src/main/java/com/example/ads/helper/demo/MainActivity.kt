@@ -203,7 +203,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ProductPurchase
             }
 
             mBinding.showRunTimePermission -> {
-                isInterstitialAdShow = true
+                needToBlockOpenAdInternally = true
                 AksPermission.with(mActivity)
                     .permissions(
                         Manifest.permission.CAMERA,
@@ -214,33 +214,34 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ProductPurchase
                     .isShowDefaultSettingDialog(false)
                     .request(
                         onGrantedResult = {
-                            isInterstitialAdShow = false
+//                            isInterstitialAdShow = false
                         },
                         onDeniedResult = {
-                            isInterstitialAdShow = false
+//                            isInterstitialAdShow = false
                         },
                         onPermanentlyDeniedResult = {
-                            isInterstitialAdShow = false
+//                            isInterstitialAdShow = false
                             doNotAskAgain(it.toMutableList().getPermissionName().toString())
                         }
                     )
             }
             mBinding.showDialogs -> {
+                needToBlockOpenAdInternally = true
                 AlertDialog.Builder(mActivity)
                     .setTitle("Hello")
                     .setMessage("Hello")
                     .setOnDismissListener {
-                        isInterstitialAdShow = false
+//                        isInterstitialAdShow = false
                     }
                     .create()
                     .show()
-                isInterstitialAdShow = true
             }
         }
     }
 
     private fun Context.shareApp(msg: String?) {
         try {
+            needToBlockOpenAdInternally = true
             val intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"
             intent.putExtra(Intent.EXTRA_TEXT, msg)

@@ -21,11 +21,6 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
 
     private val mTAG: String = "Admob_${javaClass.simpleName}"
 
-    // variable to track pause event time
-    private var isPause: Boolean = false
-    private var mLastPauseTime: Long = 0
-    private val mMinPauseDuration = 100
-
     private var mOpenAdManager: OpenAdManager? = null
 
     interface AppLifecycleListener {
@@ -98,28 +93,20 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
     override fun onPause(owner: LifecycleOwner) {
         super.onPause(owner)
         logI(tag = mTAG, message = "onPause: ")
-        mLastPauseTime = SystemClock.elapsedRealtime()
-        isPause = true
     }
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
         isAppForeground = true
-        logI(tag = mTAG, message = "onAppForegrounded: isAppForeground::$isAppForeground")
+        logI(tag = mTAG, message = "onStart: isAppForeground::$isAppForeground")
     }
 
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
         isAppForeground = false
-        logI(tag = mTAG, message = "onAppBackgrounded: isAppForeground::$isAppForeground")
+        logI(tag = mTAG, message = "onStop: isAppForeground::$isAppForeground")
 
         NativeAdvancedHelper.startAdClickTimer()
-
-        if (SystemClock.elapsedRealtime() - mLastPauseTime < mMinPauseDuration) {
-            if (isPause) {
-                isPause = false
-            }
-        }
     }
 
     override fun onResume(owner: LifecycleOwner) {
@@ -127,16 +114,24 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
         logI(tag = mTAG, message = "onResume: ")
         if (isOpenAdEnable) {
             mAppLifecycleListener?.let { lListener ->
+                logI(tag = mTAG, message = "onResume: LifecycleListener Not Null")
                 mOpenAdManager?.let { lOpenAdManager ->
-                    if (isAppForeground && !isPause) {
+                    logI(tag = mTAG, message = "onResume: OpenAdManager Not Null isAppForeground::$isAppForeground")
+                    if (isAppForeground) {
                         lOpenAdManager.mCurrentActivity?.let { fCurrentActivity ->
                             if (fCurrentActivity !is AdActivity) {
+                                logI(tag = mTAG, message = "onResume: Current Activity Is Not Ad Activity, isAnyAdOpen::$isAnyAdOpen, isInterstitialAdShow::$isInterstitialAdShow")
                                 if (isAnyAdOpen) {
                                     isAnyAdOpen = false
                                 } else {
                                     if (fCurrentActivity !is FullScreenNativeAdDialogActivity && !isInterstitialAdShow) {
-                                        if (lListener.onResumeApp(fCurrentActivity)) {
-                                            lOpenAdManager.showOpenAd()
+                                        logI(tag = mTAG, message = "onResume: Need To Show Open Ad needToBlockOpenAdInternally::$needToBlockOpenAdInternally")
+                                        if (!needToBlockOpenAdInternally) {
+                                            val lDeveloperResumeFlag: Boolean = lListener.onResumeApp(fCurrentActivity)
+                                            logI(tag = mTAG, message = "onResume: Need To Show Open Ad yourResumeFlag::$lDeveloperResumeFlag")
+                                            if (lDeveloperResumeFlag) {
+                                                lOpenAdManager.showOpenAd()
+                                            }
                                         }
                                     }
                                 }
@@ -144,8 +139,8 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
                         }
                     }
 
-                    if (isPause) {
-                        isPause = false
+                    if (needToBlockOpenAdInternally) {
+                        needToBlockOpenAdInternally = false
                     }
                 }
             }

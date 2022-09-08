@@ -20,6 +20,8 @@ var isAppForeground = false
 var isInterstitialAdShow = false
 var isAnyAdOpen = false
 
+var needToBlockOpenAdInternally: Boolean = false
+
 var isAnyAdShowing: Boolean = false
 
 internal var admob_app_id: String? = null
