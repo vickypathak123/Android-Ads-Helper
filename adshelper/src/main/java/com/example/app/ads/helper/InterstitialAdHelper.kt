@@ -23,6 +23,8 @@ object InterstitialAdHelper {
 
     private val TAG = "Admob_${javaClass.simpleName}"
 
+    private var isAdsShowingFlagForDeveloper: Boolean = false
+
     private var mInterstitialAdMob: InterstitialAd? = null
 
     private var mIsAdMobAdLoaded = false
@@ -89,6 +91,7 @@ object InterstitialAdHelper {
                                 override fun onAdShowedFullScreenContent() {
                                     super.onAdShowedFullScreenContent()
                                     logI(tag = TAG, message = "onAdShowedFullScreenContent: ")
+                                    isAdsShowingFlagForDeveloper = true
                                 }
 
                                 override fun onAdFailedToShowFullScreenContent(adError: AdError) {
@@ -174,13 +177,14 @@ object InterstitialAdHelper {
      * @param isBackAds pass true if you don't need to load ad after ad-close
      * @param onAdClosed this is a call back of your ad close, it will call also if your ad was not showing to the user
      */
-    fun FragmentActivity.isShowInterstitialAd(isBackAds: Boolean = false, @NonNull onAdClosed: (isShowFullScreenAd: Boolean) -> Unit) {
+    fun FragmentActivity.isShowInterstitialAd(isBackAds: Boolean = false, @NonNull onAdClosed: (isAdShowing: Boolean, isShowFullScreenAd: Boolean) -> Unit) {
         mListener = object : AdMobAdsListener {
             override fun onAdClosed(isShowFullScreenAd: Boolean) {
                 isInterstitialAdShow = false
                 mIsAnyAdShow = false
                 if (isAppForeground) {
-                    onAdClosed.invoke(isShowFullScreenAd)
+                    onAdClosed.invoke(isAdsShowingFlagForDeveloper, isShowFullScreenAd)
+                    isAdsShowingFlagForDeveloper = false
                 }
                 if (!isBackAds) {
                     logI(tag = TAG, message = "onAdClosed: Load New Ad")
@@ -194,6 +198,8 @@ object InterstitialAdHelper {
         }
 
         mIsAnyAdShow = if (!isInterstitialAdShow && isNeedToShowAds && !mIsAnyAdShow) {
+            isAdsShowingFlagForDeveloper = false
+
             if (mIsAdMobAdLoaded && mInterstitialAdMob != null) {
                 if (!isAnyAdShowing) {
                     isAnyAdShowing = true
@@ -214,6 +220,7 @@ object InterstitialAdHelper {
                         onDialogActivityDismiss = {
                             logE(tag = TAG, message = "isShowInterstitialAd: Dialog Activity Dismiss")
                             mIsAnyAdShow = false
+                            isAdsShowingFlagForDeveloper = true
                             mListener?.onAdClosed(true)
                         }
 

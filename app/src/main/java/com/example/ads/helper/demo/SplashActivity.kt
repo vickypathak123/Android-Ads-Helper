@@ -102,7 +102,7 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
                 startNextActivity()
             }
         } else {
-            mActivity.isShowInterstitialAd {
+            mActivity.isShowInterstitialAd { _, _ ->
                 Log.e(TAG, "openActivityWithAd: Call With or With-Out Interstitial Ad")
                 startNextActivity()
             }

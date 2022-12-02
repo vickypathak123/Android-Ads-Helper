@@ -69,7 +69,7 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
 
 
     override fun onBackPressed() {
-        mActivity.isShowInterstitialAd(isBackAds = true) { _ ->
+        mActivity.isShowInterstitialAd(isBackAds = true) { _, _ ->
             finish()
         }
     }

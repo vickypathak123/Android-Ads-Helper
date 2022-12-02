@@ -170,8 +170,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ProductPurchase
                 shareApp("hello")
             }
             mBinding.showInterstitialAds -> {
-                mActivity.isShowInterstitialAd { isShowFullScreenAd ->
-                    Log.e(TAG, "onClick: isShowFullScreenAd::$isShowFullScreenAd")
+                mActivity.isShowInterstitialAd { isAdShowing, isShowFullScreenAd ->
+                    Log.e(TAG, "onClick: isAdShowing::$isAdShowing, isShowFullScreenAd::$isShowFullScreenAd")
                 }
             }
             mBinding.showFullScreenNativeAd -> {
@@ -197,7 +197,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ProductPurchase
             }
 
             mBinding.showCustomNativeAds -> {
-                mActivity.isShowInterstitialAd { _ ->
+                mActivity.isShowInterstitialAd { _, _ ->
                     launchActivity(getActivityIntent<CustomNativeAdsActivity> { putBoolean("is_add_video_options", mBinding.adsSwitch.isChecked) })
                 }
             }
@@ -282,7 +282,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ProductPurchase
         if (mExitDialog != null) {
             mExitDialog?.let {
                 it.showExitDialog(isAddVideoOptions = mBinding.adsSwitch.isChecked) {
-                    mActivity.isShowInterstitialAd(isBackAds = true) { _ ->
+                    mActivity.isShowInterstitialAd(isBackAds = true) { _, _ ->
                         launchActivity(getActivityIntent<SecondActivity>())
                     }
                 }
