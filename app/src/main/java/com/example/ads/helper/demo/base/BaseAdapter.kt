@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 @Suppress("unused")
-abstract class BaseAdapter<T>(var mList: MutableList<T>): RecyclerView.Adapter<BaseViewHolder<*>>() {
+abstract class BaseAdapter<T>(var mList: MutableList<T>) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         return onCreateHolder(parent, viewType)
@@ -25,10 +25,9 @@ abstract class BaseAdapter<T>(var mList: MutableList<T>): RecyclerView.Adapter<B
     abstract fun onBindHolder(holder: BaseViewHolder<*>, position: Int)
 
     open fun addAllItems(mLists: Collection<T>) {
-        mList.clear()
+        clearList()
         mList.addAll(mLists)
-        notifyItemRangeChanged(0, itemCount)
-//        notifyDataSetChanged()
+        notifyItemRangeInserted(0, mLists.size)
     }
 
     open fun addItem(mLists: T) {
@@ -43,7 +42,9 @@ abstract class BaseAdapter<T>(var mList: MutableList<T>): RecyclerView.Adapter<B
     }
 
     open fun clearList() {
+        val totalSize = mList.size
+        mList.removeAll(mList)
         mList.clear()
-        notifyItemRangeChanged(0, itemCount)
+        notifyItemRangeRemoved(0, totalSize)
     }
 }

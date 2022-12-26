@@ -7,7 +7,7 @@ import android.graphics.Rect
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.util.Log
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewTreeObserver
@@ -17,6 +17,11 @@ import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.updateLayoutParams
+import com.example.app.ads.helper.interstitialad.InterstitialAdModel
+import com.example.app.ads.helper.nativead.NativeAdModel
+import com.example.app.ads.helper.openad.OpenAdModel
+import com.example.app.ads.helper.reward.RewardedInterstitialAdModel
+import com.example.app.ads.helper.reward.RewardedVideoAdModel
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
@@ -34,19 +39,17 @@ var isAnyAdShowing: Boolean = false
 
 internal var admob_app_id: String? = null
 
-internal var admob_interstitial_ad_id: ArrayList<String> = ArrayList()
+internal var admob_interstitial_ad_model_list: ArrayList<InterstitialAdModel> = ArrayList()
+internal var admob_app_open_ad_model_list: ArrayList<OpenAdModel> = ArrayList()
+internal var admob_rewarded_interstitial_ad_model_list: ArrayList<RewardedInterstitialAdModel> = ArrayList()
+internal var admob_rewarded_video_ad_model_list: ArrayList<RewardedVideoAdModel> = ArrayList()
+internal var mList: ArrayList<NativeAdModel> = ArrayList()
 
 internal var admob_native_advanced_ad_id: ArrayList<String> = ArrayList()
-
-internal var admob_reward_video_ad_id: ArrayList<String> = ArrayList()
-
-internal var admob_interstitial_ad_reward_id: ArrayList<String> = ArrayList()
-
-internal var admob_open_ad_id: ArrayList<String> = ArrayList()
+internal var admob_banner_ad_id: ArrayList<String> = ArrayList()
 
 internal var isOpenAdEnable: Boolean = true
 internal var isBlockInterstitialAd: Boolean = false
-internal var isDebugMode: Boolean = false
 
 /**
  * Extension method to Get String resource for Context.
@@ -70,6 +73,8 @@ internal inline val View.visible: View
         return this
     }
 
+internal fun View.beVisibleIf(beVisible: Boolean) = if (beVisible) visible else gone
+
 /**
  * Hide the view. (visibility = View.INVISIBLE)
  */
@@ -91,6 +96,23 @@ internal inline val View.gone: View
         }
         return this
     }
+//</editor-fold>
+
+//<editor-fold desc="For get Display Data">
+/**
+ * Extension method to find a device DisplayMetrics
+ */
+internal inline val Context.displayMetrics: DisplayMetrics get() = resources.displayMetrics
+
+/**
+ * Extension method to find a device width in pixels
+ */
+internal inline val Context.displayWidth: Int get() = displayMetrics.widthPixels
+
+/**
+ * Extension method to find a device density
+ */
+internal inline val Context.displayDensity: Float get() = displayMetrics.density
 //</editor-fold>
 
 /**
@@ -146,13 +168,13 @@ internal fun setTestDeviceIds(vararg fDeviceId: String) {
 /**
  * Extension method for add different size of Native Ad
  */
-enum class NativeAdsSize {
-    Big, Medium, FullScreen, Custom
+enum class NativeAdsSize { Big, Medium, FullScreen, Custom
+
 }
 
 internal var onDialogActivityDismiss: () -> Unit = {}
 
-private fun View.onGlobalLayout(callback: () -> Unit) {
+internal fun View.onGlobalLayout(callback: () -> Unit) {
     viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
         override fun onGlobalLayout() {
             viewTreeObserver.removeOnGlobalLayoutListener(this)
@@ -199,11 +221,11 @@ fun setCloseIconPosition(fParentLayout: ConstraintLayout, fCloseIcon: ImageView,
                     ) {
                         closeIcon.updateLayoutParams<ConstraintLayout.LayoutParams> {
                             when (fIconPosition) {
-                                IconPosition.LEFT -> {
+                                IconPosition.RIGHT_TO_LEFT -> {
                                     startToStart = ConstraintSet.PARENT_ID
                                     endToEnd = ConstraintSet.UNSET
                                 }
-                                IconPosition.RIGHT -> {
+                                IconPosition.LEFT_TO_RIGHT -> {
                                     endToEnd = ConstraintSet.PARENT_ID
                                     startToStart = ConstraintSet.UNSET
                                 }
@@ -218,5 +240,5 @@ fun setCloseIconPosition(fParentLayout: ConstraintLayout, fCloseIcon: ImageView,
 }
 
 enum class IconPosition {
-    LEFT, RIGHT
+    RIGHT_TO_LEFT, LEFT_TO_RIGHT
 }

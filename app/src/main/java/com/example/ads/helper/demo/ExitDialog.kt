@@ -8,13 +8,9 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.Window
-import com.example.ads.helper.demo.databinding.DialogExitBinding
-import com.example.app.ads.helper.NativeAdsSize
-import com.example.app.ads.helper.NativeAdvancedModelHelper
-import com.example.app.ads.helper.isInterstitialAdShow
 import com.example.ads.helper.demo.base.utils.displayWidth
-import com.example.ads.helper.demo.base.utils.gone
-import com.example.ads.helper.demo.base.utils.visible
+import com.example.ads.helper.demo.databinding.DialogExitBinding
+import com.example.app.ads.helper.isInterstitialAdShow
 
 class ExitDialog(private val mContext: Activity): Dialog(mContext) {
 
@@ -55,20 +51,9 @@ class ExitDialog(private val mContext: Activity): Dialog(mContext) {
         }
     }
 
-    fun showExitDialog(isAddVideoOptions: Boolean, onYesButtonClick: () -> Unit) {
+    fun showExitDialog(onYesButtonClick: () -> Unit) {
         if (!mContext.isFinishing && !isShowing) {
             this.onYesButtonClick = onYesButtonClick
-
-            mBinding.flNativeAdPlaceHolderBig.gone
-
-            NativeAdvancedModelHelper(mContext).loadNativeAdvancedAd(
-                NativeAdsSize.Big,
-                mBinding.flNativeAdPlaceHolderBig,
-                isAddVideoOptions = isAddVideoOptions,
-                isAdLoaded = {
-                    mBinding.flNativeAdPlaceHolderBig.visible
-                }
-            )
             show()
         }
     }

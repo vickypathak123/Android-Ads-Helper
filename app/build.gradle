@@ -57,13 +57,13 @@ dependencies {
     implementation "com.android.billingclient:billing-ktx:5.0.0"
 
     //<editor-fold desc="Kotlin Co-routines">
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     implementation "org.jetbrains.anko:anko:0.10.8"
     //</editor-fold>
 
     //<editor-fold desc="The Google SDK for Google Ads">
-    implementation "com.google.android.gms:play-services-ads:21.1.0"
+    implementation "com.google.android.gms:play-services-ads:21.2.0"
     //</editor-fold>
 
     //<editor-fold desc="Lottie Animation">
@@ -72,7 +72,7 @@ dependencies {
 
     //<editor-fold desc="SSP-SDP Dimension">
     implementation 'com.intuit.ssp:ssp-android:1.0.6'
-    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+    implementation 'com.intuit.sdp:sdp-android:1.1.0'
     //</editor-fold>
 
     //<editor-fold desc="Run-Time Permission">

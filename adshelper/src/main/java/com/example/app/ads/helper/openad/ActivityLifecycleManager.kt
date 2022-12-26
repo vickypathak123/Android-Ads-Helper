@@ -3,9 +3,9 @@ package com.example.app.ads.helper.openad
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import com.example.app.ads.helper.openad.OpenAdHelper.isShowOpenAd
+import com.example.app.ads.helper.openad.AppOpenAdHelper.showAppOpenAd
 
-class OpenAdManager(
+class ActivityLifecycleManager(
     myApplication: Application
 ) : Application.ActivityLifecycleCallbacks {
 
@@ -44,6 +44,6 @@ class OpenAdManager(
     //</editor-fold>
 
     fun showOpenAd() {
-        mCurrentActivity?.let { it.isShowOpenAd {} }
+        mCurrentActivity?.let { it.showAppOpenAd {} }
     }
 }

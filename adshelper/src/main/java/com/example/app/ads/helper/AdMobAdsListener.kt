@@ -2,6 +2,7 @@
 
 package com.example.app.ads.helper
 
+import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.nativead.NativeAd
@@ -31,6 +32,13 @@ interface AdMobAdsListener {
      * @param isShowFullScreenAd [by Default value = false] it's true when fullscreen native ad show and close
      */
     fun onAdClosed(isShowFullScreenAd: Boolean = false) {}
+
+    /**
+     * This method is called when your Adaptive Banner AD data was loaded successfully
+     *
+     * @param adView it's a reference to your Adaptive Banner Ad View
+     */
+    fun onAdaptiveBannerLoaded(adView: AdView) {}
 
     /**
      * This method is called when your Native AD data was loaded successfully

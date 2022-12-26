@@ -32,6 +32,8 @@ abstract class BaseBindingFragment<VB : ViewBinding> : BaseFragment() {
     // your fragment binding object
     lateinit var mBinding: VB
 
+    val isBindingInit: Boolean get() = this::mBinding.isInitialized
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

@@ -1,5 +1,6 @@
 package com.example.app.ads.helper.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
@@ -23,7 +24,7 @@ class FullScreenNativeAdDialogActivity : AppCompatActivity() {
         }
 
     companion object {
-        fun lunchFullScreenAd(fContext: FragmentActivity) {
+        fun lunchFullScreenAd(fContext: Activity) {
             val intent = Intent(fContext, FullScreenNativeAdDialogActivity::class.java)
             fContext.startActivity(intent)
         }

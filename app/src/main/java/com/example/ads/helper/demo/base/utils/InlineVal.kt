@@ -4,6 +4,7 @@ package com.example.ads.helper.demo.base.utils
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -16,6 +17,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import com.example.ads.helper.demo.R
+import com.example.ads.helper.demo.base.BaseActivity
 import kotlin.math.roundToInt
 
 /**
@@ -226,5 +229,28 @@ inline val Context.isValidContextForGlide: Boolean
             return false
         }
         return true
+    }
+
+inline val BaseActivity.shareApp: Unit
+    get() {
+
+        val lAppMsg = "Download this amazing " + getStringRes(R.string.app_name) + " app from play store, " +
+                "Please search in play store or Click on the link given below to " +
+                "download. "
+
+        val lAppLink = "https://play.google.com/store/apps/details?id=" + this.packageName
+
+        val lFinalMsg = String.format(lAppMsg, getStringRes(R.string.app_name), getStringRes(R.string.app_name))
+
+        val lShareAppIntent = Intent(Intent.ACTION_SEND)
+        lShareAppIntent.putExtra(Intent.EXTRA_TEXT, lFinalMsg + lAppLink)
+        lShareAppIntent.type = "text/plain"
+
+        launchActivityForResult(
+            fIntent = Intent.createChooser(lShareAppIntent, "Share Via"),
+            onActivityResult = { resultCode, data ->
+
+            }
+        )
     }
 

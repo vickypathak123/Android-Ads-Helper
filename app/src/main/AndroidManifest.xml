@@ -11,7 +11,6 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission
@@ -22,41 +21,47 @@
     <application
         android:name=".AppApplication"
         android:allowBackup="false"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:hardwareAccelerated="true"
         android:theme="@style/Theme.AdsHelper"
         tools:ignore="LockedOrientationActivity">
-        <activity
-            android:name=".CustomNativeAdsActivity"
-            android:hardwareAccelerated="true"
-            android:exported="false" />
-        <activity
-            android:name=".NativeAdsActivity"
-            android:exported="true"
-            android:hardwareAccelerated="true">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-        </activity>
+
         <activity
-            android:name=".SecondActivity"
+            android:name=".activitys.BannerLandscapeActivity"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activitys.BannerPortraitActivity"
+            android:exported="false"
+            android:hardwareAccelerated="true" />
+        <activity
+            android:name=".activitys.CustomNativeAdsActivity"
+            android:exported="false"
+            android:hardwareAccelerated="true" />
+        <activity
+            android:name=".activitys.NativeAdsActivity"
+            android:exported="true"
+            android:hardwareAccelerated="true"/>
+        <activity
+            android:name=".activitys.SecondActivity"
             android:exported="false"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activitys.MainActivity"
             android:exported="false"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".activitys.SplashActivity"
             android:exported="true"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
@@ -71,7 +76,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/admob_app_id" />
+            android:value="@string/test_admob_app_id" />
     </application>
 
 </manifest>

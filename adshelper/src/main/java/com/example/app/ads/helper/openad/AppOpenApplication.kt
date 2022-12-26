@@ -5,7 +5,6 @@ import android.app.ActivityManager
 import android.content.Context
 import android.os.Build
 import android.os.Process
-import android.os.SystemClock
 import android.webkit.WebView
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -14,21 +13,25 @@ import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import com.example.app.ads.helper.*
 import com.example.app.ads.helper.activity.FullScreenNativeAdDialogActivity
+import com.example.app.ads.helper.interstitialad.InterstitialAdHelper
+import com.example.app.ads.helper.reward.RewardedInterstitialAdHelper
+import com.example.app.ads.helper.reward.RewardedVideoAdHelper
 import com.google.android.gms.ads.AdActivity
 import com.google.android.gms.ads.MobileAds
 
 open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver {
 
-    private val mTAG: String = "Admob_${javaClass.simpleName}"
-
-    private var mOpenAdManager: OpenAdManager? = null
-
     interface AppLifecycleListener {
         fun onResumeApp(fCurrentActivity: Activity): Boolean
     }
 
+    private val mTAG: String = "Admob_${javaClass.simpleName}"
+
+    private var mActivityLifecycleManager: ActivityLifecycleManager? = null
+
     private var mAppLifecycleListener: AppLifecycleListener? = null
 
+    //<editor-fold desc="OnCreate Function">
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         MultiDex.install(this)
@@ -36,16 +39,26 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
 
     override fun onCreate() {
         super<MultiDexApplication>.onCreate()
-        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
-        mOpenAdManager = OpenAdManager(this@AppOpenApplication)
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+        mActivityLifecycleManager = ActivityLifecycleManager(this@AppOpenApplication)
 
     }
+    //</editor-fold>
 
     fun setAppLifecycleListener(fAppLifecycleListener: AppLifecycleListener) {
         this.mAppLifecycleListener = fAppLifecycleListener
     }
 
+    fun destroyAllLoadedAd() {
+        InterstitialAdHelper.destroy()
+        AppOpenAdHelper.destroy()
+        RewardedInterstitialAdHelper.destroy()
+        RewardedVideoAdHelper.destroy()
+        NativeAdvancedModelHelper.destroy()
+    }
+
+    //<editor-fold desc="Init Ads & Set Test Device Id">
     fun initMobileAds(vararg fDeviceId: String) {
         setMobileAds(fDeviceId = fDeviceId)
     }
@@ -88,13 +101,9 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
         }
         return null
     }
+    //</editor-fold>
 
     //<editor-fold desc="For Application Lifecycle">
-    override fun onPause(owner: LifecycleOwner) {
-        super.onPause(owner)
-        logI(tag = mTAG, message = "onPause: ")
-    }
-
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
         isAppForeground = true
@@ -115,7 +124,7 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
         if (isOpenAdEnable) {
             mAppLifecycleListener?.let { lListener ->
                 logI(tag = mTAG, message = "onResume: LifecycleListener Not Null")
-                mOpenAdManager?.let { lOpenAdManager ->
+                mActivityLifecycleManager?.let { lOpenAdManager ->
                     logI(tag = mTAG, message = "onResume: OpenAdManager Not Null isAppForeground::$isAppForeground")
                     if (isAppForeground) {
                         lOpenAdManager.mCurrentActivity?.let { fCurrentActivity ->

@@ -122,11 +122,11 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             isFirstTime = false
 
             mLayout.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
-                override fun onViewAttachedToWindow(v: View?) {
+                override fun onViewAttachedToWindow(v: View) {
                     logI(tag = mTAG, message = "onViewAttachedToWindow: ")
                 }
 
-                override fun onViewDetachedFromWindow(v: View?) {
+                override fun onViewDetachedFromWindow(v: View) {
                     logI(
                         tag = mTAG,
                         message = "onViewDetachedFromWindow: " +
@@ -403,7 +403,8 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             }
         }
 
-        if (adView.storeView?.visibility == View.GONE && adView.priceView?.visibility == View.GONE) {
+        if (adView.storeView?.visibility == View.GONE
+            && adView.priceView?.visibility == View.GONE) {
             (adView.findViewById(R.id.cl_ad_price_store) as View?)?.gone
         }
 

@@ -19,6 +19,7 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.example.ads.helper.demo.base.utils.isOnline
+import com.example.ads.helper.demo.isNeedToLoadAd
 
 /**
  * @author Akshay Harsoda
@@ -45,25 +46,10 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
     /**
      * your activity context object
      */
-    val mContext: FragmentActivity
+    val mContext: BaseActivity
         get() {
-            return requireActivity()
+            return requireActivity() as BaseActivity
         }
-
-    //<editor-fold desc="For Start Activity Result">
-    private var mRequestCode: Int = 0
-
-    private val launcher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result: ActivityResult ->
-            fromActivityResult(
-                requestCode = mRequestCode,
-                resultCode = result.resultCode,
-                data = result.data
-            )
-        }
-    //</editor-fold>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -82,19 +68,23 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, null)
 
         initView()
+        loadAds()
         initViewAction()
         initViewListener()
     }
 
     override fun onResume() {
         super.onResume()
-        loadAds()
+        if (!mContext.isNeedToLoadAd) {
+            setDefaultAdUI()
+        }
     }
 
     /**
      * This method for load your all type of ads
      */
     private fun loadAds() {
+        setDefaultAdUI()
         if (mContext.isOnline) {
             initAds()
         }
@@ -115,6 +105,10 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
     /**
      * For Init All Ads.
      */
+    @UiThread
+    open fun setDefaultAdUI() {
+    }
+
     @UiThread
     open fun initAds() {
     }
@@ -154,84 +148,6 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
         for (lView in fViews) {
             lView.setOnClickListener(this)
         }
-    }
-    //</editor-fold>
-
-    //<editor-fold desc="New Activity Intent">
-    /**
-     * This Method for get your next activity intent
-     *
-     * @param isAddFlag [Default value:- true] for set up your activity flag in your intent
-     * @param fBundle lambda fun for pass data throw intent
-     */
-    inline fun <reified T : Activity> getActivityIntent(
-        isAddFlag: Boolean = true,
-        fBundle: Bundle.() -> Unit = {},
-    ): Intent {
-        val lIntent = Intent(mContext, T::class.java)
-
-        if (isAddFlag) {
-            lIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-            lIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-        }
-        lIntent.putExtras(Bundle().apply(fBundle))
-
-        return lIntent
-    }
-
-    /**
-     * This Method will replace your default method of [startActivityForResult]
-     *
-     * @param fIntent Your Launcher Screen Intent
-     * @param fRequestCode Your Request Code For Get Result Of Your Next Activity
-     * @param fEnterAnimId your activity Enter animation
-     * @param fExitAnimId your activity Exit animation
-     */
-    open fun launchActivityForResult(
-        fIntent: Intent,
-        fRequestCode: Int,
-        @AnimatorRes @AnimRes fEnterAnimId: Int = android.R.anim.fade_in,
-        @AnimatorRes @AnimRes fExitAnimId: Int = android.R.anim.fade_out
-    ) {
-        mRequestCode = fRequestCode
-        launcher.launch(
-            fIntent,
-            ActivityOptionsCompat.makeCustomAnimation(mContext, fEnterAnimId, fExitAnimId)
-        )
-    }
-
-    /**
-     * This Method will replace your default method of [startActivity]
-     *
-     * @param fIntent Your Launcher Screen Intent
-     * @param isNeedToFinish [Default value:- false] pass [isNeedToFinish = true] for finish your caller screen after call next screen
-     * @param fEnterAnimId your activity Enter animation
-     * @param fExitAnimId your activity Exit animation
-     */
-    open fun launchActivity(
-        fIntent: Intent,
-        isNeedToFinish: Boolean = false,
-        @AnimatorRes @AnimRes fEnterAnimId: Int = android.R.anim.fade_in,
-        @AnimatorRes @AnimRes fExitAnimId: Int = android.R.anim.fade_out
-    ) {
-        mContext.startActivity(fIntent)
-        mContext.overridePendingTransition(fEnterAnimId, fExitAnimId)
-
-        if (isNeedToFinish) {
-            mContext.finish()
-        }
-    }
-
-    /**
-     * This Method will replace your default method of [onActivityResult]
-     *
-     * @param requestCode The integer request code originally supplied to launchActivityForResult(), allowing you to identify who this result came from.
-     * @param resultCode The integer result code returned by the child activity through its setResult().
-     * @param data An Intent, which can return result data to the caller (various data can be attached to Intent "extras").
-     */
-    @UiThread
-    open fun fromActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
     }
     //</editor-fold>
 

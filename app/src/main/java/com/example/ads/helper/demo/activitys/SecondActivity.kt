@@ -1,8 +1,8 @@
-package com.example.ads.helper.demo
+package com.example.ads.helper.demo.activitys
 
 import android.os.CountDownTimer
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import com.example.ads.helper.demo.base.BaseActivity
 import com.example.ads.helper.demo.base.BaseBindingActivity
 import com.example.ads.helper.demo.databinding.ActivitySecondBinding
 
@@ -12,7 +12,7 @@ class SecondActivity : BaseBindingActivity<ActivitySecondBinding>() {
 
     private var isActivityPause: Boolean = false
 
-    override fun getActivityContext(): AppCompatActivity {
+    override fun getActivityContext(): BaseActivity {
         return this@SecondActivity
     }
 

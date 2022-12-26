@@ -1,17 +1,19 @@
-package com.example.ads.helper.demo
+package com.example.ads.helper.demo.activitys
 
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import com.example.ads.helper.demo.R
+import com.example.ads.helper.demo.base.BaseActivity
 import com.example.ads.helper.demo.base.BaseBindingActivity
 import com.example.ads.helper.demo.base.utils.getDrawableRes
 import com.example.ads.helper.demo.base.utils.gone
 import com.example.ads.helper.demo.databinding.ActivityNativeAdsBinding
 import com.example.app.ads.helper.*
-import com.example.app.ads.helper.InterstitialAdHelper.isShowInterstitialAd
+import com.example.app.ads.helper.interstitialad.InterstitialAdHelper
+import com.example.app.ads.helper.interstitialad.InterstitialAdHelper.showInterstitialAd
 
 class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
 
-    override fun getActivityContext(): AppCompatActivity {
+    override fun getActivityContext(): BaseActivity {
         return this@NativeAdsActivity
     }
 
@@ -22,7 +24,7 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
     override fun initAds() {
         super.initAds()
 
-        InterstitialAdHelper.loadInterstitialAd(fContext = mActivity)
+        InterstitialAdHelper.loadAd(fContext = mActivity)
 
         NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
             NativeAdsSize.Big,
@@ -34,12 +36,6 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
             NativeAdsSize.Medium,
             mBinding.flNativeAdPlaceHolderMedium,
             isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
-        )
-
-        GiftIconHelper.loadGiftAd(
-            fContext = mActivity,
-            fivGiftIcon = mBinding.layoutHeader.layoutGiftAd.giftAdIcon,
-            fivBlastIcon = mBinding.layoutHeader.layoutGiftAd.giftBlastAdIcon
         )
     }
 
@@ -69,7 +65,7 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
 
 
     override fun onBackPressed() {
-        mActivity.isShowInterstitialAd(isBackAds = true) { _, _ ->
+        mActivity.showInterstitialAd { _, _ ->
             finish()
         }
     }

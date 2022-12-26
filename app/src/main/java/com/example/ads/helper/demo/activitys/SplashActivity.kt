@@ -1,19 +1,21 @@
-package com.example.ads.helper.demo
+package com.example.ads.helper.demo.activitys
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.CountDownTimer
 import android.util.Log
+import com.example.ads.helper.demo.IS_OPEN_ADS_ENABLE
+import com.example.ads.helper.demo.base.BaseActivity
 import com.example.ads.helper.demo.base.BaseBindingActivity
 import com.example.ads.helper.demo.databinding.ActivitySplashBinding
 import com.example.ads.helper.demo.base.utils.isOnline
-import com.example.app.ads.helper.InterstitialAdHelper
-import com.example.app.ads.helper.InterstitialAdHelper.isShowInterstitialAd
-import com.example.app.ads.helper.InterstitialRewardHelper
+import com.example.ads.helper.demo.getBoolean
 import com.example.app.ads.helper.NativeAdvancedModelHelper
-import com.example.app.ads.helper.RewardVideoHelper
-import com.example.app.ads.helper.openad.OpenAdHelper
-import com.example.app.ads.helper.openad.OpenAdHelper.isShowOpenAd
+import com.example.app.ads.helper.interstitialad.InterstitialAdHelper
+import com.example.app.ads.helper.interstitialad.InterstitialAdHelper.showInterstitialAd
+import com.example.app.ads.helper.openad.AppOpenAdHelper
+import com.example.app.ads.helper.openad.AppOpenAdHelper.showAppOpenAd
+import com.example.app.ads.helper.reward.RewardedInterstitialAdHelper
+import com.example.app.ads.helper.reward.RewardedVideoAdHelper
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
@@ -22,7 +24,7 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
 
     private var isActivityPause: Boolean = false
 
-    override fun getActivityContext(): AppCompatActivity {
+    override fun getActivityContext(): BaseActivity {
         return this@SplashActivity
     }
 
@@ -43,11 +45,11 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
         super.initView()
 
         //<editor-fold desc="Destroy All Ads in splash once">
-        OpenAdHelper.destroy()
+        AppOpenAdHelper.destroy()
         InterstitialAdHelper.destroy()
+        RewardedInterstitialAdHelper.destroy()
+        RewardedVideoAdHelper.destroy()
         NativeAdvancedModelHelper.destroy()
-        RewardVideoHelper.destroy()
-        InterstitialRewardHelper.destroy()
         //</editor-fold>
 
         setAdDelay()
@@ -59,17 +61,16 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
             startTimer(3000)
 
             if (this.getBoolean(IS_OPEN_ADS_ENABLE, true)) {
-                OpenAdHelper.loadOpenAd(mActivity, onAdLoad = {
+                AppOpenAdHelper.loadAd(mActivity, onAdLoaded = {
                     Log.e(TAG, "onOpenAdLoad: ")
                     mTimer?.cancel()
                     openActivityWithAd()
                 })
             } else {
-                InterstitialAdHelper.loadInterstitialAd(
-                    fContext = mActivity,
-                    fIsShowFullScreenNativeAd = false
+                InterstitialAdHelper.loadAd(
+                    fContext = mActivity
                 ) {
-                    Log.e(TAG, "onInterstitialAdLoad: ")
+                    Log.e(TAG, "Admob_ onInterstitialAdLoad: ")
                     mTimer?.cancel()
                     openActivityWithAd()
                 }
@@ -92,9 +93,9 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
         mTimer = null
 
         if (this.getBoolean(IS_OPEN_ADS_ENABLE, true)) {
-            if (OpenAdHelper.isAdAvailable()) {
+            if (AppOpenAdHelper.isAppOpenAdAvailable()) {
                 Log.e(TAG, "openActivityWithAd: Call With Open Ad")
-                mActivity.isShowOpenAd {
+                mActivity.showAppOpenAd {
                     startNextActivity()
                 }
             } else {
@@ -102,7 +103,7 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
                 startNextActivity()
             }
         } else {
-            mActivity.isShowInterstitialAd { _, _ ->
+            mActivity.showInterstitialAd { _, _ ->
                 Log.e(TAG, "openActivityWithAd: Call With or With-Out Interstitial Ad")
                 startNextActivity()
             }

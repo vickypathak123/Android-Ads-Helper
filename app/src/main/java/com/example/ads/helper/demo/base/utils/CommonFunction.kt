@@ -9,13 +9,19 @@ import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowInsets
 import android.view.WindowInsetsController
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.RadioButton
+import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.children
 import kotlin.math.roundToInt
 
 //<editor-fold desc="For Get All Type of Resources">
@@ -94,3 +100,27 @@ inline fun <reified T : Enum<T>> Bundle.getEnumExtra(): T =
     this.getInt(T::class.java.name, -1).takeUnless { it == -1 }
         ?.let { T::class.java.enumConstants[it] } ?: T::class.java.enumConstants[0]
 //</editor-fold>
+
+fun ViewGroup.setSelection() {
+
+    for (view in this.children) {
+        if (view is ViewGroup) {
+            view.setSelection()
+        } else {
+            when (view) {
+                is CheckBox -> {
+                    view.isSelected = true
+                }
+                is RadioButton -> {
+                    view.isSelected = true
+                }
+                is Button -> {
+                    view.isSelected = true
+                }
+                is TextView -> {
+                    view.isSelected = true
+                }
+            }
+        }
+    }
+}

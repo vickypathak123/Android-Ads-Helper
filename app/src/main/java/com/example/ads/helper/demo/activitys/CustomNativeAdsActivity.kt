@@ -1,21 +1,21 @@
-package com.example.ads.helper.demo
+package com.example.ads.helper.demo.activitys
 
 import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import com.example.ads.helper.demo.R
+import com.example.ads.helper.demo.base.BaseActivity
 import com.example.ads.helper.demo.base.BaseBindingActivity
 import com.example.ads.helper.demo.base.utils.getDrawableRes
 import com.example.ads.helper.demo.base.utils.gone
 import com.example.ads.helper.demo.databinding.ActivityCustomNativeAdsBinding
-import com.example.app.ads.helper.GiftIconHelper
-import com.example.app.ads.helper.InterstitialAdHelper
-import com.example.app.ads.helper.InterstitialAdHelper.isShowInterstitialAd
 import com.example.app.ads.helper.NativeAdsSize
 import com.example.app.ads.helper.NativeAdvancedModelHelper
+import com.example.app.ads.helper.interstitialad.InterstitialAdHelper
+import com.example.app.ads.helper.interstitialad.InterstitialAdHelper.showInterstitialAd
 
 class CustomNativeAdsActivity : BaseBindingActivity<ActivityCustomNativeAdsBinding>() {
 
-    override fun getActivityContext(): AppCompatActivity {
+    override fun getActivityContext(): BaseActivity {
         return this@CustomNativeAdsActivity
     }
 
@@ -26,9 +26,8 @@ class CustomNativeAdsActivity : BaseBindingActivity<ActivityCustomNativeAdsBindi
     override fun initAds() {
         super.initAds()
 
-        InterstitialAdHelper.loadInterstitialAd(
+        InterstitialAdHelper.loadAd(
             fContext = mActivity,
-            fIsShowFullScreenNativeAd = true /* Default Value */,
             onAdLoaded = {
                 // Call When Open Ad Loaded Successfully
                 // Perform your Action
@@ -40,12 +39,6 @@ class CustomNativeAdsActivity : BaseBindingActivity<ActivityCustomNativeAdsBindi
             fLayout = mBinding.flNativeAdPlaceHolderCustom,
             fCustomAdView = LayoutInflater.from(this).inflate(com.example.app.ads.helper.R.layout.layout_google_native_ad_custom_sample, null),
             isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
-        )
-
-        GiftIconHelper.loadGiftAd(
-            fContext = mActivity,
-            fivGiftIcon = mBinding.layoutHeader.layoutGiftAd.giftAdIcon,
-            fivBlastIcon = mBinding.layoutHeader.layoutGiftAd.giftBlastAdIcon
         )
     }
 
@@ -75,7 +68,7 @@ class CustomNativeAdsActivity : BaseBindingActivity<ActivityCustomNativeAdsBindi
 
 
     override fun onBackPressed() {
-        mActivity.isShowInterstitialAd(isBackAds = true) { _, _ ->
+        mActivity.showInterstitialAd(fIsShowFullScreenNativeAd = true) { _, _ ->
             finish()
         }
     }
