@@ -3,6 +3,7 @@ package com.example.app.ads.helper
 import android.content.Context
 import com.example.app.ads.helper.interstitialad.InterstitialAdHelper
 import com.example.app.ads.helper.interstitialad.InterstitialAdModel
+import com.example.app.ads.helper.nativead.NativeAdHelper
 import com.example.app.ads.helper.nativead.NativeAdModel
 import com.example.app.ads.helper.openad.AppOpenAdHelper
 import com.example.app.ads.helper.openad.OpenAdModel
@@ -55,6 +56,7 @@ class SetAdsID(private val mContext: Context) : Serializable {
     private var mIsNeedToLoadMultipleAppOpenAdRequest: Boolean = false
     private var mIsNeedToLoadMultipleRewardedInterstitialAdRequest: Boolean = false
     private var mIsNeedToLoadMultipleRewardedVideoAdRequest: Boolean = false
+    private var mIsNeedToLoadMultipleNativeAdRequest: Boolean = false
     //</editor-fold>
 
     private var isTakeAllTestAdID: Boolean = false
@@ -162,6 +164,11 @@ class SetAdsID(private val mContext: Context) : Serializable {
     fun isNeedToLoadMultipleRewardedVideoAdRequest(fIsNeedToLoadMultipleRequest: Boolean) = this@SetAdsID.apply {
         mIsNeedToLoadMultipleRewardedVideoAdRequest = fIsNeedToLoadMultipleRequest
     }
+
+    @JvmName("isNeedToLoadMultipleNativeAdRequest")
+    fun isNeedToLoadMultipleNativeAdRequest(fIsNeedToLoadMultipleRequest: Boolean) = this@SetAdsID.apply {
+        mIsNeedToLoadMultipleNativeAdRequest = fIsNeedToLoadMultipleRequest
+    }
     //</editor-fold>
 
     @JvmName("initialize")
@@ -208,9 +215,14 @@ class SetAdsID(private val mContext: Context) : Serializable {
             admob_native_advanced_ad_id.add(mContext.getStringRes(R.string.test_admob_native_advanced_ad_id))
             mList.add(
                 NativeAdModel(
-                    adsID = mContext.getStringRes(R.string.test_admob_native_advanced_ad_id)
+                    adsID = mContext.getStringRes(R.string.test_admob_native_advanced_ad_id)// + "1"
                 )
             )
+//            mList.add(
+//                NativeAdModel(
+//                    adsID = mContext.getStringRes(R.string.test_admob_native_advanced_ad_id)
+//                )
+//            )
 
             admob_banner_ad_id.add(mContext.getStringRes(R.string.test_admob_banner_ad_id))
         } else {
@@ -271,6 +283,7 @@ class SetAdsID(private val mContext: Context) : Serializable {
         AppOpenAdHelper.isNeedToLoadMultipleRequest = this.mIsNeedToLoadMultipleAppOpenAdRequest
         RewardedInterstitialAdHelper.isNeedToLoadMultipleRequest = this.mIsNeedToLoadMultipleRewardedInterstitialAdRequest
         RewardedVideoAdHelper.isNeedToLoadMultipleRequest = this.mIsNeedToLoadMultipleRewardedVideoAdRequest
+        NativeAdHelper.isNeedToLoadMultipleRequest = this.mIsNeedToLoadMultipleNativeAdRequest
         //</editor-fold>
 
         isOpenAdEnable = this.mIsEnable

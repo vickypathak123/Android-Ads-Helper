@@ -120,14 +120,17 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ProductPurchase
             //</editor-fold>
 
             //<editor-fold desc="Native Advanced Ad Work">
-            NativeAdModelHelper(mActivity).loadNativeAdvancedAd(
-                fSize = NativeAdsSize.Big,
-                fLayout = flNativeAdPlaceHolderMedium,
-                isAddVideoOptions = false,
-                onAdLoaded = {
-                    Log.e(TAG, "Akshay_ initAds: Load Native Ad")
-                }
-            )
+//            NativeAdModelHelper(mActivity).loadNativeAdvancedAd(
+//                fSize = NativeAdsSize.Big,
+//                fLayout = flNativeAdPlaceHolderMedium,
+//                isAddVideoOptions = false,
+//                onAdLoaded = {
+//                    Log.e(TAG, "Akshay_ initAds: onAdLoaded: Load Native Ad")
+//                },
+//                onAdFailed = {
+//                    Log.e(TAG, "Akshay_ initAds: onAdFailed: Load Native Ad")
+//                }
+//            )
             //</editor-fold>
         }
     }

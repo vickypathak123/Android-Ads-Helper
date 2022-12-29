@@ -29,7 +29,7 @@ class AppApplication : AppOpenApplication(), AppOpenApplication.AppLifecycleList
             .needToTakeAllTestAdID(true)
             .isDebugModeEnable(true)
             .needToBlockInterstitialAd(false)
-            .isNeedToLoadMultipleInterstitialAdRequest(true)
+            .isNeedToLoadMultipleNativeAdRequest(true)
             .isEnableOpenAd(this.getBoolean(IS_OPEN_ADS_ENABLE, true))
             .setLifeTimeProductKey("android.test.purchased")
 

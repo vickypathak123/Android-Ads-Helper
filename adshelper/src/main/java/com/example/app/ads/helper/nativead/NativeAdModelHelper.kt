@@ -62,12 +62,41 @@ class NativeAdModelHelper(private val mContext: Activity) {
         onClickAdClose: () -> Unit = {},
     ) {
 
+        fLayout.tag = fSize.name
+
+        logE(
+            tag = TAG, message = "loadNativeAdvancedAd: New Request -> ${fSize.name}")
+
+//        val viewListData = NativeAdHelper.mViewList.filter { it.fLayout != fLayout }
+//        val viewListData: ArrayList<NativeAdHelper.TestModel> = ArrayList()
+//
+//        for (data in NativeAdHelper.mViewList) {
+//            if (data.fLayout == fLayout) {
+//                viewListData.add(data)
+//            }
+//        }
+//
+//        logE(tag = TAG, message = "loadNativeAdvancedAd: viewListData isEmpty::${viewListData.isEmpty()} -> ${fSize.name}")
+//        if (viewListData.isEmpty()) {
+//            NativeAdHelper.mViewList.add(
+//                NativeAdHelper.TestModel(
+//                    fLayout = fLayout,
+//                    onAdLoaded = { _, _ -> },
+//                    onAdClosed = { },
+//                    onAdFailed = { },
+//                )
+//            )
+//        }
+//
+//        logE(tag = TAG, message = "loadAd: View List Size -> ${NativeAdHelper.mViewList.size}  -> ${fSize.name}")
+
         NativeAdHelper.loadAd(
             fContext = mContext,
+            fLayout = fLayout,
             isAddVideoOptions = isAddVideoOptions,
             adChoicesPlacement = fAdChoicesPlacement,
             onAdLoaded = { index, nativeAd ->
-                logE(tag = TAG, message = "loadNativeAdvancedAd: Index -> $index")
+                logE(tag = TAG, message = "loadNativeAdvancedAd: onAdLoaded: Index -> $index")
                 loadAdWithPerfectLayout(
                     fSize = fSize,
                     fLayout = fLayout,
@@ -78,6 +107,30 @@ class NativeAdModelHelper(private val mContext: Activity) {
                     onAdLoaded = onAdLoaded,
                     onClickAdClose = onClickAdClose
                 )
+            },
+            onAdClosed = { index ->
+                logE(tag = TAG, message = "loadNativeAdvancedAd: onAdClosed: Index -> $index")
+                fLayout.removeAllViews()
+                fLayout.gone
+
+                loadNativeAdvancedAd(
+                    fSize = fSize,
+                    fLayout = fLayout,
+                    fCustomAdView = fCustomAdView,
+                    fAdChoicesPlacement = fAdChoicesPlacement,
+                    isNeedLayoutShow = isNeedLayoutShow,
+                    isAddVideoOptions = isAddVideoOptions,
+                    isSetDefaultButtonColor = isSetDefaultButtonColor,
+                    onAdLoaded = onAdLoaded,
+                    onAdClosed = onAdClosed,
+                    onAdFailed = onAdFailed,
+                    onClickAdClose = onClickAdClose,
+                )
+            },
+            onAdFailed = { index ->
+                logE(tag = TAG, message = "loadNativeAdvancedAd: onAdFailed: Index -> $index")
+                fLayout.removeAllViews()
+                fLayout.gone
             }
         )
     }

@@ -24,6 +24,8 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
 
     private var isActivityPause: Boolean = false
 
+    private var isNextActivityCall: Boolean = false
+
     override fun getActivityContext(): BaseActivity {
         return this@SplashActivity
     }
@@ -94,23 +96,30 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
 
         if (this.getBoolean(IS_OPEN_ADS_ENABLE, true)) {
             if (AppOpenAdHelper.isAppOpenAdAvailable()) {
-                Log.e(TAG, "openActivityWithAd: Call With Open Ad")
-                mActivity.showAppOpenAd {
-                    startNextActivity()
+                if (!isNextActivityCall) {
+                    Log.e(TAG, "openActivityWithAd: Call With Open Ad")
+                    mActivity.showAppOpenAd {
+                        startNextActivity()
+                    }
                 }
             } else {
-                Log.e(TAG, "openActivityWithAd: Call With Out Open Ad")
-                startNextActivity()
+                if (!isNextActivityCall) {
+                    Log.e(TAG, "openActivityWithAd: Call With Out Open Ad")
+                    startNextActivity()
+                }
             }
         } else {
-            mActivity.showInterstitialAd { _, _ ->
-                Log.e(TAG, "openActivityWithAd: Call With or With-Out Interstitial Ad")
-                startNextActivity()
+            if (!isNextActivityCall) {
+                mActivity.showInterstitialAd { _, _ ->
+                    Log.e(TAG, "openActivityWithAd: Call With or With-Out Interstitial Ad")
+                    startNextActivity()
+                }
             }
         }
     }
 
     private fun startNextActivity() {
+        isNextActivityCall = true
         launchActivity(
             fIntent = getActivityIntent<MainActivity>(),
             isNeedToFinish = false
