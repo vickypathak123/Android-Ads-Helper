@@ -12,8 +12,11 @@ import com.example.app.ads.helper.*
 import com.example.app.ads.helper.interstitialad.InterstitialAdHelper
 import com.example.app.ads.helper.interstitialad.InterstitialAdHelper.showInterstitialAd
 import com.example.app.ads.helper.nativead.NativeAdModelHelper
+import com.example.app.ads.helper.purchase.AdsManager
 
 class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
+    var nativeModeHelper: NativeAdModelHelper? = null
+    var nativeModeHelper1: NativeAdModelHelper? = null
 
     override fun getActivityContext(): BaseActivity {
         return this@NativeAdsActivity
@@ -27,8 +30,8 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
         super.initAds()
 
         InterstitialAdHelper.loadAd(fContext = mActivity)
-
-        NativeAdModelHelper(mActivity).loadNativeAdvancedAd(
+        nativeModeHelper= NativeAdModelHelper(this)
+        nativeModeHelper?.loadNativeAdvancedAd(
             fSize = NativeAdsSize.Big,
             fLayout = mBinding.flNativeAdPlaceHolderBig,
             isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
@@ -42,8 +45,8 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
                 Log.e(TAG, "Akshay_ initAds: onAdFailed: Load Native Ad -> Big")
             }
         )
-
-        NativeAdModelHelper(mActivity).loadNativeAdvancedAd(
+        nativeModeHelper1= NativeAdModelHelper((mActivity))
+        nativeModeHelper1?.loadNativeAdvancedAd(
             fSize = NativeAdsSize.Medium,
             fLayout = mBinding.flNativeAdPlaceHolderMedium,
             isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
@@ -76,6 +79,13 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
         mBinding.layoutHeader.txtHeaderTitle.text = "Native Ads"
         mBinding.layoutHeader.ivHeaderBack.setImageDrawable(mActivity.getDrawableRes(R.drawable.ic_new_header_back))
         mBinding.layoutHeader.ivHeaderRightIcon.gone
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        nativeModeHelper?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds())
+        nativeModeHelper1?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds())
     }
 
     override fun initViewListener() {

@@ -1,16 +1,27 @@
-<com.google.android.gms.ads.nativead.NativeAdView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/native_ad_view"
     android:layout_width="match_parent"
-    android:layoutDirection="ltr"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:layoutDirection="ltr"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="?attr/native_ads_background_color"
         android:minHeight="50dp">
 
         <TextView
@@ -21,11 +32,10 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_gravity="start"
-            android:background="?attr/native_ads_main_color"
+            android:background="@color/shimmer_placeholder"
             android:paddingLeft="@dimen/_5sdp"
             android:paddingRight="@dimen/_5sdp"
             android:text="Ad"
-            android:textColor="?attr/native_ads_label_text_color"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -75,7 +85,7 @@
             android:layout_marginRight="8dp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="?attr/native_ads_main_color"
+            android:background="@color/shimmer_placeholder"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/ll_star"
@@ -102,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:textColor="?attr/native_ads_body_text_color"
+                android:background="@color/shimmer_placeholder"
                 android:textSize="13sp"
                 android:textStyle="bold" />
 
@@ -127,14 +137,14 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:maxLines="2"
-            android:textColor="?attr/native_ads_body_text_color"
+            android:background="@color/shimmer_placeholder"
             android:textSize="12sp"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/test_icon_view" />
 
-        <com.google.android.gms.ads.nativead.MediaView
+        <ImageView
             android:id="@+id/ad_media"
             android:layout_width="0dp"
             android:layout_height="120dp"
@@ -144,6 +154,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
+            android:background="@color/shimmer_placeholder"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toTopOf="@id/ad_call_to_action"
             app:layout_constraintEnd_toEndOf="parent"
@@ -160,13 +171,11 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/native_ad_button"
+            android:background="@color/shimmer_placeholder"
             android:gravity="center"
-            android:text="ad_call_to_action"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="?attr/native_ads_label_text_color"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -174,4 +183,5 @@
             tools:ignore="HardcodedText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</com.google.android.gms.ads.nativead.NativeAdView>
+</com.facebook.shimmer.ShimmerFrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

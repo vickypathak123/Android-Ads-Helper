@@ -37,17 +37,20 @@ object InterstitialAdHelper {
     private var mOnAdLoaded: () -> Unit = {}
 
     private fun getInterstitialAdModel(
-        onFindModel: (index: Int, interstitialAdModel: InterstitialAdModel) -> Unit
+        onFindModel: (index: Int, interstitialAdModel: InterstitialAdModel) -> Unit,
     ) {
-        mAdIdPosition = if (mAdIdPosition < admob_interstitial_ad_model_list.size) {
-            if (mAdIdPosition == -1) {
+        mAdIdPosition =
+            if (mList.size == 1) {
                 0
+            } else if (mAdIdPosition < admob_interstitial_ad_model_list.size) {
+                if (mAdIdPosition == -1) {
+                    0
+                } else {
+                    (mAdIdPosition + 1)
+                }
             } else {
-                (mAdIdPosition + 1)
+                0
             }
-        } else {
-            0
-        }
 
         logE(TAG, "getInterstitialAdModel: AdIdPosition -> $mAdIdPosition")
 
@@ -62,7 +65,7 @@ object InterstitialAdHelper {
     private fun loadNewAd(
         fContext: Context,
         fModel: InterstitialAdModel,
-        fIndex: Int
+        fIndex: Int,
     ) {
 
         logI(tag = TAG, message = "loadNewAd: Index -> $fIndex\nAdsID -> ${fModel.adsID}")
@@ -133,7 +136,7 @@ object InterstitialAdHelper {
         interstitialAdModel: InterstitialAdModel,
         index: Int,
         onAdLoaded: () -> Unit,
-        onAdFailed: () -> Unit
+        onAdFailed: () -> Unit,
     ) {
         if (fContext.isOnline
             && interstitialAdModel.interstitialAd == null
@@ -193,7 +196,7 @@ object InterstitialAdHelper {
      */
     fun loadAd(
         fContext: Context,
-        onAdLoaded: () -> Unit = {}
+        onAdLoaded: () -> Unit = {},
     ) {
         mOnAdLoaded = onAdLoaded
         isAnyIndexLoaded = false
@@ -249,7 +252,7 @@ object InterstitialAdHelper {
      */
     fun Activity.showInterstitialAd(
         fIsShowFullScreenNativeAd: Boolean = true,
-        onAdClosed: (isAdShowing: Boolean, isShowFullScreenAd: Boolean) -> Unit
+        onAdClosed: (isAdShowing: Boolean, isShowFullScreenAd: Boolean) -> Unit,
     ) {
         this@InterstitialAdHelper.mIsShowFullScreenNativeAd = fIsShowFullScreenNativeAd
 

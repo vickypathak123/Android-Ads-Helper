@@ -23,6 +23,8 @@ import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 import org.jetbrains.annotations.NotNull
+import java.util.*
+import kotlin.collections.ArrayList
 
 object ProductPurchaseHelper {
 
@@ -631,8 +633,8 @@ object ProductPurchaseHelper {
                 lDiscountPercentage /= 100
 
                 val lDiscountPrice = weekPrice.replace(
-                    String.format("%.2f", lWeekNumber),
-                    String.format("%.2f", (lYearNumber / 52)),
+                    String.format(Locale.ENGLISH,"%.2f", lWeekNumber),
+                    String.format(Locale.ENGLISH,"%.2f", (lYearNumber / 52)),
                     false
                 )
 
@@ -657,8 +659,8 @@ object ProductPurchaseHelper {
                 lDiscountPercentage /= 100
 
                 val lDiscountPrice = weekPrice.replace(
-                    String.format("%.2f", lWeekNumber),
-                    String.format("%.2f", (lMonthNumber / 4)),
+                    String.format(Locale.ENGLISH,"%.2f", lWeekNumber),
+                    String.format(Locale.ENGLISH,"%.2f", (lMonthNumber / 4)),
                     false
                 )
 
@@ -683,8 +685,8 @@ object ProductPurchaseHelper {
                 lDiscountPercentage /= 100
 
                 val lDiscountPrice = monthPrice.replace(
-                    String.format("%.2f", lMonthNumber),
-                    String.format("%.2f", (lYearNumber / 12)),
+                    String.format(Locale.ENGLISH,"%.2f", lMonthNumber),
+                    String.format(Locale.ENGLISH,"%.2f", (lYearNumber / 12)),
                     false
                 )
 

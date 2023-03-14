@@ -9,6 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.ads.helper.demo"
+//        applicationId "com.clap.find.my.mobile.alarm.sound"
         minSdk 21
         targetSdk 31
         versionCode 1
@@ -77,5 +78,9 @@ dependencies {
 
     //<editor-fold desc="Run-Time Permission">
     implementation 'com.github.AkshayHarsoda:AksPermission-Android:v1.1.0'
+    //</editor-fold>
+
+    // <editor-fold desc=Revenue Cat">
+    implementation 'com.revenuecat.purchases:purchases:5.8.0'
     //</editor-fold>
 }

@@ -226,9 +226,9 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, View.OnClickL
      */
     private fun loadAds() {
         setDefaultAdUI()
-        if (isOnline) {
+//        if (isOnline) {
             initAds()
-        }
+//        }
     }
     //</editor-fold>
 

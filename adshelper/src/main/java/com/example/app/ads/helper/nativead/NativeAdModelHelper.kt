@@ -3,6 +3,7 @@ package com.example.app.ads.helper.nativead
 import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.*
@@ -27,7 +28,16 @@ import com.google.android.gms.ads.nativead.NativeAdView
 class NativeAdModelHelper(private val mContext: Activity) {
 
     private val TAG = "Akshay_Admob_${javaClass.simpleName}"
+    private var mFLayout: FrameLayout? = null
+    private var mShimmerLayout: View? = null
 
+    var isAdLoaded = false
+
+    companion object {
+        fun destroy() {
+            NativeAdHelper.destroy()
+        }
+    }
 
     /**
      * Call this method when you need to load your Native Advanced AD
@@ -52,44 +62,46 @@ class NativeAdModelHelper(private val mContext: Activity) {
         fSize: NativeAdsSize,
         fLayout: FrameLayout,
         fCustomAdView: View? = null,
+        fCustomShimmerView: View? = null,
         @NativeAdOptions.AdChoicesPlacement fAdChoicesPlacement: Int = NativeAdOptions.ADCHOICES_TOP_RIGHT,
         isNeedLayoutShow: Boolean = true,
         isAddVideoOptions: Boolean = true,
         isSetDefaultButtonColor: Boolean = true,
+        isNeedToShowShimmerLayout: Boolean = true,
+
         onAdLoaded: (isNeedToRemoveCloseButton: Boolean) -> Unit = {},
         onAdClosed: () -> Unit = {},
         onAdFailed: () -> Unit = {},
         onClickAdClose: () -> Unit = {},
     ) {
-
+        mFLayout = fLayout
         fLayout.tag = fSize.name
 
         logE(
-            tag = TAG, message = "loadNativeAdvancedAd: New Request -> ${fSize.name}")
+            tag = TAG, message = "loadNativeAdvancedAd: New Request -> ${fSize.name}"
+        )
 
-//        val viewListData = NativeAdHelper.mViewList.filter { it.fLayout != fLayout }
-//        val viewListData: ArrayList<NativeAdHelper.TestModel> = ArrayList()
-//
-//        for (data in NativeAdHelper.mViewList) {
-//            if (data.fLayout == fLayout) {
-//                viewListData.add(data)
-//            }
-//        }
-//
-//        logE(tag = TAG, message = "loadNativeAdvancedAd: viewListData isEmpty::${viewListData.isEmpty()} -> ${fSize.name}")
-//        if (viewListData.isEmpty()) {
-//            NativeAdHelper.mViewList.add(
-//                NativeAdHelper.TestModel(
-//                    fLayout = fLayout,
-//                    onAdLoaded = { _, _ -> },
-//                    onAdClosed = { },
-//                    onAdFailed = { },
-//                )
-//            )
-//        }
-//
-//        logE(tag = TAG, message = "loadAd: View List Size -> ${NativeAdHelper.mViewList.size}  -> ${fSize.name}")
-
+        if (isNeedToShowShimmerLayout) {
+            val shimmerLayout =
+                when (fSize) {
+                    NativeAdsSize.Big -> mContext.inflater.inflate(R.layout.layout_shimmer_google_native_ad_big, fLayout, false)
+                    NativeAdsSize.Medium -> mContext.inflater.inflate(R.layout.layout_shimmer_google_native_ad_medium, fLayout, false)
+                    NativeAdsSize.Custom ->
+                        fCustomShimmerView ?: mContext.inflater.inflate(R.layout.layout_shimmer_google_native_ad_big, fLayout, false)
+                    NativeAdsSize.FullScreen -> {
+                        mContext.inflater.inflate(R.layout.layout_shimmer_google_native_ad_exit_full_screen_app_store, fLayout, false)
+                    }
+                }
+            mShimmerLayout = shimmerLayout
+            if (isNeedLayoutShow ) {
+                Log.d(TAG, "loadNativeAdvancedAd: add shimmer")
+                fLayout.addView(shimmerLayout)
+                fLayout.visible
+            } else {
+//                fLayout.removeAllViews()
+                fLayout.gone
+            }
+        }
         NativeAdHelper.loadAd(
             fContext = mContext,
             fLayout = fLayout,
@@ -97,6 +109,9 @@ class NativeAdModelHelper(private val mContext: Activity) {
             adChoicesPlacement = fAdChoicesPlacement,
             onAdLoaded = { index, nativeAd ->
                 logE(tag = TAG, message = "loadNativeAdvancedAd: onAdLoaded: Index -> $index")
+                if (NativeAdvancedModelHelper.getNativeAd == null)
+                    NativeAdvancedHelper.mNativeAd = nativeAd
+                isAdLoaded = true
                 loadAdWithPerfectLayout(
                     fSize = fSize,
                     fLayout = fLayout,
@@ -112,15 +127,19 @@ class NativeAdModelHelper(private val mContext: Activity) {
                 logE(tag = TAG, message = "loadNativeAdvancedAd: onAdClosed: Index -> $index")
                 fLayout.removeAllViews()
                 fLayout.gone
+                isAdLoaded = false
+                NativeAdvancedHelper.mNativeAd = null
 
                 loadNativeAdvancedAd(
                     fSize = fSize,
                     fLayout = fLayout,
                     fCustomAdView = fCustomAdView,
+                    fCustomShimmerView = fCustomShimmerView,
                     fAdChoicesPlacement = fAdChoicesPlacement,
                     isNeedLayoutShow = isNeedLayoutShow,
                     isAddVideoOptions = isAddVideoOptions,
                     isSetDefaultButtonColor = isSetDefaultButtonColor,
+                    isNeedToShowShimmerLayout = isNeedToShowShimmerLayout,
                     onAdLoaded = onAdLoaded,
                     onAdClosed = onAdClosed,
                     onAdFailed = onAdFailed,
@@ -131,9 +150,32 @@ class NativeAdModelHelper(private val mContext: Activity) {
                 logE(tag = TAG, message = "loadNativeAdvancedAd: onAdFailed: Index -> $index")
                 fLayout.removeAllViews()
                 fLayout.gone
+                isAdLoaded = false
             }
         )
     }
+
+    fun manageShimmerLayoutVisibility(isNeedToShowAd: Boolean) {
+        if (isNeedToShowAd) {
+            if (mContext.isOnline) {
+                if (!isAdLoaded) {
+                    mFLayout?.removeAllViews()
+                    mFLayout?.addView(mShimmerLayout)
+                    mFLayout?.visible
+                } else {
+                    mFLayout?.visible
+                }
+            } else {
+//                mFLayout?.removeAllViews()
+                mFLayout?.gone
+            }
+        } else {
+//            mFLayout?.removeAllViews()
+            mFLayout?.gone
+        }
+
+    }
+
 
     private fun loadAdWithPerfectLayout(
         fSize: NativeAdsSize,
@@ -143,11 +185,11 @@ class NativeAdModelHelper(private val mContext: Activity) {
         isNeedLayoutShow: Boolean,
         isSetDefaultButtonColor: Boolean = true,
         onAdLoaded: (isNeedToRemoveCloseButton: Boolean) -> Unit,
-        onClickAdClose: () -> Unit
+        onClickAdClose: () -> Unit,
     ) {
         fLayout.removeAllViews()
-        fLayout.gone
-
+//        fLayout.visible
+        Log.d(TAG, "loadAdWithPerfectLayout: ")
         val adView = when (fSize) {
             NativeAdsSize.Big -> mContext.inflater.inflate(R.layout.layout_google_native_ad_big, fLayout, false)
             NativeAdsSize.Medium -> mContext.inflater.inflate(R.layout.layout_google_native_ad_medium, fLayout, false)

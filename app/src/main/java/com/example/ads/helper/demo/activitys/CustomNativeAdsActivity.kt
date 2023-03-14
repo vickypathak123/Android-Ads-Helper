@@ -12,9 +12,13 @@ import com.example.app.ads.helper.NativeAdsSize
 import com.example.app.ads.helper.NativeAdvancedModelHelper
 import com.example.app.ads.helper.interstitialad.InterstitialAdHelper
 import com.example.app.ads.helper.interstitialad.InterstitialAdHelper.showInterstitialAd
+import com.example.app.ads.helper.nativead.NativeAdModelHelper
+import com.example.app.ads.helper.purchase.AdsManager
 
 class CustomNativeAdsActivity : BaseBindingActivity<ActivityCustomNativeAdsBinding>() {
 
+
+    var nativeModeHelper:NativeAdModelHelper?=null
     override fun getActivityContext(): BaseActivity {
         return this@CustomNativeAdsActivity
     }
@@ -33,11 +37,13 @@ class CustomNativeAdsActivity : BaseBindingActivity<ActivityCustomNativeAdsBindi
                 // Perform your Action
             }
         )
+        nativeModeHelper= NativeAdModelHelper((mActivity))
 
-        NativeAdvancedModelHelper(mActivity).loadNativeAdvancedAd(
+        nativeModeHelper?.loadNativeAdvancedAd(
             fSize = NativeAdsSize.Custom,
             fLayout = mBinding.flNativeAdPlaceHolderCustom,
             fCustomAdView = LayoutInflater.from(this).inflate(com.example.app.ads.helper.R.layout.layout_google_native_ad_custom_sample, null),
+            fCustomShimmerView = LayoutInflater.from(this).inflate(com.example.app.ads.helper.R.layout.layout_shimmer_google_native_ad_custom_sample, null),
             isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
         )
     }
@@ -71,5 +77,10 @@ class CustomNativeAdsActivity : BaseBindingActivity<ActivityCustomNativeAdsBindi
         mActivity.showInterstitialAd(fIsShowFullScreenNativeAd = true) { _, _ ->
             finish()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        nativeModeHelper?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds())
     }
 }

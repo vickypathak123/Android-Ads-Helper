@@ -8,17 +8,24 @@ import com.example.app.ads.helper.nativead.NativeAdModel
 import com.example.app.ads.helper.openad.AppOpenAdHelper
 import com.example.app.ads.helper.openad.OpenAdModel
 import com.example.app.ads.helper.purchase.ProductPurchaseHelper
+import com.example.app.ads.helper.revenuecat.RevenueCatProductInfo
+import com.example.app.ads.helper.revenuecat.getFullBillingPeriod
 import com.example.app.ads.helper.reward.RewardedInterstitialAdHelper
 import com.example.app.ads.helper.reward.RewardedInterstitialAdModel
 import com.example.app.ads.helper.reward.RewardedVideoAdHelper
 import com.example.app.ads.helper.reward.RewardedVideoAdModel
-import com.google.android.gms.ads.nativead.NativeAd
+import com.google.gson.Gson
+import com.revenuecat.purchases.*
+import com.revenuecat.purchases.interfaces.UpdatedCustomerInfoListener
 import java.io.Serializable
 
 /**
  * @author Akshay Harsoda
  * @since 16 Oct 2021
  */
+
+var TAG = VasuAdsConfig.javaClass.simpleName
+
 @Suppress("unused")
 object VasuAdsConfig {
 
@@ -60,6 +67,9 @@ class SetAdsID(private val mContext: Context) : Serializable {
     //</editor-fold>
 
     private var isTakeAllTestAdID: Boolean = false
+    private var isNeedToGetProductListFromRevenueCat: Boolean = false
+    private var revenueCatId: String = ""
+    var customerInfo: CustomerInfo? = null
 
     private var mIsEnable: Boolean = isOpenAdEnable
     private var mIsBlockInterstitialAd: Boolean = false
@@ -142,6 +152,20 @@ class SetAdsID(private val mContext: Context) : Serializable {
         mSubscriptionKeyList.clearAll()
         mSubscriptionKeyList.addAll(keys.filter { it.isNotEmpty() })
     }
+
+
+    @JvmName("needToGetProductListFromRevenueCat")
+    fun needToGetProductListFromRevenueCat(fIsEnable: Boolean) = this@SetAdsID.apply {
+        this.isNeedToGetProductListFromRevenueCat = fIsEnable
+    }
+
+
+    @JvmName("setRevenueCatId")
+    fun setRevenueCatId(key: String) = this@SetAdsID.apply {
+        this.revenueCatId = key
+    }
+
+
     //</editor-fold>
 
     //<editor-fold desc="Set Purchase Key">
@@ -276,6 +300,97 @@ class SetAdsID(private val mContext: Context) : Serializable {
         //<editor-fold desc="Set Product Key List">
         ProductPurchaseHelper.setLifeTimeProductKey(*mLifeTimeProductKeyList.toTypedArray())
         ProductPurchaseHelper.setSubscriptionKey(*mSubscriptionKeyList.toTypedArray())
+        //</editor-fold>
+
+
+        //<editor-fold desc="Set Revenue Cat ">
+        if (isNeedToGetProductListFromRevenueCat) {
+            if (revenueCatId.isNotEmpty()) {
+                Purchases.debugLogsEnabled = true
+                Purchases.configure(
+                    PurchasesConfiguration.Builder(mContext, revenueCatId).observerMode(false)
+                        .appUserID(null).build()
+                )
+                Purchases.sharedInstance.updatedCustomerInfoListener = UpdatedCustomerInfoListener { customerInfo ->
+                    // - Update our user's customerInfo object
+                    logD(TAG, "onCreate:  user info -->$customerInfo")
+                    this.customerInfo = customerInfo
+//            if (customerInfo.activeSubscriptions.isNotEmpty()) {
+//                AdsManager(this).onProductSubscribed()
+//            } else {
+//                AdsManager(this).onSubscribeExpired()
+//            }
+//            customerInfo.entitlements.all.keys.forEach {
+//                PRODUCT_LIST.find { key -> key.id == customerInfo.entitlements.all[it]?.productIdentifier }?.freeTrialPeriod = "Not Found"
+//            }
+//            Log.d(TAG, "onCreate:  isneedtoShowAd -->" + AdsManager(this).isNeedToShowAds())
+//            Log.d(TAG, "onCreate:Customar Info PRODUCT_LIST -->" + Gson().toJson(PRODUCT_LIST))
+
+                }
+                Purchases.sharedInstance.getOfferingsWith({ error ->
+                    // An error occurred
+                    logE(tag = TAG, "onCreate:  error -->$error")
+                }) { offerings ->
+                    offerings.current?.availablePackages?.let { listOfProducts ->
+                        // Display packages for sale
+                        revenueCatProductList.clear()
+                        listOfProducts.forEach {
+                            logD(TAG, "onCreate:  purchase -->$it")
+                            val freeTrialPeriod = when (it.packageType) {
+                                PackageType.LIFETIME -> {
+                                    "Not Found"
+                                }
+                                PackageType.MONTHLY, PackageType.ANNUAL, PackageType.WEEKLY -> {
+                                    val pricingList = it.product.freeTrialPeriod
+                                    if (customerInfo?.entitlements?.all?.any { entitle -> entitle?.value?.productIdentifier.toString() == it.product.sku } == true) {
+                                        "Not Found"
+                                    } else if (pricingList?.isNotEmpty() == true) {
+                                        pricingList.getFullBillingPeriod() ?: "Not Found"
+                                    } else {
+                                        "Not Found"
+                                    }
+                                }
+                                else -> {
+                                    "Not Found"
+                                }
+                            }
+                            val billingPeriod = when (it.packageType) {
+                                PackageType.LIFETIME -> {
+                                    "Not Found"
+                                }
+                                PackageType.MONTHLY, PackageType.ANNUAL, PackageType.WEEKLY -> {
+                                    val pricingList = it.product.subscriptionPeriod
+                                    if (pricingList?.isNotEmpty() == true) {
+                                        pricingList.getFullBillingPeriod() ?: "Not Found"
+                                    } else {
+                                        "Not Found"
+                                    }
+                                }
+                                else -> {
+                                    "Not Found"
+                                }
+                            }
+
+
+
+                            revenueCatProductList.add(
+                                RevenueCatProductInfo(
+                                    id = it.product.sku,
+                                    formattedPrice = it.product.price,
+                                    packageType = it.packageType,
+                                    priceAmountMicros = it.product.priceAmountMicros,
+                                    priceCurrencyCode = it.product.priceCurrencyCode,
+                                    billingPeriod = billingPeriod,
+                                    freeTrialPeriod = freeTrialPeriod,
+                                    productDetail = it
+                                )
+                            )
+                        }
+                        logD(TAG, "onCreate: PRODUCT_LIST -->" + Gson().toJson(revenueCatProductList))
+                    }
+                }
+            }
+        }
         //</editor-fold>
 
         //<editor-fold desc="Set Load Multiple Ads Request Flag">

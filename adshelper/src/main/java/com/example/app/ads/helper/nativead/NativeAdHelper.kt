@@ -35,9 +35,11 @@ internal object NativeAdHelper {
     private var mOnAdLoaded: (index: Int, nativeAd: NativeAd) -> Unit = { _, _ -> }
 
     private fun getNativeAdModel(
-        onFindModel: (index: Int, nativeAdModel: NativeAdModel) -> Unit
+        onFindModel: (index: Int, nativeAdModel: NativeAdModel) -> Unit,
     ) {
-        mAdIdPosition = if (mAdIdPosition < mList.size) {
+        mAdIdPosition = if (mList.size == 1) {
+            0
+        } else if (mAdIdPosition < mList.size) {
             if (mAdIdPosition == -1) {
                 0
             } else {
@@ -120,6 +122,7 @@ internal object NativeAdHelper {
                     isAnyAdShowing = false
                     isAnyAdOpen = false
                     isThisAdShowing = false
+                    isInterstitialAdShow=false
 
                     fModel.listener?.onAdClosed()
                 }
@@ -327,6 +330,19 @@ internal object NativeAdHelper {
 
     private fun isNativeAdAvailable(): Boolean {
         return mList.find { it.nativeAd != null }?.nativeAd != null
+    }
+
+    fun destroy() {
+        isThisAdShowing = false
+        isAnyIndexLoaded = false
+        isAnyIndexAlreadyLoaded = false
+        mAdIdPosition = -1
+        mViewList.clear()
+        for (data in mList) {
+            data.nativeAd = null
+            data.listener = null
+            data.isAdLoadingRunning = false
+        }
     }
 
 }
