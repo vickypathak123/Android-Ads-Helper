@@ -6,10 +6,11 @@ import android.util.Log
 import androidx.multidex.MultiDex
 import com.example.ads.helper.demo.activitys.SecondActivity
 import com.example.ads.helper.demo.activitys.SplashActivity
+import com.example.ads.helper.demo.base.utils.isOnline
 import com.example.app.ads.helper.VasuAdsConfig
+import com.example.app.ads.helper.openad.AppOpenAdHelper
 import com.example.app.ads.helper.openad.AppOpenApplication
-import com.example.app.ads.helper.revenuecat.getRevenueCatProductInfo
-import com.revenuecat.purchases.PackageType
+import com.example.app.ads.helper.purchase.AdsManager
 
 class AppApplication : AppOpenApplication(), AppOpenApplication.AppLifecycleListener {
 
@@ -45,6 +46,8 @@ class AppApplication : AppOpenApplication(), AppOpenApplication.AppLifecycleList
         initMobileAds("7B65F08938431E179E187CA18BCE3422")
 
         destroyAllLoadedAd()
+//        if (AdsManager(this).isNeedToShowAds() && isOnline)
+//            AppOpenAdHelper.loadAd(this)
     }
 
     override fun onResumeApp(fCurrentActivity: Activity): Boolean {

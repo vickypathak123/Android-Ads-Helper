@@ -658,7 +658,7 @@ object ProductPurchaseHelper {
                 lDiscountPercentage = lDiscountPercentage.toInt().toDouble()
                 lDiscountPercentage /= 100
 
-                val lDiscountPrice = weekPrice.replace(
+                val lDiscountPrice = weekPrice.replace(",","").replace(
                     String.format(Locale.ENGLISH,"%.2f", lWeekNumber),
                     String.format(Locale.ENGLISH,"%.2f", (lMonthNumber / 4)),
                     false
@@ -684,7 +684,7 @@ object ProductPurchaseHelper {
                 lDiscountPercentage = lDiscountPercentage.toInt().toDouble()
                 lDiscountPercentage /= 100
 
-                val lDiscountPrice = monthPrice.replace(
+                val lDiscountPrice = monthPrice.replace(",","").replace(
                     String.format(Locale.ENGLISH,"%.2f", lMonthNumber),
                     String.format(Locale.ENGLISH,"%.2f", (lYearNumber / 12)),
                     false
@@ -765,7 +765,7 @@ object ProductPurchaseHelper {
                                 logW(tag = TAG, message = "$fMethodName: <<<-----------------   Product Offer Details of Index:: $index   ----------------->>>")
                                 logW(tag = TAG, message = "$fMethodName: Offer Token:: $offerToken")
                                 logW(tag = TAG, message = "$fMethodName: Offer Tags:: $offerTags")
-                                logW(tag = TAG, message = "$fMethodName: Installment Plan Details:: $installmentPlanDetails")
+//                                logW(tag = TAG, message = "$fMethodName: Installment Plan Details:: $installmentPlanDetails")
 
                                 if (pricingPhases.pricingPhaseList.isNotEmpty()) {
                                     pricingPhases.pricingPhaseList.forEachIndexed { index, pricingPhase1 ->

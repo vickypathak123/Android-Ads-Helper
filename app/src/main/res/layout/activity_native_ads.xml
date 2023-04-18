@@ -25,6 +25,15 @@
         app:layout_constraintTop_toBottomOf="@id/layout_header" />
 
     <FrameLayout
+        android:id="@+id/flNativeAdPlaceHolderVoiceGps"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fl_native_ad_place_holder_medium" />
+
+    <FrameLayout
         android:id="@+id/fl_native_ad_place_holder_big"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

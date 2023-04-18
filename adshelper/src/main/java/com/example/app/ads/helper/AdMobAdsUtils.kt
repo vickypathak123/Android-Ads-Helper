@@ -20,7 +20,6 @@ import androidx.core.view.updateLayoutParams
 import com.example.app.ads.helper.interstitialad.InterstitialAdModel
 import com.example.app.ads.helper.nativead.NativeAdModel
 import com.example.app.ads.helper.openad.OpenAdModel
-import com.example.app.ads.helper.revenuecat.RevenueCatProductInfo
 import com.example.app.ads.helper.reward.RewardedInterstitialAdModel
 import com.example.app.ads.helper.reward.RewardedVideoAdModel
 import com.google.android.gms.ads.AdRequest
@@ -51,7 +50,8 @@ internal var admob_banner_ad_id: ArrayList<String> = ArrayList()
 
 internal var isOpenAdEnable: Boolean = true
 internal var isBlockInterstitialAd: Boolean = false
-internal val revenueCatProductList: ArrayList<RevenueCatProductInfo> = ArrayList()
+//internal val revenueCatProductList: ArrayList<RevenueCatProductInfo> = ArrayList()
+//var customerInfo: CustomerInfo? = null
 
 
 /**
@@ -171,8 +171,8 @@ internal fun setTestDeviceIds(vararg fDeviceId: String) {
 /**
  * Extension method for add different size of Native Ad
  */
-enum class NativeAdsSize { Big, Medium, FullScreen, Custom
-
+enum class NativeAdsSize {
+    Big, Medium, FullScreen, Custom,VOICE_GPS
 }
 
 internal var onDialogActivityDismiss: () -> Unit = {}

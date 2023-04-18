@@ -6,8 +6,11 @@ import android.graphics.Canvas
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.DrawableCompat
 import com.example.app.ads.helper.*
 import com.example.app.ads.helper.blurEffect.BlurImage
@@ -16,6 +19,7 @@ import com.example.app.ads.helper.logE
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.google.android.gms.ads.nativead.NativeAdView
+import java.lang.annotation.Native
 
 
 /**
@@ -68,7 +72,10 @@ class NativeAdModelHelper(private val mContext: Activity) {
         isAddVideoOptions: Boolean = true,
         isSetDefaultButtonColor: Boolean = true,
         isNeedToShowShimmerLayout: Boolean = true,
-
+        topMargin: Int = 0,
+        startMargin: Int = 0,
+        bottomMargin: Int = 0,
+        endMargin: Int = 0,
         onAdLoaded: (isNeedToRemoveCloseButton: Boolean) -> Unit = {},
         onAdClosed: () -> Unit = {},
         onAdFailed: () -> Unit = {},
@@ -86,14 +93,21 @@ class NativeAdModelHelper(private val mContext: Activity) {
                 when (fSize) {
                     NativeAdsSize.Big -> mContext.inflater.inflate(R.layout.layout_shimmer_google_native_ad_big, fLayout, false)
                     NativeAdsSize.Medium -> mContext.inflater.inflate(R.layout.layout_shimmer_google_native_ad_medium, fLayout, false)
+                    NativeAdsSize.VOICE_GPS -> mContext.inflater.inflate(R.layout.layout_google_native_ad_voice_gps_home_loading, fLayout, false)
                     NativeAdsSize.Custom ->
                         fCustomShimmerView ?: mContext.inflater.inflate(R.layout.layout_shimmer_google_native_ad_big, fLayout, false)
                     NativeAdsSize.FullScreen -> {
                         mContext.inflater.inflate(R.layout.layout_shimmer_google_native_ad_exit_full_screen_app_store, fLayout, false)
                     }
                 }
+            if (fSize == NativeAdsSize.VOICE_GPS) {
+                val clMain = shimmerLayout.findViewById<CardView>(R.id.clMain)
+                val param = clMain.layoutParams as ViewGroup.MarginLayoutParams
+                param.setMargins(startMargin, topMargin, endMargin, bottomMargin)
+                clMain.layoutParams = param // Tested!! - You need this line for the params to be applied.
+            }
             mShimmerLayout = shimmerLayout
-            if (isNeedLayoutShow ) {
+            if (isNeedLayoutShow) {
                 Log.d(TAG, "loadNativeAdvancedAd: add shimmer")
                 fLayout.addView(shimmerLayout)
                 fLayout.visible
@@ -119,6 +133,10 @@ class NativeAdModelHelper(private val mContext: Activity) {
                     fCustomAdView = fCustomAdView,
                     isNeedLayoutShow = isNeedLayoutShow,
                     isSetDefaultButtonColor = isSetDefaultButtonColor,
+                    topMargin = topMargin,
+                    startMargin = startMargin,
+                    endMargin = endMargin,
+                    bottomMargin = bottomMargin,
                     onAdLoaded = onAdLoaded,
                     onClickAdClose = onClickAdClose
                 )
@@ -140,6 +158,10 @@ class NativeAdModelHelper(private val mContext: Activity) {
                     isAddVideoOptions = isAddVideoOptions,
                     isSetDefaultButtonColor = isSetDefaultButtonColor,
                     isNeedToShowShimmerLayout = isNeedToShowShimmerLayout,
+                    topMargin = topMargin,
+                    startMargin = startMargin,
+                    endMargin = endMargin,
+                    bottomMargin = bottomMargin,
                     onAdLoaded = onAdLoaded,
                     onAdClosed = onAdClosed,
                     onAdFailed = onAdFailed,
@@ -184,6 +206,10 @@ class NativeAdModelHelper(private val mContext: Activity) {
         fCustomAdView: View? = null,
         isNeedLayoutShow: Boolean,
         isSetDefaultButtonColor: Boolean = true,
+        topMargin: Int = 0,
+        startMargin: Int = 0,
+        bottomMargin: Int = 0,
+        endMargin: Int = 0,
         onAdLoaded: (isNeedToRemoveCloseButton: Boolean) -> Unit,
         onClickAdClose: () -> Unit,
     ) {
@@ -193,6 +219,7 @@ class NativeAdModelHelper(private val mContext: Activity) {
         val adView = when (fSize) {
             NativeAdsSize.Big -> mContext.inflater.inflate(R.layout.layout_google_native_ad_big, fLayout, false)
             NativeAdsSize.Medium -> mContext.inflater.inflate(R.layout.layout_google_native_ad_medium, fLayout, false)
+            NativeAdsSize.VOICE_GPS -> mContext.inflater.inflate(R.layout.layout_google_native_ad_voice_gps_home, fLayout, false)
             NativeAdsSize.Custom -> fCustomAdView ?: mContext.inflater.inflate(R.layout.layout_google_native_ad_big, fLayout, false)
             NativeAdsSize.FullScreen -> {
                 if (fNativeAd.starRating != null && fNativeAd.price != null && fNativeAd.store != null) {
@@ -201,6 +228,12 @@ class NativeAdModelHelper(private val mContext: Activity) {
                     mContext.inflater.inflate(R.layout.layout_google_native_ad_exit_full_screen_website, fLayout, false)
                 }
             }
+        }
+        if (fSize == NativeAdsSize.VOICE_GPS) {
+            val clMain = adView.findViewById<CardView>(R.id.clMain)
+            val param = clMain.layoutParams as ViewGroup.MarginLayoutParams
+            param.setMargins(startMargin, topMargin, endMargin, bottomMargin)
+            clMain.layoutParams = param // Tested!! - You need this line for the params to be applied.
         }
 
         if (isSetDefaultButtonColor) {

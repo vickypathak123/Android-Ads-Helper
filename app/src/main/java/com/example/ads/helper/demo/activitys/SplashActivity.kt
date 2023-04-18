@@ -14,10 +14,8 @@ import com.example.app.ads.helper.interstitialad.InterstitialAdHelper
 import com.example.app.ads.helper.interstitialad.InterstitialAdHelper.showInterstitialAd
 import com.example.app.ads.helper.openad.AppOpenAdHelper
 import com.example.app.ads.helper.openad.AppOpenAdHelper.showAppOpenAd
-import com.example.app.ads.helper.revenuecat.getRevenueCatProductInfo
 import com.example.app.ads.helper.reward.RewardedInterstitialAdHelper
 import com.example.app.ads.helper.reward.RewardedVideoAdHelper
-import com.revenuecat.purchases.PackageType
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
@@ -121,7 +119,6 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
     }
 
     private fun startNextActivity() {
-        Log.d(TAG, "onCreate:  " + PackageType.MONTHLY.getRevenueCatProductInfo)
 
         isNextActivityCall = true
         launchActivity(

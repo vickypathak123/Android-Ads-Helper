@@ -17,6 +17,7 @@ import com.example.app.ads.helper.purchase.AdsManager
 class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
     var nativeModeHelper: NativeAdModelHelper? = null
     var nativeModeHelper1: NativeAdModelHelper? = null
+    var nativeModeHelper2: NativeAdModelHelper? = null
 
     override fun getActivityContext(): BaseActivity {
         return this@NativeAdsActivity
@@ -30,10 +31,30 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
         super.initAds()
 
         InterstitialAdHelper.loadAd(fContext = mActivity)
-        nativeModeHelper= NativeAdModelHelper(this)
-        nativeModeHelper?.loadNativeAdvancedAd(
-            fSize = NativeAdsSize.Big,
-            fLayout = mBinding.flNativeAdPlaceHolderBig,
+//        nativeModeHelper= NativeAdModelHelper(this)
+//        nativeModeHelper?.loadNativeAdvancedAd(
+//            fSize = NativeAdsSize.Big,
+//            fLayout = mBinding.flNativeAdPlaceHolderBig,
+//            isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
+//            onAdLoaded = {
+//                Log.e(TAG, "Akshay_ initAds: onAdLoaded: Load Native Ad -> Big")
+//            },
+//            onAdClosed = {
+//                Log.e(TAG, "Akshay_ initAds: onAdClosed: Load Native Ad -> Big")
+//            },
+//            onAdFailed = {
+//                Log.e(TAG, "Akshay_ initAds: onAdFailed: Load Native Ad -> Big")
+//            }
+//        )
+        nativeModeHelper2= NativeAdModelHelper(this)
+        nativeModeHelper2?.loadNativeAdvancedAd(
+            fSize = NativeAdsSize.VOICE_GPS,
+            fLayout = mBinding.flNativeAdPlaceHolderVoiceGps,
+            isNeedToShowShimmerLayout = true,
+            topMargin=100,
+            startMargin=100,
+            bottomMargin=50,
+            endMargin=50,
             isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
             onAdLoaded = {
                 Log.e(TAG, "Akshay_ initAds: onAdLoaded: Load Native Ad -> Big")
@@ -86,6 +107,7 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
         super.onResume()
         nativeModeHelper?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds())
         nativeModeHelper1?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds())
+        nativeModeHelper2?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds())
     }
 
     override fun initViewListener() {

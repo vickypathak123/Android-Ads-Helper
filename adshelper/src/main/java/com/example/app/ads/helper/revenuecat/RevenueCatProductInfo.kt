@@ -4,10 +4,9 @@ import android.os.Parcelable
 import androidx.annotation.Keep
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.revenuecat.purchases.PackageType
 import kotlinx.android.parcel.Parcelize
 
-@Keep
+/*@Keep
     @Parcelize
     data class RevenueCatProductInfo(
     @SerializedName("id")
@@ -34,4 +33,4 @@ import kotlinx.android.parcel.Parcelize
     @SerializedName("product_detail")
         @Expose
         val productDetail: com.revenuecat.purchases.Package
-    ) : Parcelable
+    ) : Parcelable*/

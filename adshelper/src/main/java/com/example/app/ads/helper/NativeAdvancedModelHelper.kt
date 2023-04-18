@@ -182,7 +182,9 @@ class NativeAdvancedModelHelper(private val mContext: Activity) : AdMobAdsListen
             NativeAdsSize.Medium -> {
                 mContext.inflater.inflate(R.layout.layout_google_native_ad_medium, fLayout, false) as NativeAdView
             }
-
+            NativeAdsSize.VOICE_GPS -> {
+                mContext.inflater.inflate(R.layout.layout_google_native_ad_voice_gps_home, fLayout, false) as NativeAdView
+            }
             NativeAdsSize.FullScreen -> {
                 if (nativeAd.starRating != null && nativeAd.price != null && nativeAd.store != null) {
                     mContext.inflater.inflate(
