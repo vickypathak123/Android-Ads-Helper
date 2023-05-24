@@ -59,6 +59,7 @@ VasuAdsConfig.with(this)
     .isEnableOpenAd(true /* Default Value */) // Pass false if you don't need to show open ad in your project
     .needToTakeAllTestAdID(false /* Default Value */) // Pass true if you need to show Ads with Test Ad ID in your project
     .needToBlockInterstitialAd(false /* Default Value */) // Pass true if you check fullScreenNativeAds when Interstitial Ads Failed to Load
+    .isDebugModeEnable(false /* Default Value */) // Pass true if you check ads logs 
     .setAdmobAppId("YOUR_LIVE_APP_ID")
     .setAdmobBannerAdId("YOUR_LIVE_BANNER_AD_ID")
     .setAdmobInterstitialAdId("YOUR_LIVE_INTERSTITIAL_AD_ID")
@@ -178,8 +179,8 @@ mActivity.showInterstitialAd(fIsShowFullScreenNativeAd = true) { isAdShowing, is
  * Call this method when you need to load your Native Advanced AD
  * you need to call this method only once in any activity or fragment
  *
- * this method will load your Native Advanced AD with 4 different size
- * like NativeAdsSize.Medium, NativeAdsSize.Big, NativeAdsSize.FullScreen, NativeAdsSize.Custom
+ * this method will load your Native Advanced AD with 5 different size
+ * like NativeAdsSize.Medium, NativeAdsSize.Big, NativeAdsSize.FullScreen, NativeAdsSize.Custom,NativeAdsSize.VOICE_GPS
  *
  * you can set your ads 'I' icon place through pass this type of parameter
  * like NativeAdOptions.ADCHOICES_TOP_RIGHT, NativeAdOptions.ADCHOICES_TOP_LEFT, NativeAdOptions.ADCHOICES_BOTTOM_RIGHT, NativeAdOptions.ADCHOICES_BOTTOM_LEFT
@@ -194,6 +195,10 @@ mActivity.showInterstitialAd(fIsShowFullScreenNativeAd = true) { isAdShowing, is
  * isAddVideoOptions -> [by Default value = true] pass false if you don't need to add video option
  * isSetDefaultButtonColor -> [by Default value = true] pass false if you don't need to change in ad action button
  * isNeedToShowShimmerLayout -> [by Default value = true] pass false if you don't want to add shimmer layout
+ * topMargin -> [by Default value = 0] pass top margin value ,
+ * startMargin -> [by Default value = 0] pass start margin value,
+ * bottomMargin -> [by Default value = 0] pass bottom margin value,
+ * endMargin -> [by Default value = 0] pass end margin value,
  * isAdLoaded -> lambda function call when ad isLoaded
  * onClickAdClose -> lambda function call when user click close button of ad
  * onAdClosed -> lambda function call after ad closed
@@ -210,6 +215,10 @@ nativeAdModeHelper?.loadNativeAdvancedAd(
     isAddVideoOptions = true,
     isSetDefaultButtonColor = true,
     isNeedToShowShimmerLayout = true,
+    topMargin = 100,
+    startMargin = 100,
+    bottomMargin = 50,
+    endMargin = 50,
     onAdLoaded = {
         // Perform your Action
     },
@@ -260,12 +269,14 @@ mBanner.loadBanner(fBannerAdSize = BannerAdSize.BANNER, fLayout = flBanner)
 
 
 /**
- * Call this method in onResume to manage shimmer layout visibility online offline
- * you need to call this method only once in any activity or fragment
- *
- * isNeedToShowAd -> flag that we need to show ad or not
+ * Call this method in onResume to resume banner ad
  */
-nativeAdModeHelper?.manageShimmerLayoutVisibility(AdsManager(mContext).isNeedToShowAd())
+mBanner.mAdView?.resume()
+
+/**
+ * Call this method in onPause to pause banner ad
+ */
+mBanner.mAdView?.pause()
 
 ```
 

@@ -10,6 +10,7 @@ android {
     defaultConfig {
         applicationId "com.example.ads.helper.demo"
 //        applicationId "com.clap.find.my.mobile.alarm.sound"
+//        applicationId "com.screen.mirror.cast.share.tv.device.app"
         minSdk 21
         targetSdk 31
         versionCode 1

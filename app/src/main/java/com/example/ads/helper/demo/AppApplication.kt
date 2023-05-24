@@ -36,7 +36,9 @@ class AppApplication : AppOpenApplication(), AppOpenApplication.AppLifecycleList
             .isNeedToLoadMultipleNativeAdRequest(true)
             .isEnableOpenAd(this.getBoolean(IS_OPEN_ADS_ENABLE, true))
             .setLifeTimeProductKey("android.test.purchased")
-            .needToGetProductListFromRevenueCat(true)
+//            .setSubscriptionKey("com.screen.mirror.cast.share.tv.device.app.weekly","com.screen.mirror.cast.share.tv.device.app.monthly",
+//            "com.screen.mirror.cast.share.tv.device.app.yearly")
+            .needToGetProductListFromRevenueCat(false)
 //            .setRevenueCatId("goog_DyhayqLIFIzWIoidnijVRHkLZXr")
 
 //            .setAdmobBannerAdId()
