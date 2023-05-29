@@ -372,35 +372,3 @@ mActivity.showRewardedInterstitialAd(
 ```
 
 ### ⭐️ If you liked it support me with your stars!
-
-## Developed By
-
-[Akshay Harsoda](https://github.com/AkshayHarsoda) - [akshayharsoda@gmail.com](https://mail.google.com/mail/u/0/?view=cm&fs=1&to=akshayharsoda@gmail.com&su=https://github.com/vickypathak123/Android-Ads-Helper&body=&bcc=akshayharsoda@gmail.com&tf=1)
-
-  <a href="https://github.com/AkshayHarsoda" rel="nofollow">
-  <img alt="Follow me on Google+" 
-       height="50" width="50" 
-       src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/social/github.png" 
-       style="max-width:100%;">
-  </a>
-
-  <a href="https://www.linkedin.com/in/akshay-harsoda-b66820116" rel="nofollow">
-  <img alt="Follow me on LinkedIn" 
-       height="50" width="50" 
-       src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/social/linkedin.png" 
-       style="max-width:100%;">
-  </a>
-
-  <a href="https://twitter.com/Akshayharsoda1" rel="nofollow">
-  <img alt="Follow me on Twitter" 
-       height="50" width="50"
-       src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/social/twitter.png" 
-       style="max-width:100%;">
-  </a>
-
-  <a href="https://www.facebook.com/akshay.harsoda" rel="nofollow">
-  <img alt="Follow me on Facebook" 
-       height="50" width="50" 
-       src="https://github.com/vickypathak123/Android-Ads-Helper/blob/master/social/facebook.png" 
-       style="max-width:100%;">
-  </a>
