@@ -51,7 +51,7 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
             fSize = NativeAdsSize.VOICE_GPS,
             fLayout = mBinding.flNativeAdPlaceHolderVoiceGps,
             isNeedToShowShimmerLayout = true,
-            topMargin=100,
+            topMargin=10,
             startMargin=100,
             bottomMargin=50,
             endMargin=50,

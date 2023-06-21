@@ -58,6 +58,7 @@ object AppOpenAdHelper {
     private fun loadNewAd(
         fContext: Context,
         fModel: OpenAdModel,
+        fOrientation: Int,
         fIndex: Int
     ) {
 
@@ -69,7 +70,7 @@ object AppOpenAdHelper {
             fContext,
             fModel.adsID,
             AdRequest.Builder().build(),
-            AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
+            fOrientation,
             object : AppOpenAd.AppOpenAdLoadCallback() {
 
                 override fun onAdLoaded(appOpenAd: AppOpenAd) {
@@ -127,6 +128,7 @@ object AppOpenAdHelper {
         fContext: Context,
         openAdModel: OpenAdModel,
         index: Int,
+        fOrientation: Int,
         onAdLoaded: () -> Unit,
         onAdFailed: () -> Unit
     ) {
@@ -136,6 +138,7 @@ object AppOpenAdHelper {
         ) {
             loadNewAd(
                 fContext = fContext,
+                fOrientation = fOrientation,
                 fModel = openAdModel.apply {
                     this.listener = object : AdMobAdsListener {
 
@@ -188,6 +191,7 @@ object AppOpenAdHelper {
      */
     fun loadAd(
         fContext: Context,
+        fOrientation: Int = AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
         onAdLoaded: () -> Unit = {}
     ) {
         mOnAdLoaded = onAdLoaded
@@ -203,6 +207,7 @@ object AppOpenAdHelper {
                         fContext = fContext,
                         openAdModel = openAdModel,
                         index = index,
+                        fOrientation = fOrientation,
                         onAdLoaded = onAdLoaded,
                         onAdFailed = {},
                     )
@@ -215,6 +220,7 @@ object AppOpenAdHelper {
                         fContext = fContext,
                         openAdModel = openAdModel,
                         index = index,
+                        fOrientation = fOrientation,
                         onAdLoaded = onAdLoaded,
                         onAdFailed = {
                             if ((mAdIdPosition + 1) >= admob_app_open_ad_model_list.size) {
