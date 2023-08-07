@@ -19,5 +19,7 @@
     <string name="other_dialogs">Other Dialogs</string>
     <string name="change_app_language">Change App Language</string>
     <string name="selected_lanaguage">Select Lanaguage</string>
+    <string name="dialog_title" >other_dialogs</string>
+    <string name="dialog_messages" >Run-Time Permission</string>
 
 </resources>

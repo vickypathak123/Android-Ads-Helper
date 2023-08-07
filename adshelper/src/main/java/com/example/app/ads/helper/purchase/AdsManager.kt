@@ -13,32 +13,41 @@ class AdsManager(context: Context) {
     private val sp: SharedPreferences = SharedPreferences(context)
 
     fun onProductPurchased() {
-        Log.e(TAG,"onProductPurchased")
+        Log.e(TAG, "onProductPurchased")
         sp.save(isNeedToShow, true)
     }
+
     fun onProductExpired() {
-        Log.e(TAG,"onProductExpired")
+        Log.e(TAG, "onProductExpired")
         sp.save(isNeedToShow, false)
     }
 
     fun onProductSubscribed() {
-        Log.e(TAG,"onProductSubscribed")
+        Log.e(TAG, "onProductSubscribed")
         sp.save(isSubscribe, true)
     }
+
     fun onSubscribeExpired() {
-        Log.e(TAG,"onSubscribeExpired")
+        Log.e(TAG, "onSubscribeExpired")
         sp.save(isSubscribe, false)
     }
 
     fun isNeedToShowAds(): Boolean {
         val isProductPurchased = sp.read(isNeedToShow, false)
-        val isSubscribe = sp.read(isSubscribe, false)
 
         Log.e(TAG, "isNeedToShowAds:isProductPurchased-$isProductPurchased")
-        Log.e(TAG, "isNeedToShowAds:isSubscribe-$isSubscribe")
-        return !(isProductPurchased || isSubscribe)
+        return !isProductPurchased
     }
 
+    /**
+     * Using this method check user subscribed or not
+     */
+    fun isSubscribe(): Boolean {
+        val isSubscribe = sp.read(isSubscribe, false)
+
+        Log.e(TAG, "isNeedToShowAds:isSubscribe-$isSubscribe")
+        return !isSubscribe
+    }
 
     /**
      *   SharedPreferences helper class
