@@ -105,9 +105,9 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
 
     override fun onResume() {
         super.onResume()
-        nativeModeHelper?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds())
-        nativeModeHelper1?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds())
-        nativeModeHelper2?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds())
+//        nativeModeHelper?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds())
+//        nativeModeHelper1?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds())
+//        nativeModeHelper2?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds())
     }
 
     override fun initViewListener() {

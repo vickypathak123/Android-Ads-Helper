@@ -22,13 +22,13 @@ import com.example.app.ads.helper.interstitialad.InterstitialAdModel
 import com.example.app.ads.helper.nativead.NativeAdModel
 import com.example.app.ads.helper.openad.OpenAdModel
 import com.example.app.ads.helper.purchase.AdsManager
-import com.example.app.ads.helper.revenuecat.RevenueCatProductInfo
+//import com.example.app.ads.helper.revenuecat.RevenueCatProductInfo
 import com.example.app.ads.helper.reward.RewardedInterstitialAdModel
 import com.example.app.ads.helper.reward.RewardedVideoAdModel
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
-import com.revenuecat.purchases.CustomerInfo
+//import com.revenuecat.purchases.CustomerInfo
 
 
 var isNeedToShowAds = true
@@ -55,8 +55,8 @@ internal var admob_banner_ad_id: ArrayList<String> = ArrayList()
 
 internal var isOpenAdEnable: Boolean = true
 internal var isBlockInterstitialAd: Boolean = false
-internal val revenueCatProductList: ArrayList<RevenueCatProductInfo> = ArrayList()
-var customerInfo: CustomerInfo? = null
+//internal val revenueCatProductList: ArrayList<RevenueCatProductInfo> = ArrayList()
+//var customerInfo: CustomerInfo? = null
 
 
 /**
