@@ -2,7 +2,7 @@
 
 Android Ads code that is required in every app of Vasundhara Infotech [Vasundhara Infotech LLP](https://vasundharainfotechllp.com)
 
-[![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
+[![API](https://img.shields.io/badge/API-23%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=23)
 [![Version](https://jitpack.io/v/vickypathak123/Android-Ads-Helper.svg)](https://jitpack.io/#vickypathak123/Android-Ads-Helper)
 
 ## Using `build.gradle`
@@ -120,11 +120,15 @@ OpenAdHelper.loadOpenAd(this)
  * Call this method when you need to load your Open AD
  * you need to call this method only once in your launcher activity or your application class
  *
- * fContext -> this is a reference to your activity context
- * onAdLoad -> callback after ad successfully loaded
+ * @param fContext -> this is a reference to your activity context
+ * @param  onAdLoad -> callback after ad successfully loaded
+ * @param isNeedToShow check if Subscribe is done then ads will not show
+ * @param remoteConfig check remote Config parameters is if true ads will show else false ads will not show
  */
-AppOpenAdHelper.loadOpenAd(
+AppOpenAdHelper.loadAd(
     fContext = mActivity,
+    isNeedToShowAds = Boolean,
+    remoteConfig = Boolean,
     onAdLoad = {
         // Call When Open Ad Loaded Successfully
         // Perform your Action
@@ -133,8 +137,12 @@ AppOpenAdHelper.loadOpenAd(
 
 // Show Open Ad When You Need
 // Check first open ad is Available or Not
+/**
+ * @param isNeedToShow check if Subscribe is done then ads will not show
+ * @param remoteConfig check remote Config parameters is if true ads will show else false ads will not show
+ */
 if (AppOpenAdHelper.isAppOpenAdAvailable()) {
-    mActivity.isShowOpenAd {
+    mActivity.isShowOpenAd(isNeedToShowAds, remoteConfig) {
         // Perform your Action
     }
 }
@@ -149,9 +157,13 @@ if (AppOpenAdHelper.isAppOpenAdAvailable()) {
  *
  * @param fContext this is a reference to your activity context
  * @param onAdLoaded callback after ad successfully loaded
+ * @param isNeedToShow check if Subscribe is done then ads will not show
+ * @param remoteConfig check remote Config parameters is if true ads will show else false ads will not show
  */
 InterstitialAdHelper.loadAd(
     fContext = mActivity,
+   isNeedToShow,
+   remoteConfig,
     onAdLoaded = {
 
     }
@@ -167,43 +179,37 @@ InterstitialAdHelper.loadAd(
  *
  * @param fIsShowFullScreenNativeAd pass false if you don't need native ad if interstitial ads not loaded
  * @param onAdClosed this is a call back of your ad close, it will call also if your ad was not showing to the user
+ * @param isNeedToShow check if Subscribe is done then ads will not show
+ * @param remoteConfig check remote Config parameters is if true ads will show else false ads will not show
  */
-mActivity.showInterstitialAd(fIsShowFullScreenNativeAd = true) { isAdShowing, isShowFullScreenAd ->
+mActivity.showInterstitialAd(fIsShowFullScreenNativeAd = true) { isAdShowing, isNeedToShow,remoteConfig,isShowFullScreenAd ->
 }
 ```
 
 ## Native Advanced Ad Details
 
 ```kotlin
-        /**
+/**
  * Call this method when you need to load your Native Advanced AD
  * you need to call this method only once in any activity or fragment
  *
- * this method will load your Native Advanced AD with 5 different size
- * like NativeAdsSize.Medium, NativeAdsSize.Big, NativeAdsSize.FullScreen, NativeAdsSize.Custom,NativeAdsSize.VOICE_GPS
+ * this method will load your Native Advanced AD with 4 different size like [NativeAdsSize.Medium], [NativeAdsSize.Big], [NativeAdsSize.FullScreen], [NativeAdsSize.Custom]
+ * for Native Advanced AD Size @see [NativeAdsSize] once
  *
- * you can set your ads 'I' icon place through pass this type of parameter
- * like NativeAdOptions.ADCHOICES_TOP_RIGHT, NativeAdOptions.ADCHOICES_TOP_LEFT, NativeAdOptions.ADCHOICES_BOTTOM_RIGHT, NativeAdOptions.ADCHOICES_BOTTOM_LEFT
- *
- * mContext -> this is a reference to your activity or fragment context
- * fSize ->  it indicate your Ad Size
- * fLayout -> FrameLayout for add NativeAd View
- * adChoicesPlacement -> Ads 'I' icon place
- * fCustomAdView -> your native ad custom layout
- * fCustomShimmerView -> your shimmer custom layout
- * isNeedLayoutShow -> [by Default value = true] pass false if you do not need to show AD at a time when it's loaded successfully
- * isAddVideoOptions -> [by Default value = true] pass false if you don't need to add video option
- * isSetDefaultButtonColor -> [by Default value = true] pass false if you don't need to change in ad action button
- * isNeedToShowShimmerLayout -> [by Default value = true] pass false if you don't want to add shimmer layout
- * topMargin -> [by Default value = 0] pass top margin value ,
- * startMargin -> [by Default value = 0] pass start margin value,
- * bottomMargin -> [by Default value = 0] pass bottom margin value,
- * endMargin -> [by Default value = 0] pass end margin value,
- * isAdLoaded -> lambda function call when ad isLoaded
- * onClickAdClose -> lambda function call when user click close button of ad
- * onAdClosed -> lambda function call after ad closed
- * onAdFailed -> lambda function call after ad failed to load
- */
+ * @param fSize it indicate your Ad Size
+ * @param fLayout FrameLayout for add NativeAd View
+ * @param fCustomAdView your native ad custom layout
+ * @param adChoicesPlacement Ads I icon place @see [NativeAdOptions.ADCHOICES_TOP_RIGHT], [NativeAdOptions.ADCHOICES_TOP_LEFT], [NativeAdOptions.ADCHOICES_BOTTOM_RIGHT], [NativeAdOptions.ADCHOICES_BOTTOM_LEFT]
+ * @param isNeedLayoutShow [by Default value = true] pass false if you do not need to show AD at a time when it's loaded successfully
+ * @param isAddVideoOptions [by Default value = true] pass false if you don't need to add video option
+ * @param isSetDefaultButtonColor [by Default value = true] pass false if you don't need to change in ad action button
+ * @param onAdLoaded lambda function call when ad isLoaded
+ * @param onAdClosed lambda function call after ad closed
+ * @param onAdFailed lambda function call after ad failed to load
+ * @param onClickAdClose lambda function call when user click close button of ad
+ * @param isNeedToShow check if Subscribe is done then ads will not show
+ * @param remoteConfig check remote Config parameters is if true ads will show else false ads will not show
+*/
 var nativeAdModeHelper = NativeAdModelHelper(mContext = mActivity)
 nativeAdModeHelper?.loadNativeAdvancedAd(
     fSize = NativeAdsSize.FullScreen,
@@ -215,6 +221,8 @@ nativeAdModeHelper?.loadNativeAdvancedAd(
     isAddVideoOptions = true,
     isSetDefaultButtonColor = true,
     isNeedToShowShimmerLayout = true,
+   isNeedToShowAd=true,
+   remoteConfig=true,
     topMargin = 100,
     startMargin = 100,
     bottomMargin = 50,
@@ -237,9 +245,19 @@ nativeAdModeHelper?.loadNativeAdvancedAd(
  * Call this method in onResume to manage shimmer layout visibility online offline
  * you need to call this method only once in any activity or fragment
  *
- * isNeedToShowAd -> flag that we need to show ad or not
+ * @param isNeedToShowAd -> flag that we need to show ad or not
+ * @param fSize -> it indicate your Ad Size
+ * @param fLayout FrameLayout for add NativeAd View
+ * @param fCustomAdView your native ad custom layout
+ * @param remoteConfig your firebase Remote Config
  */
-nativeAdModeHelper?.manageShimmerLayoutVisibility(AdsManager(mContext).isNeedToShowAd())
+nativeAdModeHelper?.manageShimmerLayoutVisibility(
+   AdsManager(mContext).isNeedToShowAd(),
+   fSize,
+   fLayout,
+   fCustomAdView,
+   remoteConfig
+    )
 
 ```
 
@@ -269,16 +287,23 @@ mBanner.loadBanner(fBannerAdSize = BannerAdSize.BANNER, fLayout = flBanner)
 
 
 /**
- * Call this method in onResume to resume banner ad
+ * Call this method in onResume to manage shimmer layout visibility online offline
+ * you need to call this method only once in any activity or fragment
+ *
+ * @param isNeedToShowAd -> flag that we need to show ad or not
+ * @param fSize -> it indicate your Ad Size
+ * @param fLayout FrameLayout for add NativeAd View
+ * @param remoteConfig your firebase Remote Config
  */
-mBanner.mAdView?.resume()
-
-/**
- * Call this method in onPause to pause banner ad
- */
-mBanner.mAdView?.pause()
+mBanner.manageShimmerLayoutVisibility(
+   AdsManager(mContext).isNeedToShowAd(),
+   fBannerAdSize,
+   fLayout,
+   remoteConfig
+    )
 
 ```
+
 
 ## Reward Video Ad Details
 
@@ -296,11 +321,15 @@ mBanner.mAdView?.pause()
  * )
  *
  * @param fContext this is a reference to your activity or fragment context
+ * @param isNeedToShowAd -> flag that we need to show ad or not
+ * @param remoteConfig your firebase Remote Config
  * @param onStartToLoadAd @see [AdMobAdsListener.onStartToLoadRewardVideoAd]
  * @param onAdLoaded @see [AdMobAdsListener.onAdLoaded]
  */
 RewardedVideoAdHelper.loadAd(
     fContext = mActivity,
+   isNeedToShowAd,
+   remoteConfig,
     onStartToLoadAd = {
     },
     onAdLoaded = {
@@ -317,8 +346,12 @@ RewardedVideoAdHelper.loadAd(
  * )
  *
  * @param onUserEarnedReward @see [AdMobAdsListener.onUserEarnedReward]
+ * @param isNeedToShowAd -> flag that we need to show ad or not
+ * @param remoteConfig your firebase Remote Config
  */
 mActivity.showRewardedVideoAd(
+   isNeedToShowAd,
+   remoteConfig,
     onUserEarnedReward = { isUserEarnedReward ->
     }
 )
@@ -340,11 +373,15 @@ mActivity.showRewardedVideoAd(
  * )
  *
  * @param fContext this is a reference to your activity or fragment context
+ * @param isNeedToShowAd -> flag that we need to show ad or not
+ * @param remoteConfig your firebase Remote Config
  * @param onStartToLoadAd @see [AdMobAdsListener.onStartToLoadRewardedInterstitialAd]
  * @param onAdLoaded @see [AdMobAdsListener.onAdLoaded]
  */
 RewardedInterstitialAdHelper.loadAd(
     fContext = mActivity,
+   isNeedToShowAd=isNeedToShowAd,
+   remoteConfig=remoteConfig,
     onStartToLoadAd = {
     },
     onAdLoaded = {
@@ -362,8 +399,12 @@ RewardedInterstitialAdHelper.loadAd(
  * )
  *
  * @param onUserEarnedReward @see [AdMobAdsListener.onUserEarnedReward]
+ * @param isNeedToShowAd -> flag that we need to show ad or not
+ * @param remoteConfig your firebase Remote Config
  */
 mActivity.showRewardedInterstitialAd(
+   isNeedToShowAd=isNeedToShowAd,
+   remoteConfig=remoteConfig,
     onUserEarnedReward = { isUserEarnedReward ->
 
     }

@@ -8,7 +8,7 @@ import com.example.ads.helper.demo.base.BaseBindingActivity
 import com.example.ads.helper.demo.base.utils.getDrawableRes
 import com.example.ads.helper.demo.base.utils.gone
 import com.example.ads.helper.demo.databinding.ActivityNativeAdsBinding
-import com.example.app.ads.helper.*
+import com.example.app.ads.helper.NativeAdsSize
 import com.example.app.ads.helper.interstitialad.InterstitialAdHelper
 import com.example.app.ads.helper.interstitialad.InterstitialAdHelper.showInterstitialAd
 import com.example.app.ads.helper.nativead.NativeAdModelHelper
@@ -46,15 +46,15 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
 //                Log.e(TAG, "Akshay_ initAds: onAdFailed: Load Native Ad -> Big")
 //            }
 //        )
-        nativeModeHelper2= NativeAdModelHelper(this)
+        nativeModeHelper2 = NativeAdModelHelper(this)
         nativeModeHelper2?.loadNativeAdvancedAd(
             fSize = NativeAdsSize.VOICE_GPS,
             fLayout = mBinding.flNativeAdPlaceHolderVoiceGps,
             isNeedToShowShimmerLayout = true,
-            topMargin=10,
-            startMargin=100,
-            bottomMargin=50,
-            endMargin=50,
+            topMargin = 10,
+            startMargin = 100,
+            bottomMargin = 50,
+            endMargin = 50,
             isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
             onAdLoaded = {
                 Log.e(TAG, "Akshay_ initAds: onAdLoaded: Load Native Ad -> Big")
@@ -66,7 +66,7 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
                 Log.e(TAG, "Akshay_ initAds: onAdFailed: Load Native Ad -> Big")
             }
         )
-        nativeModeHelper1= NativeAdModelHelper((mActivity))
+        nativeModeHelper1 = NativeAdModelHelper((mActivity))
         nativeModeHelper1?.loadNativeAdvancedAd(
             fSize = NativeAdsSize.Medium,
             fLayout = mBinding.flNativeAdPlaceHolderMedium,
@@ -105,9 +105,23 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
 
     override fun onResume() {
         super.onResume()
-//        nativeModeHelper?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds())
-//        nativeModeHelper1?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds())
-//        nativeModeHelper2?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds())
+//        nativeModeHelper?.manageShimmerLayoutVisibility(
+//            AdsManager(this).isNeedToShowAds(),
+//            NativeAdsSize.Medium,
+//            mBinding.flNativeAdPlaceHolderMedium,
+//            null,
+//            true
+//        )
+        nativeModeHelper1?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds(),
+            NativeAdsSize.VOICE_GPS,
+            mBinding.flNativeAdPlaceHolderMedium,
+            null,
+            true)
+        nativeModeHelper2?.manageShimmerLayoutVisibility( AdsManager(this).isNeedToShowAds(),
+            NativeAdsSize.Medium,
+            mBinding.flNativeAdPlaceHolderVoiceGps,
+            null,
+            true)
     }
 
     override fun initViewListener() {

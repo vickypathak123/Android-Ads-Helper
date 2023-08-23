@@ -2,7 +2,15 @@ package com.example.app.ads.helper.openad
 
 import android.app.Activity
 import android.content.Context
-import com.example.app.ads.helper.*
+import com.example.app.ads.helper.AdMobAdsListener
+import com.example.app.ads.helper.admob_app_open_ad_model_list
+import com.example.app.ads.helper.isAnyAdOpen
+import com.example.app.ads.helper.isAnyAdShowing
+import com.example.app.ads.helper.isAppForeground
+import com.example.app.ads.helper.isOnline
+import com.example.app.ads.helper.isOpenAdEnable
+import com.example.app.ads.helper.logE
+import com.example.app.ads.helper.logI
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -82,19 +90,28 @@ object AppOpenAdHelper {
 
                             override fun onAdShowedFullScreenContent() {
                                 super.onAdShowedFullScreenContent()
-                                logI(tag = TAG, message = "loadNewAd: onAdShowedFullScreenContent: Index -> $fIndex")
+                                logI(
+                                    tag = TAG,
+                                    message = "loadNewAd: onAdShowedFullScreenContent: Index -> $fIndex"
+                                )
                                 isAnyAdShowing = true
                                 isThisAdShowing = true
                             }
 
                             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                                 super.onAdFailedToShowFullScreenContent(adError)
-                                logE(tag = TAG, message = "loadNewAd: onAdFailedToShowFullScreenContent: Index -> $fIndex\nErrorMessage::${adError.message}\nErrorCode::${adError.code}")
+                                logE(
+                                    tag = TAG,
+                                    message = "loadNewAd: onAdFailedToShowFullScreenContent: Index -> $fIndex\nErrorMessage::${adError.message}\nErrorCode::${adError.code}"
+                                )
                             }
 
                             override fun onAdDismissedFullScreenContent() {
                                 super.onAdDismissedFullScreenContent()
-                                logI(tag = TAG, message = "loadNewAd: onAdDismissedFullScreenContent: Index -> $fIndex")
+                                logI(
+                                    tag = TAG,
+                                    message = "loadNewAd: onAdDismissedFullScreenContent: Index -> $fIndex"
+                                )
                                 fModel.appOpenAd?.fullScreenContentCallback = null
                                 fModel.appOpenAd = null
 
@@ -115,7 +132,10 @@ object AppOpenAdHelper {
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
                     super.onAdFailedToLoad(adError)
-                    logE(tag = TAG, message = "loadNewAd: onAdFailedToLoad: Index -> $fIndex\nAd failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}\nErrorMessage::${adError.message}")
+                    logE(
+                        tag = TAG,
+                        message = "loadNewAd: onAdFailedToLoad: Index -> $fIndex\nAd failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}\nErrorMessage::${adError.message}"
+                    )
                     fModel.isAdLoadingRunning = false
                     fModel.appOpenAd = null
                     fModel.listener?.onAdFailed()
@@ -145,7 +165,10 @@ object AppOpenAdHelper {
                         override fun onAppOpenAdLoaded(appOpenAd: AppOpenAd) {
                             super.onAppOpenAdLoaded(appOpenAd)
                             mAdIdPosition = -1
-                            logI(tag = TAG, message = "requestWithIndex: onAppOpenAdLoaded: Index -> $index")
+                            logI(
+                                tag = TAG,
+                                message = "requestWithIndex: onAppOpenAdLoaded: Index -> $index"
+                            )
                             if (!isAnyIndexLoaded) {
                                 isAnyIndexLoaded = true
                                 onAdLoaded.invoke()
@@ -191,6 +214,8 @@ object AppOpenAdHelper {
      */
     fun loadAd(
         fContext: Context,
+        isNeedToShowAds: Boolean,
+        remoteConfig: Boolean,
         fOrientation: Int = AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
         onAdLoaded: () -> Unit = {}
     ) {
@@ -226,7 +251,12 @@ object AppOpenAdHelper {
                             if ((mAdIdPosition + 1) >= admob_app_open_ad_model_list.size) {
                                 mAdIdPosition = -1
                             } else {
-                                loadAd(fContext = fContext, onAdLoaded = mOnAdLoaded)
+                                loadAd(
+                                    fContext = fContext,
+                                    isNeedToShowAds,
+                                    remoteConfig,
+                                    onAdLoaded = mOnAdLoaded
+                                )
                             }
                         },
                     )
@@ -254,6 +284,8 @@ object AppOpenAdHelper {
      * @param onAdClosed this is a call back of your ad close, it will call also if your ad was not showing to the user
      */
     fun Activity.showAppOpenAd(
+        isNeedToShowAds: Boolean,
+        remoteConfig: Boolean,
         onAdClosed: () -> Unit
     ) {
         if (!isThisAdShowing) {
@@ -264,13 +296,14 @@ object AppOpenAdHelper {
                     }
 
                     logI(tag = TAG, message = "showAppOpenAd: onAdClosed: Load New Ad")
-                    loadAd(fContext = this@showAppOpenAd)
+                    loadAd(fContext = this@showAppOpenAd, isNeedToShowAds, remoteConfig)
                 }
             }
 
             if (admob_app_open_ad_model_list.isNotEmpty()) {
 
-                val loadedAdModel: OpenAdModel? = admob_app_open_ad_model_list.find { it.appOpenAd != null }
+                val loadedAdModel: OpenAdModel? =
+                    admob_app_open_ad_model_list.find { it.appOpenAd != null }
 
                 loadedAdModel?.let {
                     val lIndex: Int = admob_app_open_ad_model_list.indexOf(it)
@@ -283,7 +316,10 @@ object AppOpenAdHelper {
                                 isThisAdShowing = true
 
                                 it.appOpenAd?.show(this)
-                                logI(tag = TAG, message = "showAppOpenAd: Show AppOpen Ad Index -> $lIndex")
+                                logI(
+                                    tag = TAG,
+                                    message = "showAppOpenAd: Show AppOpen Ad Index -> $lIndex"
+                                )
                             }
                         }
                     }

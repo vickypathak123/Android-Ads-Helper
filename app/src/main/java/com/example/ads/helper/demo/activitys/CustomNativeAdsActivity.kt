@@ -9,7 +9,6 @@ import com.example.ads.helper.demo.base.utils.getDrawableRes
 import com.example.ads.helper.demo.base.utils.gone
 import com.example.ads.helper.demo.databinding.ActivityCustomNativeAdsBinding
 import com.example.app.ads.helper.NativeAdsSize
-import com.example.app.ads.helper.NativeAdvancedModelHelper
 import com.example.app.ads.helper.interstitialad.InterstitialAdHelper
 import com.example.app.ads.helper.interstitialad.InterstitialAdHelper.showInterstitialAd
 import com.example.app.ads.helper.nativead.NativeAdModelHelper
@@ -18,7 +17,7 @@ import com.example.app.ads.helper.purchase.AdsManager
 class CustomNativeAdsActivity : BaseBindingActivity<ActivityCustomNativeAdsBinding>() {
 
 
-    var nativeModeHelper:NativeAdModelHelper?=null
+    var nativeModeHelper: NativeAdModelHelper? = null
     override fun getActivityContext(): BaseActivity {
         return this@CustomNativeAdsActivity
     }
@@ -37,13 +36,19 @@ class CustomNativeAdsActivity : BaseBindingActivity<ActivityCustomNativeAdsBindi
                 // Perform your Action
             }
         )
-        nativeModeHelper= NativeAdModelHelper((mActivity))
+        nativeModeHelper = NativeAdModelHelper((mActivity))
 
         nativeModeHelper?.loadNativeAdvancedAd(
             fSize = NativeAdsSize.Custom,
             fLayout = mBinding.flNativeAdPlaceHolderCustom,
-            fCustomAdView = LayoutInflater.from(this).inflate(com.example.app.ads.helper.R.layout.layout_google_native_ad_custom_sample, null),
-            fCustomShimmerView = LayoutInflater.from(this).inflate(com.example.app.ads.helper.R.layout.layout_shimmer_google_native_ad_custom_sample, null),
+            fCustomAdView = LayoutInflater.from(this).inflate(
+                com.example.app.ads.helper.R.layout.layout_google_native_ad_custom_sample,
+                null
+            ),
+            fCustomShimmerView = LayoutInflater.from(this).inflate(
+                com.example.app.ads.helper.R.layout.layout_shimmer_google_native_ad_custom_sample,
+                null
+            ),
             isAddVideoOptions = intent?.extras?.getBoolean("is_add_video_options") ?: false,
         )
     }
@@ -81,6 +86,15 @@ class CustomNativeAdsActivity : BaseBindingActivity<ActivityCustomNativeAdsBindi
 
     override fun onResume() {
         super.onResume()
-//        nativeModeHelper?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds())
+        nativeModeHelper?.manageShimmerLayoutVisibility(
+            AdsManager(this).isNeedToShowAds(),
+            NativeAdsSize.Custom,
+            mBinding.flNativeAdPlaceHolderCustom,
+            LayoutInflater.from(this).inflate(
+                com.example.app.ads.helper.R.layout.layout_shimmer_google_native_ad_custom_sample,
+                null
+            ),
+            true
+        )
     }
 }
