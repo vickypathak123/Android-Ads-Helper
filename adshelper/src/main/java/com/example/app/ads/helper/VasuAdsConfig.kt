@@ -8,11 +8,16 @@ import com.example.app.ads.helper.nativead.NativeAdModel
 import com.example.app.ads.helper.openad.AppOpenAdHelper
 import com.example.app.ads.helper.openad.OpenAdModel
 import com.example.app.ads.helper.purchase.ProductPurchaseHelper
+import com.example.app.ads.helper.revenuecat.RevenueCatProductInfo
+import com.example.app.ads.helper.revenuecat.getFullBillingPeriod
+import com.example.app.ads.helper.revenuecat.initRevenueCatProductList
 import com.example.app.ads.helper.reward.RewardedInterstitialAdHelper
 import com.example.app.ads.helper.reward.RewardedInterstitialAdModel
 import com.example.app.ads.helper.reward.RewardedVideoAdHelper
 import com.example.app.ads.helper.reward.RewardedVideoAdModel
 import com.google.gson.Gson
+import com.revenuecat.purchases.*
+import com.revenuecat.purchases.interfaces.UpdatedCustomerInfoListener
 import java.io.Serializable
 
 /**
@@ -299,24 +304,34 @@ class SetAdsID(private val mContext: Context) : Serializable {
 
 
         //<editor-fold desc="Set Revenue Cat ">
-//        if (isNeedToGetProductListFromRevenueCat) {
-//            if (revenueCatId.isNotEmpty()) {
-//                Purchases.debugLogsEnabled = true
-//                Purchases.configure(
-//                    PurchasesConfiguration.Builder(mContext, revenueCatId).observerMode(false)
-//                        .appUserID(null).build()
-//                )
-//                Purchases.sharedInstance.updatedCustomerInfoListener = UpdatedCustomerInfoListener { customerInformation ->
-//                    // - Update our user's customerInfo object
-//                    logD(TAG, "onCreate:  user info -->$customerInformation")
-//                    customerInfo = customerInformation
-//
-//                }
-//                initRevenueCatProductList{
-//
-//                }
+        if (isNeedToGetProductListFromRevenueCat) {
+            if (revenueCatId.isNotEmpty()) {
+                Purchases.debugLogsEnabled = true
+                Purchases.configure(
+                    PurchasesConfiguration.Builder(mContext, revenueCatId).observerMode(false)
+                        .appUserID(null).build()
+                )
+                Purchases.sharedInstance.updatedCustomerInfoListener = UpdatedCustomerInfoListener { customerInformation ->
+                    // - Update our user's customerInfo object
+                    logD(TAG, "onCreate:  user info -->$customerInformation")
+                    customerInfo = customerInformation
+//            if (customerInfo.activeSubscriptions.isNotEmpty()) {
+//                AdsManager(this).onProductSubscribed()
+//            } else {
+//                AdsManager(this).onSubscribeExpired()
 //            }
-//        }
+//            customerInfo.entitlements.all.keys.forEach {
+//                PRODUCT_LIST.find { key -> key.id == customerInfo.entitlements.all[it]?.productIdentifier }?.freeTrialPeriod = "Not Found"
+//            }
+//            Log.d(TAG, "onCreate:  isneedtoShowAd -->" + AdsManager(this).isNeedToShowAds())
+//            Log.d(TAG, "onCreate:Customar Info PRODUCT_LIST -->" + Gson().toJson(PRODUCT_LIST))
+
+                }
+                initRevenueCatProductList{
+
+                }
+            }
+        }
         //</editor-fold>
 
         //<editor-fold desc="Set Load Multiple Ads Request Flag">

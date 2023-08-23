@@ -10,8 +10,8 @@ android {
     compileSdk 33
     namespace "com.example.app.ads.helper"
     defaultConfig {
-        minSdk 21
-        targetSdk 31
+        minSdk 23
+        targetSdk 33
         versionCode 1
         versionName "$dependencies_version"
         multiDexEnabled true
@@ -80,9 +80,6 @@ dependencies {
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
     //</editor-fold>
     //
-//    // <editor-fold desc=Revenue Cat">
-//    implementation 'com.revenuecat.purchases:purchases:5.8.0'
-//    //</editor-fold>
 }
 
 afterEvaluate {

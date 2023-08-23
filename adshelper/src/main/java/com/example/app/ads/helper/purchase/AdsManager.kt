@@ -1,5 +1,6 @@
 package com.example.app.ads.helper.purchase
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 
@@ -32,7 +33,7 @@ class AdsManager(context: Context) {
         sp.save(isSubscribe, false)
     }
 
-    fun isNeedToShowAds(): Boolean {
+    fun isNeedToShowAdsOld(): Boolean {
         val isProductPurchased = sp.read(isNeedToShow, false)
 
         Log.e(TAG, "isNeedToShowAds:isProductPurchased-$isProductPurchased")
@@ -48,6 +49,23 @@ class AdsManager(context: Context) {
         Log.e(TAG, "isNeedToShowAds:isSubscribe-$isSubscribe")
         return !isSubscribe
     }
+
+
+    fun isNeedToShowAds(): Boolean {
+        var isPurchase = false
+        if (!isNeedToShowAdsOld()) {
+            // User is Purchased
+            isPurchase = true
+        }
+        return if (isSubscribe()) {
+            // Only Come inside When the User Is Not Subscribe
+            !isPurchase
+        } else {
+            // Only come inside when the user is only subscribe
+            false
+        }
+    }
+
 
     /**
      *   SharedPreferences helper class

@@ -11,8 +11,8 @@ android {
         applicationId "com.example.ads.helper.demo"
 //        applicationId "com.clap.find.my.mobile.alarm.sound"
 //        applicationId "com.screen.mirror.cast.share.tv.device.app"
-        minSdk 21
-        targetSdk 31
+        minSdk 23
+        targetSdk 33
         versionCode 1
         versionName "$dependencies_version"
         multiDexEnabled true
@@ -51,7 +51,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     implementation project(path: ':adshelper')
-
     //<editor-fold desc="Multidex support">
     implementation 'com.android.support:multidex:1.0.3'
     //</editor-fold>

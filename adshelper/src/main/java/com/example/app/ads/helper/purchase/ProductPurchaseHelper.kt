@@ -4,55 +4,41 @@ package com.example.app.ads.helper.purchase
 
 import android.app.Activity
 import android.content.Context
-import android.os.Parcelable
 import android.os.SystemClock
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.Keep
 import androidx.annotation.NonNull
 import com.android.billingclient.api.*
 import com.example.app.ads.helper.logE
 import com.example.app.ads.helper.logI
 import com.example.app.ads.helper.logW
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 import org.jetbrains.annotations.NotNull
 import java.util.*
-import kotlin.collections.ArrayList
 
 object ProductPurchaseHelper {
 
-    @Keep
-    @Parcelize
-    data class ProductInfo(
+    class ProductInfo(
         @SerializedName("id")
-        @Expose
         val id: String,
         @SerializedName("formatted_price")
-        @Expose
         val formattedPrice: String,
         @SerializedName("price_amount_micros")
-        @Expose
         val priceAmountMicros: Long,
         @SerializedName("price_currency_code")
-        @Expose
         val priceCurrencyCode: String,
         @SerializedName("billing_period")
-        @Expose
         val billingPeriod: String,
         @SerializedName("free_trial_period")
-        @Expose
         val freeTrialPeriod: String,
         @SerializedName("product_detail")
-        @Expose
-        val productDetail: @RawValue ProductDetails
-    ) : Parcelable
+        val productDetail: ProductDetails
+    )
 
     private val TAG: String = javaClass.simpleName
 
@@ -60,10 +46,12 @@ object ProductPurchaseHelper {
     private val subscriptionKeyList: ArrayList<String> = ArrayList()
     private val PRODUCT_LIST: ArrayList<ProductInfo> = ArrayList()
 
-    private var mPurchaseListener: ProductPurchaseListener? = null // Callback for listen purchase states
+    private var mPurchaseListener: ProductPurchaseListener? =
+        null // Callback for listen purchase states
     private var mBillingClient: BillingClient? = null // Object of BillingClient
 
-    private var isConsumable: Boolean = false // Flag if purchase need to consume so user can buy again
+    private var isConsumable: Boolean =
+        false // Flag if purchase need to consume so user can buy again
 
     // variable to track event time
     private var mLastClickTime: Long = 0
@@ -75,12 +63,15 @@ object ProductPurchaseHelper {
                 Purchase.PurchaseState.UNSPECIFIED_STATE -> {
                     "UNSPECIFIED_STATE"
                 }
+
                 Purchase.PurchaseState.PURCHASED -> {
                     "PURCHASED"
                 }
+
                 Purchase.PurchaseState.PENDING -> {
                     "PENDING"
                 }
+
                 else -> {
                     "Unknown"
                 }
@@ -113,6 +104,11 @@ object ProductPurchaseHelper {
         subscriptionKeyList.clear()
         subscriptionKeyList.addAll(keys.filter { it.isNotEmpty() })
     }
+
+    internal fun addOtherSubscriptionKey(keys: String) {
+        if (!subscriptionKeyList.contains(keys))
+            subscriptionKeyList.add(keys)
+    }
     //</editor-fold>
 
     //<editor-fold desc="init Billing Related Data">
@@ -135,23 +131,39 @@ object ProductPurchaseHelper {
                                     }
                                 }
                             } else {
-                                logI(tag = TAG, message = "onPurchasesUpdated: =>> Response OK But Purchase List Null Found")
+                                logI(
+                                    tag = TAG,
+                                    message = "onPurchasesUpdated: =>> Response OK But Purchase List Null Found"
+                                )
                             }
                         }
+
                         else -> {
                             when (billingResult.responseCode) {
                                 BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED,
                                 BillingClient.BillingResponseCode.BILLING_UNAVAILABLE,
                                 BillingClient.BillingResponseCode.USER_CANCELED -> {
                                     if (billingResult.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
-                                        Toast.makeText(context, "You've cancelled the Google play billing process", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(
+                                            context,
+                                            "You've cancelled the Google play billing process",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     }
                                 }
+
                                 else -> {
-                                    Toast.makeText(context, "Item not found or Google play billing error", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        context,
+                                        "Item not found or Google play billing error",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             }
-                            logResponseCode(responseMsg = "onPurchasesUpdated: ", billingResult = billingResult)
+                            logResponseCode(
+                                responseMsg = "onPurchasesUpdated: ",
+                                billingResult = billingResult
+                            )
                         }
                     }
                 }
@@ -230,11 +242,24 @@ object ProductPurchaseHelper {
                     val purchasesHistoryResult = billingClient.queryPurchaseHistory(historyParams)
                     if (purchasesHistoryResult.billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                         purchasesHistoryResult.purchaseHistoryRecordList?.let { listOfHistoryProducts ->
-                            val idList = listOfHistoryProducts.flatMap { it.products } as ArrayList<String>
-                            initSubscription(context = context, historyList = idList, onComplete = onComplete)
-                        } ?: initSubscription(context = context, historyList = ArrayList(), onComplete = onComplete)
+                            val idList =
+                                listOfHistoryProducts.flatMap { it.products } as ArrayList<String>
+                            initSubscription(
+                                context = context,
+                                historyList = idList,
+                                onComplete = onComplete
+                            )
+                        } ?: initSubscription(
+                            context = context,
+                            historyList = ArrayList(),
+                            onComplete = onComplete
+                        )
                     } else {
-                        initSubscription(context = context, historyList = ArrayList(), onComplete = onComplete)
+                        initSubscription(
+                            context = context,
+                            historyList = ArrayList(),
+                            onComplete = onComplete
+                        )
                     }
                 }
             } else {
@@ -246,7 +271,11 @@ object ProductPurchaseHelper {
         }
     }
 
-    private suspend fun initSubscription(context: Context, historyList: ArrayList<String>, onComplete: () -> Unit) {
+    private suspend fun initSubscription(
+        context: Context,
+        historyList: ArrayList<String>,
+        onComplete: () -> Unit
+    ) {
         if (subscriptionKeyList.isNotEmpty()) {
             val params = QueryProductDetailsParams.newBuilder()
                 .setProductList(
@@ -291,16 +320,25 @@ object ProductPurchaseHelper {
 
                             val formattedPrice = when (productType) {
                                 BillingClient.ProductType.INAPP -> {
-                                    productDetail.oneTimePurchaseOfferDetails?.formattedPrice ?: "Not Found"
+                                    productDetail.oneTimePurchaseOfferDetails?.formattedPrice
+                                        ?: "Not Found"
                                 }
+
                                 BillingClient.ProductType.SUBS -> {
-                                    val pricingList = productDetail.subscriptionOfferDetails?.get(0)?.pricingPhases?.pricingPhaseList?.filter { !it.formattedPrice.equals("Free", ignoreCase = true) }
+                                    val pricingList =
+                                        productDetail.subscriptionOfferDetails?.get(0)?.pricingPhases?.pricingPhaseList?.filter {
+                                            !it.formattedPrice.equals(
+                                                "Free",
+                                                ignoreCase = true
+                                            )
+                                        }
                                     if (pricingList?.isNotEmpty() == true) {
                                         pricingList[0]?.formattedPrice ?: "Not Found"
                                     } else {
                                         "Not Found"
                                     }
                                 }
+
                                 else -> {
                                     "Not Found"
                                 }
@@ -308,16 +346,25 @@ object ProductPurchaseHelper {
 
                             val priceAmountMicros = when (productType) {
                                 BillingClient.ProductType.INAPP -> {
-                                    productDetail.oneTimePurchaseOfferDetails?.priceAmountMicros ?: 0
+                                    productDetail.oneTimePurchaseOfferDetails?.priceAmountMicros
+                                        ?: 0
                                 }
+
                                 BillingClient.ProductType.SUBS -> {
-                                    val pricingList = productDetail.subscriptionOfferDetails?.get(0)?.pricingPhases?.pricingPhaseList?.filter { !it.formattedPrice.equals("Free", ignoreCase = true) }
+                                    val pricingList =
+                                        productDetail.subscriptionOfferDetails?.get(0)?.pricingPhases?.pricingPhaseList?.filter {
+                                            !it.formattedPrice.equals(
+                                                "Free",
+                                                ignoreCase = true
+                                            )
+                                        }
                                     if (pricingList?.isNotEmpty() == true) {
                                         pricingList[0]?.priceAmountMicros ?: 0
                                     } else {
                                         0
                                     }
                                 }
+
                                 else -> {
                                     0
                                 }
@@ -325,16 +372,25 @@ object ProductPurchaseHelper {
 
                             val priceCurrencyCode = when (productType) {
                                 BillingClient.ProductType.INAPP -> {
-                                    productDetail.oneTimePurchaseOfferDetails?.priceCurrencyCode ?: "Not Found"
+                                    productDetail.oneTimePurchaseOfferDetails?.priceCurrencyCode
+                                        ?: "Not Found"
                                 }
+
                                 BillingClient.ProductType.SUBS -> {
-                                    val pricingList = productDetail.subscriptionOfferDetails?.get(0)?.pricingPhases?.pricingPhaseList?.filter { !it.formattedPrice.equals("Free", ignoreCase = true) }
+                                    val pricingList =
+                                        productDetail.subscriptionOfferDetails?.get(0)?.pricingPhases?.pricingPhaseList?.filter {
+                                            !it.formattedPrice.equals(
+                                                "Free",
+                                                ignoreCase = true
+                                            )
+                                        }
                                     if (pricingList?.isNotEmpty() == true) {
                                         pricingList[0]?.priceCurrencyCode ?: "Not Found"
                                     } else {
                                         "Not Found"
                                     }
                                 }
+
                                 else -> {
                                     "Not Found"
                                 }
@@ -344,14 +400,23 @@ object ProductPurchaseHelper {
                                 BillingClient.ProductType.INAPP -> {
                                     "One Time Purchase"
                                 }
+
                                 BillingClient.ProductType.SUBS -> {
-                                    val pricingList = productDetail.subscriptionOfferDetails?.get(0)?.pricingPhases?.pricingPhaseList?.filter { !it.formattedPrice.equals("Free", ignoreCase = true) }
+                                    val pricingList =
+                                        productDetail.subscriptionOfferDetails?.get(0)?.pricingPhases?.pricingPhaseList?.filter {
+                                            !it.formattedPrice.equals(
+                                                "Free",
+                                                ignoreCase = true
+                                            )
+                                        }
                                     if (pricingList?.isNotEmpty() == true) {
-                                        pricingList[0]?.billingPeriod?.getFullBillingPeriod() ?: "Not Found"
+                                        pricingList[0]?.billingPeriod?.getFullBillingPeriod()
+                                            ?: "Not Found"
                                     } else {
                                         "Not Found"
                                     }
                                 }
+
                                 else -> {
                                     "Not Found"
                                 }
@@ -361,19 +426,28 @@ object ProductPurchaseHelper {
                                 BillingClient.ProductType.INAPP -> {
                                     "Not Found"
                                 }
+
                                 BillingClient.ProductType.SUBS -> {
                                     val index = if (historyList.contains(productID)) {
                                         (productDetail.subscriptionOfferDetails?.size ?: 1) - 1
                                     } else {
                                         0
                                     }
-                                    val pricingList = productDetail.subscriptionOfferDetails?.get(index)?.pricingPhases?.pricingPhaseList?.filter { it.formattedPrice.equals("Free", ignoreCase = true) }
+                                    val pricingList =
+                                        productDetail.subscriptionOfferDetails?.get(index)?.pricingPhases?.pricingPhaseList?.filter {
+                                            it.formattedPrice.equals(
+                                                "Free",
+                                                ignoreCase = true
+                                            )
+                                        }
                                     if (pricingList?.isNotEmpty() == true) {
-                                        pricingList[0]?.billingPeriod?.getFullBillingPeriod() ?: "Not Found"
+                                        pricingList[0]?.billingPeriod?.getFullBillingPeriod()
+                                            ?: "Not Found"
                                     } else {
                                         "Not Found"
                                     }
                                 }
+
                                 else -> {
                                     "Not Found"
                                 }
@@ -391,11 +465,17 @@ object ProductPurchaseHelper {
                                 )
                             )
 
-                            logProductDetail(fMethodName = methodName, fProductDetail = productDetail)
+                            logProductDetail(
+                                fMethodName = methodName,
+                                fProductDetail = productDetail
+                            )
                         }
                     }
                 } else {
-                    logResponseCode(responseMsg = "$methodName: ", billingResult = productDetails.billingResult)
+                    logResponseCode(
+                        responseMsg = "$methodName: ",
+                        billingResult = productDetails.billingResult
+                    )
                 }
 
                 billingClient.queryPurchasesAsync(
@@ -410,12 +490,19 @@ object ProductPurchaseHelper {
                                 onPurchased(context, productType)
                             } else {
                                 onExpired(context, productType)
-                                logI(tag = TAG, message = "$methodName: =>> Purchases History Not Found")
+                                logI(
+                                    tag = TAG,
+                                    message = "$methodName: =>> Purchases History Not Found"
+                                )
                             }
                         }
+
                         else -> {
                             onExpired(context, productType)
-                            logResponseCode(responseMsg = "$methodName: ", billingResult = billingResult)
+                            logResponseCode(
+                                responseMsg = "$methodName: ",
+                                billingResult = billingResult
+                            )
                         }
                     }
                     onComplete.invoke()
@@ -490,7 +577,8 @@ object ProductPurchaseHelper {
     }
 
     private suspend fun consumePurchase(purchase: Purchase) {
-        val consumeParams = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
+        val consumeParams =
+            ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
         mBillingClient?.let {
             val consumeResult = it.consumePurchase(consumeParams)
             logResponseCode("consumePurchase: ", consumeResult.billingResult)
@@ -499,21 +587,47 @@ object ProductPurchaseHelper {
     //</editor-fold>
 
     //<editor-fold desc="Purchase Product & Subscribe">
-    fun purchaseProduct(activity: Activity, @NotNull productId: String, fIsConsumable: Boolean = false) {
+    fun purchaseProduct(
+        activity: Activity,
+        @NotNull productId: String,
+        fIsConsumable: Boolean = false
+    ) {
         isConsumable = fIsConsumable
         CoroutineScope(Dispatchers.Main).launch {
-            purchaseSelectedProduct(methodName = "purchaseProduct", activity = activity, productId = productId, productKeyList = lifeTimeProductKeyList, productType = BillingClient.ProductType.INAPP)
+            purchaseSelectedProduct(
+                methodName = "purchaseProduct",
+                activity = activity,
+                productId = productId,
+                productKeyList = lifeTimeProductKeyList,
+                productType = BillingClient.ProductType.INAPP
+            )
         }
     }
 
-    fun subscribeProduct(activity: Activity, @NotNull productId: String, fIsConsumable: Boolean = false) {
+    fun subscribeProduct(
+        activity: Activity,
+        @NotNull productId: String,
+        fIsConsumable: Boolean = false
+    ) {
         isConsumable = fIsConsumable
         CoroutineScope(Dispatchers.Main).launch {
-            purchaseSelectedProduct(methodName = "subscribeProduct", activity = activity, productId = productId, productKeyList = subscriptionKeyList, productType = BillingClient.ProductType.SUBS)
+            purchaseSelectedProduct(
+                methodName = "subscribeProduct",
+                activity = activity,
+                productId = productId,
+                productKeyList = subscriptionKeyList,
+                productType = BillingClient.ProductType.SUBS
+            )
         }
     }
 
-    private suspend fun purchaseSelectedProduct(methodName: String, activity: Activity, @NotNull productId: String, @NotNull productKeyList: ArrayList<String>, @NonNull productType: String) {
+    private suspend fun purchaseSelectedProduct(
+        methodName: String,
+        activity: Activity,
+        @NotNull productId: String,
+        @NotNull productKeyList: ArrayList<String>,
+        @NonNull productType: String
+    ) {
         if (mBillingClient != null && mBillingClient?.isReady == true) {
             mBillingClient?.let { billingClient ->
                 val params = QueryProductDetailsParams.newBuilder()
@@ -531,7 +645,10 @@ object ProductPurchaseHelper {
                     billingClient.queryProductDetails(params)
                 }
 
-                val productDetail = getProductDetails(productId = productId, productDetailsList = productDetailsResult.productDetailsList)
+                val productDetail = getProductDetails(
+                    productId = productId,
+                    productDetailsList = productDetailsResult.productDetailsList
+                )
 
                 if (productDetail != null) {
 
@@ -545,7 +662,8 @@ object ProductPurchaseHelper {
                         return
                     }
 
-                    val lBuilder: BillingFlowParams.ProductDetailsParams.Builder = BillingFlowParams.ProductDetailsParams.newBuilder()
+                    val lBuilder: BillingFlowParams.ProductDetailsParams.Builder =
+                        BillingFlowParams.ProductDetailsParams.newBuilder()
                     lBuilder.apply {
                         setProductDetails(productDetail)
                         offerToken?.let {
@@ -565,11 +683,16 @@ object ProductPurchaseHelper {
 
                             onPurchased(context = activity, productType = productType)
                             mPurchaseListener?.onProductAlreadyOwn()
-                            logProductDetail(fMethodName = methodName, fProductDetail = productDetail)
+                            logProductDetail(
+                                fMethodName = methodName,
+                                fProductDetail = productDetail
+                            )
                         }
+
                         BillingClient.BillingResponseCode.OK -> {
                             logE(tag = TAG, message = "$methodName: =>> Purchase in Progress")
                         }
+
                         else -> {
                             logResponseCode(methodName, billingResult)
                         }
@@ -579,12 +702,16 @@ object ProductPurchaseHelper {
                     CoroutineScope(Dispatchers.Main).launch {
                         mPurchaseListener?.onBillingKeyNotFound(productId)
                     }
-                    logE(tag = TAG, message = "$methodName: =>> Product Detail not found for product id:: $productId")
+                    logE(
+                        tag = TAG,
+                        message = "$methodName: =>> Product Detail not found for product id:: $productId"
+                    )
                 }
             }
         } else {
             CoroutineScope(Dispatchers.Main).launch {
-                Toast.makeText(activity, "The Billing Client Is Not Ready", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "The Billing Client Is Not Ready", Toast.LENGTH_SHORT)
+                    .show()
             }
             logE(tag = TAG, message = "$methodName: =>> The billing client is not ready")
         }
@@ -633,8 +760,8 @@ object ProductPurchaseHelper {
                 lDiscountPercentage /= 100
 
                 val lDiscountPrice = weekPrice.replace(
-                    String.format(Locale.ENGLISH,"%.2f", lWeekNumber),
-                    String.format(Locale.ENGLISH,"%.2f", (lYearNumber / 52)),
+                    String.format(Locale.ENGLISH, "%.2f", lWeekNumber),
+                    String.format(Locale.ENGLISH, "%.2f", (lYearNumber / 52)),
                     false
                 )
 
@@ -658,9 +785,9 @@ object ProductPurchaseHelper {
                 lDiscountPercentage = lDiscountPercentage.toInt().toDouble()
                 lDiscountPercentage /= 100
 
-                val lDiscountPrice = weekPrice.replace(",","").replace(
-                    String.format(Locale.ENGLISH,"%.2f", lWeekNumber),
-                    String.format(Locale.ENGLISH,"%.2f", (lMonthNumber / 4)),
+                val lDiscountPrice = weekPrice.replace(",", "").replace(
+                    String.format(Locale.ENGLISH, "%.2f", lWeekNumber),
+                    String.format(Locale.ENGLISH, "%.2f", (lMonthNumber / 4)),
                     false
                 )
 
@@ -684,9 +811,9 @@ object ProductPurchaseHelper {
                 lDiscountPercentage = lDiscountPercentage.toInt().toDouble()
                 lDiscountPercentage /= 100
 
-                val lDiscountPrice = monthPrice.replace(",","").replace(
-                    String.format(Locale.ENGLISH,"%.2f", lMonthNumber),
-                    String.format(Locale.ENGLISH,"%.2f", (lYearNumber / 12)),
+                val lDiscountPrice = monthPrice.replace(",", "").replace(
+                    String.format(Locale.ENGLISH, "%.2f", lMonthNumber),
+                    String.format(Locale.ENGLISH, "%.2f", (lYearNumber / 12)),
                     false
                 )
 
@@ -713,12 +840,18 @@ object ProductPurchaseHelper {
             BillingClient.BillingResponseCode.USER_CANCELED -> "USER_CANCELED"
             else -> "unDefined Error"
         }
-        logE(tag = TAG, message = "$responseMsg :: \nerrorCode::$errorCode,\nMessage::${billingResult.debugMessage}")
+        logE(
+            tag = TAG,
+            message = "$responseMsg :: \nerrorCode::$errorCode,\nMessage::${billingResult.debugMessage}"
+        )
     }
 
     private fun logPurchaseItem(purchase: Purchase) {
         with(purchase) {
-            logW(tag = TAG, message = "<<<-----------------   Purchase Details   ----------------->>>")
+            logW(
+                tag = TAG,
+                message = "<<<-----------------   Purchase Details   ----------------->>>"
+            )
             logW(tag = TAG, message = "Order Id: $orderId")
             logW(tag = TAG, message = "Original Json: $originalJson")
             logW(tag = TAG, message = "Package Name: $packageName")
@@ -733,14 +866,20 @@ object ProductPurchaseHelper {
             logW(tag = TAG, message = "Purchase Time: $purchaseTime")
             logW(tag = TAG, message = "Acknowledged: $isAcknowledged")
             logW(tag = TAG, message = "AutoRenewing: $isAutoRenewing")
-            logW(tag = TAG, message = "<<<-----------------   End of Purchase Details   ----------------->>>")
+            logW(
+                tag = TAG,
+                message = "<<<-----------------   End of Purchase Details   ----------------->>>"
+            )
         }
     }
 
     private fun logProductDetail(fMethodName: String, @NotNull fProductDetail: ProductDetails) {
         with(fProductDetail) {
             logW(tag = TAG, message = "\n")
-            logW(tag = TAG, message = "$fMethodName: <<<-----------------   \"$productId\" Product Details   ----------------->>>")
+            logW(
+                tag = TAG,
+                message = "$fMethodName: <<<-----------------   \"$productId\" Product Details   ----------------->>>"
+            )
             logW(tag = TAG, message = "$fMethodName: Product Id:: $productId")
             logW(tag = TAG, message = "$fMethodName: Name:: $name")
             logW(tag = TAG, message = "$fMethodName: Title:: $title")
@@ -749,11 +888,23 @@ object ProductPurchaseHelper {
             oneTimePurchaseOfferDetails?.let { details ->
                 with(details) {
                     logW(tag = TAG, message = "\n")
-                    logW(tag = TAG, message = "$fMethodName: <<<-----------------   Life-Time Purchase Product Price Details   ----------------->>>")
-                    logW(tag = TAG, message = "$fMethodName: Price Amount Micros:: $priceAmountMicros")
+                    logW(
+                        tag = TAG,
+                        message = "$fMethodName: <<<-----------------   Life-Time Purchase Product Price Details   ----------------->>>"
+                    )
+                    logW(
+                        tag = TAG,
+                        message = "$fMethodName: Price Amount Micros:: $priceAmountMicros"
+                    )
                     logW(tag = TAG, message = "$fMethodName: Formatted Price:: $formattedPrice")
-                    logW(tag = TAG, message = "$fMethodName: Price Currency Code:: $priceCurrencyCode")
-                    logW(tag = TAG, message = "$fMethodName: <<<-----------------   End of Life-Time Purchase Product Price Details   ----------------->>>")
+                    logW(
+                        tag = TAG,
+                        message = "$fMethodName: Price Currency Code:: $priceCurrencyCode"
+                    )
+                    logW(
+                        tag = TAG,
+                        message = "$fMethodName: <<<-----------------   End of Life-Time Purchase Product Price Details   ----------------->>>"
+                    )
                 }
             }
             subscriptionOfferDetails?.let { details ->
@@ -762,7 +913,10 @@ object ProductPurchaseHelper {
                         subscriptionOfferDetails?.let { offerDetails ->
                             with(offerDetails) {
                                 logW(tag = "", message = "\n")
-                                logW(tag = TAG, message = "$fMethodName: <<<-----------------   Product Offer Details of Index:: $index   ----------------->>>")
+                                logW(
+                                    tag = TAG,
+                                    message = "$fMethodName: <<<-----------------   Product Offer Details of Index:: $index   ----------------->>>"
+                                )
                                 logW(tag = TAG, message = "$fMethodName: Offer Token:: $offerToken")
                                 logW(tag = TAG, message = "$fMethodName: Offer Tags:: $offerTags")
 //                                logW(tag = TAG, message = "$fMethodName: Installment Plan Details:: $installmentPlanDetails")
@@ -772,26 +926,56 @@ object ProductPurchaseHelper {
                                         pricingPhase1?.let { pricingPhase ->
                                             with(pricingPhase) {
                                                 logW(tag = "", message = "\n")
-                                                logW(tag = TAG, message = "$fMethodName: <<<-----------------   Product Offer Price Details of Index:: $index   ----------------->>>")
-                                                logW(tag = TAG, message = "$fMethodName: Billing Period:: $billingPeriod")
-                                                logW(tag = TAG, message = "$fMethodName: Formatted Price:: $formattedPrice")
-                                                logW(tag = TAG, message = "$fMethodName: Price Amount Micros:: $priceAmountMicros")
-                                                logW(tag = TAG, message = "$fMethodName: Price Currency Code:: $priceCurrencyCode")
-                                                logW(tag = TAG, message = "$fMethodName: Recurrence Mode:: $recurrenceMode")
-                                                logW(tag = TAG, message = "$fMethodName: Billing Cycle Count:: $billingCycleCount")
-                                                logW(tag = TAG, message = "$fMethodName: <<<-----------------   End of Product Offer Price Details of Index:: $index   ----------------->>>")
+                                                logW(
+                                                    tag = TAG,
+                                                    message = "$fMethodName: <<<-----------------   Product Offer Price Details of Index:: $index   ----------------->>>"
+                                                )
+                                                logW(
+                                                    tag = TAG,
+                                                    message = "$fMethodName: Billing Period:: $billingPeriod"
+                                                )
+                                                logW(
+                                                    tag = TAG,
+                                                    message = "$fMethodName: Formatted Price:: $formattedPrice"
+                                                )
+                                                logW(
+                                                    tag = TAG,
+                                                    message = "$fMethodName: Price Amount Micros:: $priceAmountMicros"
+                                                )
+                                                logW(
+                                                    tag = TAG,
+                                                    message = "$fMethodName: Price Currency Code:: $priceCurrencyCode"
+                                                )
+                                                logW(
+                                                    tag = TAG,
+                                                    message = "$fMethodName: Recurrence Mode:: $recurrenceMode"
+                                                )
+                                                logW(
+                                                    tag = TAG,
+                                                    message = "$fMethodName: Billing Cycle Count:: $billingCycleCount"
+                                                )
+                                                logW(
+                                                    tag = TAG,
+                                                    message = "$fMethodName: <<<-----------------   End of Product Offer Price Details of Index:: $index   ----------------->>>"
+                                                )
                                             }
                                         }
                                     }
                                 }
 
-                                logW(tag = TAG, message = "$fMethodName: <<<-----------------   End of Product Offer Details of Index:: $index   ----------------->>>")
+                                logW(
+                                    tag = TAG,
+                                    message = "$fMethodName: <<<-----------------   End of Product Offer Details of Index:: $index   ----------------->>>"
+                                )
                             }
                         }
                     }
                 }
             }
-            logW(tag = TAG, message = "$fMethodName: <<<-----------------   End of \"$productId\" Product Details   ----------------->>>")
+            logW(
+                tag = TAG,
+                message = "$fMethodName: <<<-----------------   End of \"$productId\" Product Details   ----------------->>>"
+            )
         }
     }
     //</editor-fold>
