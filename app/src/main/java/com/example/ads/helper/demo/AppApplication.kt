@@ -33,7 +33,6 @@ class AppApplication : AppOpenApplication(), AppOpenApplication.AppLifecycleList
             .isDebugModeEnable(true)
             .needToBlockInterstitialAd(false)
             .isNeedToLoadMultipleNativeAdRequest(true)
-
             .isEnableOpenAd(this.getBoolean(IS_OPEN_ADS_ENABLE, true))
             .setLifeTimeProductKey("android.test.purchased")
 //            .setSubscriptionKey("com.screen.mirror.cast.share.tv.device.app.weekly","com.screen.mirror.cast.share.tv.device.app.monthly",

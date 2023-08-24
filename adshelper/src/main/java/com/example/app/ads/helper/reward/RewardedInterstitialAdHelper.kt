@@ -3,6 +3,7 @@ package com.example.app.ads.helper.reward
 import android.app.Activity
 import android.content.Context
 import com.example.app.ads.helper.AdMobAdsListener
+import com.example.app.ads.helper.VasuAdsConfig
 import com.example.app.ads.helper.admob_rewarded_interstitial_ad_model_list
 import com.example.app.ads.helper.isAnyAdOpen
 import com.example.app.ads.helper.isAnyAdShowing
@@ -247,12 +248,11 @@ object RewardedInterstitialAdHelper {
     fun loadAd(
         fContext: Context,
         isNeedToShow: Boolean = true,
-        remoteConfig: Boolean = true,
         onStartToLoadAd: () -> Unit,
         onAdLoaded: () -> Unit,
 
     ) {
-        if (isNeedToShow && remoteConfig) {
+        if (isNeedToShow && VasuAdsConfig.with(fContext).remoteConfigInterstitialAds && fContext.isOnline) {
 
 
             mOnAdLoaded = onAdLoaded
@@ -305,6 +305,9 @@ object RewardedInterstitialAdHelper {
             } else {
                 throw RuntimeException("set RewardedInterstitial Ad Id First")
             }
+        }else{
+            onAdLoaded.invoke()
+            onStartToLoadAd.invoke()
         }
     }
 

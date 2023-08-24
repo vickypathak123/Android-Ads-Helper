@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import com.example.app.ads.helper.AdMobAdsListener
 import com.example.app.ads.helper.NativeAdvancedModelHelper
+import com.example.app.ads.helper.VasuAdsConfig
 import com.example.app.ads.helper.activity.FullScreenNativeAdDialogActivity
 import com.example.app.ads.helper.admob_interstitial_ad_model_list
 import com.example.app.ads.helper.isAnyAdOpen
@@ -226,15 +227,13 @@ object InterstitialAdHelper {
     fun loadAd(
         fContext: Context,
         isNeedToShow: Boolean = true,
-        remoteConfig: Boolean = true,
         onAdLoaded: () -> Unit = {},
 
-    ) {
-        if (isNeedToShow && remoteConfig && fContext.isOnline) {
+        ) {
+        if (isNeedToShow && VasuAdsConfig.with(fContext).remoteConfigInterstitialAds && fContext.isOnline) {
             mOnAdLoaded = onAdLoaded
             isAnyIndexLoaded = false
             isAnyIndexAlreadyLoaded = false
-
             if (admob_interstitial_ad_model_list.isNotEmpty()) {
 
                 if (isNeedToLoadMultipleRequest) {
@@ -270,6 +269,8 @@ object InterstitialAdHelper {
             } else {
                 throw RuntimeException("set Interstitial Ad Id First")
             }
+        } else {
+            onAdLoaded.invoke()
         }
     }
 
@@ -289,11 +290,10 @@ object InterstitialAdHelper {
     fun Activity.showInterstitialAd(
         fIsShowFullScreenNativeAd: Boolean = true,
         isNeedToShow: Boolean = true,
-        remoteConfig: Boolean = true,
         onAdClosed: (isAdShowing: Boolean, isShowFullScreenAd: Boolean) -> Unit
 
     ) {
-        if (isNeedToShow && remoteConfig) {
+        if (isNeedToShow && VasuAdsConfig.with(this).remoteConfigInterstitialAds) {
 
 
             this@InterstitialAdHelper.mIsShowFullScreenNativeAd = fIsShowFullScreenNativeAd
@@ -348,7 +348,12 @@ object InterstitialAdHelper {
             } else {
                 throw RuntimeException("set Interstitial Ad Id First")
             }
+        } else {
+            if (!isThisAdShowing) {
+                mListener?.onAdClosed(false)
+            }
         }
+
     }
 
     private fun Activity.showFullScreenNativeAdDialog() {
@@ -376,6 +381,8 @@ object InterstitialAdHelper {
 
                 isThisAdShowing = true
             }
+        } else {
+            mListener?.onAdClosed(true)
         }
     }
 

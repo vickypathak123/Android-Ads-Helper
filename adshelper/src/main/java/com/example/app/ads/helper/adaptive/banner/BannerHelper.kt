@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import com.example.app.ads.helper.R
+import com.example.app.ads.helper.VasuAdsConfig
 import com.example.app.ads.helper.admob_banner_ad_id
 import com.example.app.ads.helper.displayDensity
 import com.example.app.ads.helper.displayWidth
@@ -144,9 +145,8 @@ class BannerHelper(private val mContext: Activity) {
         fLayout: FrameLayout,
         isNeedToShowShimmer: Boolean? = true,
         isNeedToShowAd: Boolean = true,
-        remoteConfig: Boolean = true
     ) {
-        if (isNeedToShowAd && remoteConfig && fLayout.context.isOnline) {
+        if (isNeedToShowAd && VasuAdsConfig.with(fLayout.context).remoteConfigBannerAds && fLayout.context.isOnline) {
             mFLayout = fLayout
             fLayout.gone
             fLayout.removeAllViews()
@@ -241,7 +241,6 @@ class BannerHelper(private val mContext: Activity) {
         isNeedToShowAd: Boolean,
         fBannerAdSize: BannerAdSize,
         fLayout: FrameLayout,
-        remoteConfig: Boolean
     ) {
 
         if (fLayout.context.isOnline && isAdLoaded) {
@@ -291,7 +290,7 @@ class BannerHelper(private val mContext: Activity) {
             )
         }
         mShimmerLayout = shimmerLayout
-        if (isNeedToShowAd && remoteConfig) {
+        if (isNeedToShowAd && VasuAdsConfig.with(fLayout.context).remoteConfigBannerAds) {
             if (!isAdLoaded) {
                 fLayout.removeAllViews()
                 fLayout.addView(mShimmerLayout)

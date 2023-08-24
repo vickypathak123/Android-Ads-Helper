@@ -71,7 +71,6 @@ class NativeAdModelHelper(private val mContext: Activity) {
         isSetDefaultButtonColor: Boolean = true,
         isNeedToShowShimmerLayout: Boolean = true,
         isNeedToShowAd: Boolean = true,
-        remoteConfig: Boolean = true,
         topMargin: Int = 0,
         startMargin: Int = 0,
         bottomMargin: Int = 0,
@@ -82,7 +81,7 @@ class NativeAdModelHelper(private val mContext: Activity) {
         onClickAdClose: () -> Unit = {},
 
         ) {
-        if (isNeedToShowAd && remoteConfig && fLayout.context.isOnline) {
+        if (isNeedToShowAd && VasuAdsConfig.with(fLayout.context).remoteConfigNativeAdvancedAds && fLayout.context.isOnline) {
             mFLayout = fLayout
             fLayout.tag = fSize.name
 
@@ -183,7 +182,6 @@ class NativeAdModelHelper(private val mContext: Activity) {
                         onAdFailed = onAdFailed,
                         onClickAdClose = onClickAdClose,
                         isNeedToShowAd = isNeedToShowAd,
-                        remoteConfig = remoteConfig
                     )
                 },
                 onAdFailed = { index ->
@@ -192,33 +190,35 @@ class NativeAdModelHelper(private val mContext: Activity) {
                     fLayout.gone
                     isAdLoaded = false
                 })
-        }
-    }
-
-    //update this method
-    //display shimmerLayout all time when internet is not available
-    fun manageShimmerLayoutVisibility(isNeedToShowAd: Boolean, remoteConfig: Boolean) {
-        if (isNeedToShowAd && remoteConfig) {
-            if(!isAdLoaded) {
-                mFLayout?.removeAllViews()
-                mFLayout?.addView(mShimmerLayout)
-                mFLayout?.visible
-            }else{
-                mFLayout?.visible
-            }
         } else {
-//            mFLayout?.removeAllViews()
-            mFLayout?.gone
+            onAdLoaded.invoke(fSize == NativeAdsSize.FullScreen)
+            onAdClosed.invoke()
+            onClickAdClose.invoke()
         }
-
     }
+
+    //old method don`t uncomment
+//    fun manageShimmerLayoutVisibility(isNeedToShowAd: Boolean) {
+//        if (isNeedToShowAd) {
+//            if (!isAdLoaded) {
+//                mFLayout?.removeAllViews()
+//                mFLayout?.addView(mShimmerLayout)
+//                mFLayout?.visible
+//            } else {
+//                mFLayout?.visible
+//            }
+//        } else {
+////            mFLayout?.removeAllViews()
+//            mFLayout?.gone
+//        }
+//
+//    }
 
     fun manageShimmerLayoutVisibility(
         isNeedToShowAd: Boolean,
         fSize: NativeAdsSize,
         fLayout: FrameLayout,
         fCustomShimmerView: View? = null,
-        remoteConfig: Boolean
     ) {
         val shimmerLayout = when (fSize) {
             NativeAdsSize.Big -> mContext.inflater.inflate(
@@ -233,7 +233,7 @@ class NativeAdModelHelper(private val mContext: Activity) {
                 R.layout.layout_google_native_ad_voice_gps_home_loading, fLayout, false
             )
 
-            NativeAdsSize.Custom -> fCustomShimmerView?: mContext.inflater.inflate(
+            NativeAdsSize.Custom -> fCustomShimmerView ?: mContext.inflater.inflate(
                 R.layout.layout_shimmer_google_native_ad_big, fLayout, false
             )
 
@@ -248,12 +248,12 @@ class NativeAdModelHelper(private val mContext: Activity) {
         }
 
         mShimmerLayout = shimmerLayout
-        if (isNeedToShowAd && remoteConfig) {
-            if(!isAdLoaded) {
+        if (isNeedToShowAd && VasuAdsConfig.with(fLayout.context).remoteConfigNativeAdvancedAds) {
+            if (!isAdLoaded) {
                 fLayout.removeAllViews()
                 fLayout.addView(mShimmerLayout)
                 fLayout.visible
-            }else{
+            } else {
                 fLayout.visible
             }
         } else {
