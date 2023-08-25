@@ -350,7 +350,7 @@ object InterstitialAdHelper {
             }
         } else {
             if (!isThisAdShowing) {
-                mListener?.onAdClosed(false)
+                onAdClosed.invoke(true,false)
             }
         }
 
