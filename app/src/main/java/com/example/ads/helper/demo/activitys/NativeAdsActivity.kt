@@ -112,16 +112,16 @@ class NativeAdsActivity : BaseBindingActivity<ActivityNativeAdsBinding>() {
 //            null,
 //            true
 //        )
-        nativeModeHelper1?.manageShimmerLayoutVisibility(AdsManager(this).isNeedToShowAds(),
+        nativeModeHelper1?.manageShimmerLayoutVisibility(
+            AdsManager(this).isNeedToShowAds(),
             NativeAdsSize.VOICE_GPS,
-            mBinding.flNativeAdPlaceHolderMedium,
-            null,
-            true)
-        nativeModeHelper2?.manageShimmerLayoutVisibility( AdsManager(this).isNeedToShowAds(),
+            mBinding.flNativeAdPlaceHolderMedium
+        )
+        nativeModeHelper2?.manageShimmerLayoutVisibility(
+            AdsManager(this).isNeedToShowAds(),
             NativeAdsSize.Medium,
-            mBinding.flNativeAdPlaceHolderVoiceGps,
-            null,
-            true)
+            mBinding.flNativeAdPlaceHolderVoiceGps
+        )
     }
 
     override fun initViewListener() {

@@ -243,9 +243,6 @@ class BannerHelper(private val mContext: Activity) {
         fLayout: FrameLayout,
     ) {
 
-        if (fLayout.context.isOnline && isAdLoaded) {
-            isAdLoaded = true
-        }
         val shimmerLayout = when (fBannerAdSize) {
             BannerAdSize.BANNER -> mContext.inflater.inflate(
                 R.layout.layout_shimmer_google_banner_ad,

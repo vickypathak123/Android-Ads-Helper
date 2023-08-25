@@ -69,45 +69,45 @@ class SetAdsID(private val mContext: Context) : Serializable {
     private var mIsBlockInterstitialAd: Boolean = false
     private var mIsDebugMode: Boolean = false
 
-    var remoteConfigOpenAds: Boolean = false
-    var remoteConfigBannerAds: Boolean = false
-    var remoteConfigNativeAdvancedAds: Boolean = false
-    var remoteConfigInterstitialAds: Boolean = false
-    var remoteConfigInterstitialAdRewardAds: Boolean = false
-    var remoteConfigRewardVideoAds: Boolean = false
+    var remoteConfigOpenAds: Boolean = true
+    var remoteConfigBannerAds: Boolean = true
+    var remoteConfigNativeAdvancedAds: Boolean = true
+    var remoteConfigInterstitialAds: Boolean = true
+    var remoteConfigInterstitialRewardAds: Boolean = true
+    var remoteConfigRewardVideoAds: Boolean = true
 
 
     /**
      * RemoteConfig Value set for All Ads
      */
-    @JvmName("needToRemoteConfigBannerAds")
-    fun needToRemoteConfigBannerAds(fIsEnable: Boolean=true) = this@SetAdsID.apply {
-        this.remoteConfigBannerAds = fIsEnable
-    }
-
-    @JvmName("needToRemoteConfigBannerAds")
-    fun needToRemoteConfigOpenAds(fIsEnable: Boolean=true) = this@SetAdsID.apply {
+    @JvmName("isEnableToRemoteConfigOpenAds")
+    fun isEnableToRemoteConfigOpenAds(fIsEnable: Boolean) = this@SetAdsID.apply {
         this.remoteConfigOpenAds = fIsEnable
     }
 
-    @JvmName("needToRemoteConfigNativeAdvancedAds")
-    fun needToRemoteConfigNativeAdvancedAds(fIsEnable: Boolean=true) = this@SetAdsID.apply {
+    @JvmName("isEnableToRemoteConfigBannerAds")
+    fun isEnableToRemoteConfigBannerAds(fIsEnable: Boolean) = this@SetAdsID.apply {
+        this.remoteConfigBannerAds = fIsEnable
+    }
+
+    @JvmName("isEnableToRemoteConfigNativeAdvancedAds")
+    fun isEnableToRemoteConfigNativeAdvancedAds(fIsEnable: Boolean) = this@SetAdsID.apply {
         this.remoteConfigNativeAdvancedAds = fIsEnable
     }
 
-    @JvmName("needToRemoteConfigInterstitialAds")
-    fun needToRemoteConfigInterstitialAds(fIsEnable: Boolean=true) = this@SetAdsID.apply {
+    @JvmName("isEnableToRemoteConfigInterstitialAds")
+    fun isEnableToRemoteConfigInterstitialAds(fIsEnable: Boolean) = this@SetAdsID.apply {
         this.remoteConfigInterstitialAds = fIsEnable
     }
 
-    @JvmName("needToRemoteConfigInterstitialAdRewardAds")
-    fun needToRemoteConfigInterstitialAdRewardAds(fIsEnable: Boolean=true) = this@SetAdsID.apply {
-        this.remoteConfigInterstitialAdRewardAds = fIsEnable
+    @JvmName("isEnableToRemoteConfigInterstitialRewardAds")
+    fun isEnableToRemoteConfigInterstitialRewardAds(fIsEnable: Boolean) = this@SetAdsID.apply {
+        this.remoteConfigInterstitialRewardAds = fIsEnable
     }
 
-    @JvmName("needToRemoteConfigRewardVideoAds")
-    fun needToRemoteConfigRewardVideoAds(fIsEnable: Boolean=true) = this@SetAdsID.apply {
-        this.remoteConfigBannerAds = fIsEnable
+    @JvmName("isEnableToRemoteConfigRewardVideoAds")
+    fun isEnableToRemoteConfigRewardVideoAds(fIsEnable: Boolean) = this@SetAdsID.apply {
+        this.remoteConfigRewardVideoAds = fIsEnable
     }
 
     //<editor-fold desc="Set Ads ID">

@@ -188,6 +188,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), ProductPurchase
                 } else if (NativeAdvancedModelHelper.getNativeAd == null) {
                     Toast.makeText(mActivity, "native ad not load", Toast.LENGTH_SHORT).show()
                 } else {
+
                     FullScreenNativeAdDialogActivity.lunchFullScreenAd(mActivity)
                 }
             }

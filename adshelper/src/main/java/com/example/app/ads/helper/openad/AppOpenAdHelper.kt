@@ -222,7 +222,7 @@ object AppOpenAdHelper {
         mOnAdLoaded = onAdLoaded
         isAnyIndexLoaded = false
         isAnyIndexAlreadyLoaded = false
-        if (isNeedToShowAds && VasuAdsConfig.with(fContext).remoteConfigOpenAds) {
+        if (isNeedToShowAds && VasuAdsConfig.with(fContext).remoteConfigOpenAds && fContext.isOnline) {
             if (admob_app_open_ad_model_list.isNotEmpty()) {
 
                 if (isNeedToLoadMultipleRequest) {
@@ -289,7 +289,7 @@ object AppOpenAdHelper {
         isNeedToShowAds: Boolean,
         onAdClosed: () -> Unit
     ) {
-        if (!isThisAdShowing && VasuAdsConfig.with(this).remoteConfigOpenAds) {
+        if (!isThisAdShowing && isNeedToShowAds && VasuAdsConfig.with(this).remoteConfigOpenAds) {
             mListener = object : AdMobAdsListener {
                 override fun onAdClosed(isShowFullScreenAd: Boolean) {
                     if (isAppForeground) {

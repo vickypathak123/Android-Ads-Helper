@@ -251,10 +251,8 @@ object RewardedInterstitialAdHelper {
         onStartToLoadAd: () -> Unit,
         onAdLoaded: () -> Unit,
 
-    ) {
-        if (isNeedToShow && VasuAdsConfig.with(fContext).remoteConfigInterstitialAds && fContext.isOnline) {
-
-
+        ) {
+        if (isNeedToShow && VasuAdsConfig.with(fContext).remoteConfigInterstitialRewardAds && fContext.isOnline) {
             mOnAdLoaded = onAdLoaded
             mOnStartToLoadAd = onStartToLoadAd
             isAnyIndexLoaded = false
@@ -305,9 +303,9 @@ object RewardedInterstitialAdHelper {
             } else {
                 throw RuntimeException("set RewardedInterstitial Ad Id First")
             }
-        }else{
-            onAdLoaded.invoke()
+        } else {
             onStartToLoadAd.invoke()
+            onAdLoaded.invoke()
         }
     }
 
@@ -328,10 +326,9 @@ object RewardedInterstitialAdHelper {
      */
     fun Activity.showRewardedInterstitialAd(
         isNeedToShow: Boolean = true,
-        remoteConfig: Boolean = true,
         onUserEarnedReward: (isUserEarnedReward: Boolean) -> Unit,
     ) {
-        if (isNeedToShow && remoteConfig) {
+        if (isNeedToShow && VasuAdsConfig.with(this).remoteConfigInterstitialRewardAds) {
             if (!isThisAdShowing) {
                 var isUserEarnedReward = false
 
@@ -355,7 +352,7 @@ object RewardedInterstitialAdHelper {
                     loadedAdModel?.let {
                         val lIndex: Int = admob_rewarded_interstitial_ad_model_list.indexOf(it)
 
-                        if (isNeedToShowAds && !isThisAdShowing) {
+                        if (!isThisAdShowing) {
                             if (it.rewardedInterstitialAd != null && isOnline && !this.isFinishing) {
                                 if (!isAnyAdShowing) {
                                     isAnyAdShowing = true
@@ -377,6 +374,8 @@ object RewardedInterstitialAdHelper {
                     throw RuntimeException("set RewardedInterstitial Ad Id First")
                 }
             }
+        } else {
+            onUserEarnedReward.invoke(true)
         }
     }
 

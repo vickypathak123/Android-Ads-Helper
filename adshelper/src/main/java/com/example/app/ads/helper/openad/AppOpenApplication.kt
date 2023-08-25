@@ -60,11 +60,9 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
     fun setAppLifecycleListener(
         fAppLifecycleListener: AppLifecycleListener,
         isNeedToShowAds: Boolean = true,
-        remoteConfig: Boolean = true
     ) {
         this.mAppLifecycleListener = fAppLifecycleListener
         this.isNeedToShowAds = isNeedToShowAds
-        this.remoteConfig = remoteConfig
     }
 
     fun destroyAllLoadedAd() {
@@ -170,8 +168,7 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
                                             )
                                             if (lDeveloperResumeFlag) {
                                                 lOpenAdManager.showOpenAd(
-                                                    isNeedToShowAds,
-                                                    remoteConfig
+                                                    isNeedToShowAds
                                                 )
                                             }
                                         }

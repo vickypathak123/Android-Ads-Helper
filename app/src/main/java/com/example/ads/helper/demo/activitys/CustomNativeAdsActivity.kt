@@ -94,7 +94,6 @@ class CustomNativeAdsActivity : BaseBindingActivity<ActivityCustomNativeAdsBindi
                 com.example.app.ads.helper.R.layout.layout_shimmer_google_native_ad_custom_sample,
                 null
             ),
-            true
         )
     }
 }
