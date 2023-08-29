@@ -24,9 +24,16 @@ var TAG = VasuAdsConfig.javaClass.simpleName
 @Suppress("unused")
 object VasuAdsConfig {
 
+    var setAdsID: SetAdsID? = null
+
     @JvmStatic
     fun with(fContext: Context): SetAdsID {
-        return SetAdsID(fContext)
+        return if (setAdsID != null) {
+            setAdsID!!
+        } else {
+            setAdsID = SetAdsID(fContext)
+            return setAdsID!!
+        }
     }
 }
 
