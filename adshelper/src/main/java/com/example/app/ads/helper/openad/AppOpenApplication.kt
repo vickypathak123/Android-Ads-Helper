@@ -11,11 +11,20 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
-import com.example.app.ads.helper.*
+import com.example.app.ads.helper.NativeAdvancedHelper
+import com.example.app.ads.helper.NativeAdvancedModelHelper
 import com.example.app.ads.helper.activity.FullScreenNativeAdDialogActivity
 import com.example.app.ads.helper.interstitialad.InterstitialAdHelper
+import com.example.app.ads.helper.isAnyAdOpen
+import com.example.app.ads.helper.isAppForeground
+import com.example.app.ads.helper.isInterstitialAdShow
+import com.example.app.ads.helper.isOpenAdEnable
+import com.example.app.ads.helper.logD
+import com.example.app.ads.helper.logI
+import com.example.app.ads.helper.needToBlockOpenAdInternally
 import com.example.app.ads.helper.reward.RewardedInterstitialAdHelper
 import com.example.app.ads.helper.reward.RewardedVideoAdHelper
+import com.example.app.ads.helper.setTestDeviceIds
 import com.google.android.gms.ads.AdActivity
 import com.google.android.gms.ads.MobileAds
 
@@ -30,6 +39,8 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
     private var mActivityLifecycleManager: ActivityLifecycleManager? = null
 
     private var mAppLifecycleListener: AppLifecycleListener? = null
+    var isNeedToShowAds = true;
+    var remoteConfig = true;
 
     //<editor-fold desc="OnCreate Function">
     override fun attachBaseContext(base: Context?) {
@@ -46,8 +57,12 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
     }
     //</editor-fold>
 
-    fun setAppLifecycleListener(fAppLifecycleListener: AppLifecycleListener) {
+    fun setAppLifecycleListener(
+        fAppLifecycleListener: AppLifecycleListener,
+        isNeedToShowAds: Boolean = true,
+    ) {
         this.mAppLifecycleListener = fAppLifecycleListener
+        this.isNeedToShowAds = isNeedToShowAds
     }
 
     fun destroyAllLoadedAd() {
@@ -125,21 +140,36 @@ open class AppOpenApplication : MultiDexApplication(), DefaultLifecycleObserver 
             mAppLifecycleListener?.let { lListener ->
                 logI(tag = mTAG, message = "onResume: LifecycleListener Not Null")
                 mActivityLifecycleManager?.let { lOpenAdManager ->
-                    logI(tag = mTAG, message = "onResume: OpenAdManager Not Null isAppForeground::$isAppForeground")
+                    logI(
+                        tag = mTAG,
+                        message = "onResume: OpenAdManager Not Null isAppForeground::$isAppForeground"
+                    )
                     if (isAppForeground) {
                         lOpenAdManager.mCurrentActivity?.let { fCurrentActivity ->
                             if (fCurrentActivity !is AdActivity) {
-                                logI(tag = mTAG, message = "onResume: Current Activity Is Not Ad Activity, isAnyAdOpen::$isAnyAdOpen, isInterstitialAdShow::$isInterstitialAdShow")
+                                logI(
+                                    tag = mTAG,
+                                    message = "onResume: Current Activity Is Not Ad Activity, isAnyAdOpen::$isAnyAdOpen, isInterstitialAdShow::$isInterstitialAdShow"
+                                )
                                 if (isAnyAdOpen) {
                                     isAnyAdOpen = false
                                 } else {
                                     if (fCurrentActivity !is FullScreenNativeAdDialogActivity && !isInterstitialAdShow) {
-                                        logI(tag = mTAG, message = "onResume: Need To Show Open Ad needToBlockOpenAdInternally::$needToBlockOpenAdInternally")
+                                        logI(
+                                            tag = mTAG,
+                                            message = "onResume: Need To Show Open Ad needToBlockOpenAdInternally::$needToBlockOpenAdInternally"
+                                        )
                                         if (!needToBlockOpenAdInternally) {
-                                            val lDeveloperResumeFlag: Boolean = lListener.onResumeApp(fCurrentActivity)
-                                            logI(tag = mTAG, message = "onResume: Need To Show Open Ad yourResumeFlag::$lDeveloperResumeFlag")
+                                            val lDeveloperResumeFlag: Boolean =
+                                                lListener.onResumeApp(fCurrentActivity)
+                                            logI(
+                                                tag = mTAG,
+                                                message = "onResume: Need To Show Open Ad yourResumeFlag::$lDeveloperResumeFlag"
+                                            )
                                             if (lDeveloperResumeFlag) {
-                                                lOpenAdManager.showOpenAd()
+                                                lOpenAdManager.showOpenAd(
+                                                    isNeedToShowAds
+                                                )
                                             }
                                         }
                                     }

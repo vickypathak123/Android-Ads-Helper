@@ -2,6 +2,7 @@
 
 package com.example.app.ads.helper
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Rect
 import android.net.ConnectivityManager
@@ -20,11 +21,14 @@ import androidx.core.view.updateLayoutParams
 import com.example.app.ads.helper.interstitialad.InterstitialAdModel
 import com.example.app.ads.helper.nativead.NativeAdModel
 import com.example.app.ads.helper.openad.OpenAdModel
+import com.example.app.ads.helper.purchase.AdsManager
+//import com.example.app.ads.helper.revenuecat.RevenueCatProductInfo
 import com.example.app.ads.helper.reward.RewardedInterstitialAdModel
 import com.example.app.ads.helper.reward.RewardedVideoAdModel
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
+//import com.revenuecat.purchases.CustomerInfo
 
 
 var isNeedToShowAds = true
@@ -41,7 +45,8 @@ internal var admob_app_id: String? = null
 
 internal var admob_interstitial_ad_model_list: ArrayList<InterstitialAdModel> = ArrayList()
 internal var admob_app_open_ad_model_list: ArrayList<OpenAdModel> = ArrayList()
-internal var admob_rewarded_interstitial_ad_model_list: ArrayList<RewardedInterstitialAdModel> = ArrayList()
+internal var admob_rewarded_interstitial_ad_model_list: ArrayList<RewardedInterstitialAdModel> =
+    ArrayList()
 internal var admob_rewarded_video_ad_model_list: ArrayList<RewardedVideoAdModel> = ArrayList()
 internal var mList: ArrayList<NativeAdModel> = ArrayList()
 
@@ -172,7 +177,7 @@ internal fun setTestDeviceIds(vararg fDeviceId: String) {
  * Extension method for add different size of Native Ad
  */
 enum class NativeAdsSize {
-    Big, Medium, FullScreen, Custom,VOICE_GPS
+    Big, Medium, FullScreen, Custom, VOICE_GPS
 }
 
 internal var onDialogActivityDismiss: () -> Unit = {}
@@ -187,7 +192,11 @@ internal fun View.onGlobalLayout(callback: () -> Unit) {
 }
 
 @RequiresApi(Build.VERSION_CODES.P)
-fun setCloseIconPosition(fParentLayout: ConstraintLayout, fCloseIcon: ImageView, fIconPosition: IconPosition) {
+fun setCloseIconPosition(
+    fParentLayout: ConstraintLayout,
+    fCloseIcon: ImageView,
+    fIconPosition: IconPosition
+) {
     fParentLayout.setOnApplyWindowInsetsListener { _, insets ->
         insets.displayCutout?.let { cutout ->
             val cutOutRect: Rect = cutout.boundingRects[0]
@@ -199,18 +208,88 @@ fun setCloseIconPosition(fParentLayout: ConstraintLayout, fCloseIcon: ImageView,
                     logE("setCloseIconPosition", "closeIconRect::->$closeIconRect")
                     logE("setCloseIconPosition", "----------------------------------------")
                     logE("setCloseIconPosition", "----------------------------------------")
-                    logE("setCloseIconPosition", "cutOut contains close::->${cutOutRect.contains(closeIconRect)}")
-                    logE("setCloseIconPosition", "cutOut contains close right::->${cutOutRect.contains(closeIconRect.right, closeIconRect.top)}")
-                    logE("setCloseIconPosition", "cutOut contains close left::->${cutOutRect.contains(closeIconRect.left, closeIconRect.bottom)}")
-                    logE("setCloseIconPosition", "cutOut contains close top::->${cutOutRect.contains(closeIconRect.left, closeIconRect.top)}")
-                    logE("setCloseIconPosition", "cutOut contains close bottom::->${cutOutRect.contains(closeIconRect.right, closeIconRect.bottom)}")
+                    logE(
+                        "setCloseIconPosition",
+                        "cutOut contains close::->${cutOutRect.contains(closeIconRect)}"
+                    )
+                    logE(
+                        "setCloseIconPosition",
+                        "cutOut contains close right::->${
+                            cutOutRect.contains(
+                                closeIconRect.right,
+                                closeIconRect.top
+                            )
+                        }"
+                    )
+                    logE(
+                        "setCloseIconPosition",
+                        "cutOut contains close left::->${
+                            cutOutRect.contains(
+                                closeIconRect.left,
+                                closeIconRect.bottom
+                            )
+                        }"
+                    )
+                    logE(
+                        "setCloseIconPosition",
+                        "cutOut contains close top::->${
+                            cutOutRect.contains(
+                                closeIconRect.left,
+                                closeIconRect.top
+                            )
+                        }"
+                    )
+                    logE(
+                        "setCloseIconPosition",
+                        "cutOut contains close bottom::->${
+                            cutOutRect.contains(
+                                closeIconRect.right,
+                                closeIconRect.bottom
+                            )
+                        }"
+                    )
                     logE("setCloseIconPosition", "----------------------------------------")
                     logE("setCloseIconPosition", "----------------------------------------")
-                    logE("setCloseIconPosition", "close contains cutOut::->${closeIconRect.contains(cutOutRect)}")
-                    logE("setCloseIconPosition", "close contains cutOut right::->${closeIconRect.contains(cutOutRect.right, cutOutRect.top)}")
-                    logE("setCloseIconPosition", "close contains cutOut left::->${closeIconRect.contains(cutOutRect.left, cutOutRect.bottom)}")
-                    logE("setCloseIconPosition", "close contains cutOut top::->${closeIconRect.contains(cutOutRect.left, cutOutRect.top)}")
-                    logE("setCloseIconPosition", "close contains cutOut bottom::->${closeIconRect.contains(cutOutRect.right, cutOutRect.bottom)}")
+                    logE(
+                        "setCloseIconPosition",
+                        "close contains cutOut::->${closeIconRect.contains(cutOutRect)}"
+                    )
+                    logE(
+                        "setCloseIconPosition",
+                        "close contains cutOut right::->${
+                            closeIconRect.contains(
+                                cutOutRect.right,
+                                cutOutRect.top
+                            )
+                        }"
+                    )
+                    logE(
+                        "setCloseIconPosition",
+                        "close contains cutOut left::->${
+                            closeIconRect.contains(
+                                cutOutRect.left,
+                                cutOutRect.bottom
+                            )
+                        }"
+                    )
+                    logE(
+                        "setCloseIconPosition",
+                        "close contains cutOut top::->${
+                            closeIconRect.contains(
+                                cutOutRect.left,
+                                cutOutRect.top
+                            )
+                        }"
+                    )
+                    logE(
+                        "setCloseIconPosition",
+                        "close contains cutOut bottom::->${
+                            closeIconRect.contains(
+                                cutOutRect.right,
+                                cutOutRect.bottom
+                            )
+                        }"
+                    )
                     if (closeIconRect.contains(cutOutRect)
                         || closeIconRect.contains(cutOutRect.right, cutOutRect.top)
                         || closeIconRect.contains(cutOutRect.left, cutOutRect.bottom)
@@ -228,6 +307,7 @@ fun setCloseIconPosition(fParentLayout: ConstraintLayout, fCloseIcon: ImageView,
                                     startToStart = ConstraintSet.PARENT_ID
                                     endToEnd = ConstraintSet.UNSET
                                 }
+
                                 IconPosition.LEFT_TO_RIGHT -> {
                                     endToEnd = ConstraintSet.PARENT_ID
                                     startToStart = ConstraintSet.UNSET
@@ -241,6 +321,8 @@ fun setCloseIconPosition(fParentLayout: ConstraintLayout, fCloseIcon: ImageView,
         return@setOnApplyWindowInsetsListener insets
     }
 }
+
+
 
 enum class IconPosition {
     RIGHT_TO_LEFT, LEFT_TO_RIGHT

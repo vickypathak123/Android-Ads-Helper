@@ -2,7 +2,16 @@ package com.example.app.ads.helper.reward
 
 import android.app.Activity
 import android.content.Context
-import com.example.app.ads.helper.*
+import com.example.app.ads.helper.AdMobAdsListener
+import com.example.app.ads.helper.VasuAdsConfig
+import com.example.app.ads.helper.admob_rewarded_video_ad_model_list
+import com.example.app.ads.helper.isAnyAdOpen
+import com.example.app.ads.helper.isAnyAdShowing
+import com.example.app.ads.helper.isAppForeground
+import com.example.app.ads.helper.isNeedToShowAds
+import com.example.app.ads.helper.isOnline
+import com.example.app.ads.helper.logE
+import com.example.app.ads.helper.logI
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -84,19 +93,28 @@ object RewardedVideoAdHelper {
 
                             override fun onAdShowedFullScreenContent() {
                                 super.onAdShowedFullScreenContent()
-                                logI(tag = TAG, message = "loadNewAd: onAdShowedFullScreenContent: Index -> $fIndex")
+                                logI(
+                                    tag = TAG,
+                                    message = "loadNewAd: onAdShowedFullScreenContent: Index -> $fIndex"
+                                )
                                 isAnyAdShowing = true
                                 isThisAdShowing = true
                             }
 
                             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                                 super.onAdFailedToShowFullScreenContent(adError)
-                                logE(tag = TAG, message = "loadNewAd: onAdFailedToShowFullScreenContent: Index -> $fIndex\nErrorMessage::${adError.message}\nErrorCode::${adError.code}")
+                                logE(
+                                    tag = TAG,
+                                    message = "loadNewAd: onAdFailedToShowFullScreenContent: Index -> $fIndex\nErrorMessage::${adError.message}\nErrorCode::${adError.code}"
+                                )
                             }
 
                             override fun onAdDismissedFullScreenContent() {
                                 super.onAdDismissedFullScreenContent()
-                                logI(tag = TAG, message = "loadNewAd: onAdDismissedFullScreenContent: Index -> $fIndex")
+                                logI(
+                                    tag = TAG,
+                                    message = "loadNewAd: onAdDismissedFullScreenContent: Index -> $fIndex"
+                                )
                                 fModel.rewardedAd?.fullScreenContentCallback = null
                                 fModel.rewardedAd = null
 
@@ -116,7 +134,10 @@ object RewardedVideoAdHelper {
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
                     super.onAdFailedToLoad(adError)
-                    logE(tag = TAG, message = "loadNewAd: onAdFailedToLoad: Index -> $fIndex\nAd failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}\nErrorMessage::${adError.message}")
+                    logE(
+                        tag = TAG,
+                        message = "loadNewAd: onAdFailedToLoad: Index -> $fIndex\nAd failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}\nErrorMessage::${adError.message}"
+                    )
                     fModel.isAdLoadingRunning = false
                     fModel.rewardedAd = null
                     fModel.listener?.onAdFailed()
@@ -158,7 +179,10 @@ object RewardedVideoAdHelper {
                         override fun onRewardVideoAdLoaded(rewardedAd: RewardedAd) {
                             super.onRewardVideoAdLoaded(rewardedAd)
                             mAdIdPosition = -1
-                            logI(tag = TAG, message = "requestWithIndex: onRewardVideoAdLoaded: Index -> $index")
+                            logI(
+                                tag = TAG,
+                                message = "requestWithIndex: onRewardVideoAdLoaded: Index -> $index"
+                            )
                             if (!isAnyIndexLoaded) {
                                 isAnyIndexLoaded = true
                                 onAdLoaded.invoke()
@@ -171,7 +195,11 @@ object RewardedVideoAdHelper {
                         override fun onAdClosed(isShowFullScreenAd: Boolean) {
                             super.onAdClosed(isShowFullScreenAd)
                             mListener?.onAdClosed(isShowFullScreenAd)
-                            loadAd(fContext = fContext, onStartToLoadAd = onStartToLoadAd, onAdLoaded = onAdLoaded)
+                            loadAd(
+                                fContext = fContext,
+                                onStartToLoadAd = onStartToLoadAd,
+                                onAdLoaded = onAdLoaded
+                            )
                         }
 
                         override fun onAdFailed() {
@@ -211,9 +239,12 @@ object RewardedVideoAdHelper {
      * @param fContext this is a reference to your activity or fragment context
      * @param onStartToLoadAd @see [AdMobAdsListener.onStartToLoadRewardVideoAd]
      * @param onAdLoaded @see [AdMobAdsListener.onAdLoaded]
+     * @param isNeedToShow check if Subscribe is done then ads will not show
+     * @param remoteConfig check remote Config parameters is if true ads will show else false ads will not show
      */
     fun loadAd(
         fContext: Context,
+        isNeedToShow: Boolean = true,
         onStartToLoadAd: () -> Unit,
         onAdLoaded: () -> Unit,
     ) {
@@ -222,44 +253,56 @@ object RewardedVideoAdHelper {
         isAnyIndexLoaded = false
         isStartToLoadAnyIndex = false
         isAnyIndexAlreadyLoaded = false
+        if (isNeedToShow && VasuAdsConfig.with(fContext).remoteConfigRewardVideoAds && fContext.isOnline) {
+            if (admob_rewarded_video_ad_model_list.isNotEmpty()) {
 
-        if (admob_rewarded_video_ad_model_list.isNotEmpty()) {
-
-            if (isNeedToLoadMultipleRequest) {
-                logI(tag = TAG, message = "loadAd: Request Ad From All ID at Same Time")
-                admob_rewarded_video_ad_model_list.forEachIndexed { index, rewardedVideoAdModel ->
-                    requestWithIndex(
-                        fContext = fContext,
-                        rewardedVideoAdModel = rewardedVideoAdModel,
-                        index = index,
-                        onStartToLoadAd = onStartToLoadAd,
-                        onAdLoaded = onAdLoaded,
-                        onAdFailed = {},
-                    )
+                if (isNeedToLoadMultipleRequest) {
+                    logI(tag = TAG, message = "loadAd: Request Ad From All ID at Same Time")
+                    admob_rewarded_video_ad_model_list.forEachIndexed { index, rewardedVideoAdModel ->
+                        requestWithIndex(
+                            fContext = fContext,
+                            rewardedVideoAdModel = rewardedVideoAdModel,
+                            index = index,
+                            onStartToLoadAd = onStartToLoadAd,
+                            onAdLoaded = onAdLoaded,
+                            onAdFailed = {},
+                        )
+                    }
+                } else {
+                    logI(tag = TAG, message = "loadAd: Request Ad After Failed Previous Index Ad")
+                    getRewardedVideoAdModel { index, rewardedVideoAdModel ->
+                        logI(
+                            tag = TAG,
+                            message = "loadAd: getRewardedInterstitialAdModel: Index -> $index"
+                        )
+                        requestWithIndex(
+                            fContext = fContext,
+                            rewardedVideoAdModel = rewardedVideoAdModel,
+                            index = index,
+                            onStartToLoadAd = onStartToLoadAd,
+                            onAdLoaded = onAdLoaded,
+                            onAdFailed = {
+                                if ((mAdIdPosition + 1) >= admob_rewarded_video_ad_model_list.size) {
+                                    mAdIdPosition = -1
+                                } else {
+                                    loadAd(
+                                        fContext = fContext,
+                                        onStartToLoadAd = onStartToLoadAd,
+                                        onAdLoaded = mOnAdLoaded
+                                    )
+                                }
+                            },
+                        )
+                    }
                 }
             } else {
-                logI(tag = TAG, message = "loadAd: Request Ad After Failed Previous Index Ad")
-                getRewardedVideoAdModel { index, rewardedVideoAdModel ->
-                    logI(tag = TAG, message = "loadAd: getRewardedInterstitialAdModel: Index -> $index")
-                    requestWithIndex(
-                        fContext = fContext,
-                        rewardedVideoAdModel = rewardedVideoAdModel,
-                        index = index,
-                        onStartToLoadAd = onStartToLoadAd,
-                        onAdLoaded = onAdLoaded,
-                        onAdFailed = {
-                            if ((mAdIdPosition + 1) >= admob_rewarded_video_ad_model_list.size) {
-                                mAdIdPosition = -1
-                            } else {
-                                loadAd(fContext = fContext, onStartToLoadAd = onStartToLoadAd, onAdLoaded = mOnAdLoaded)
-                            }
-                        },
-                    )
-                }
+                throw RuntimeException("set RewardedVideo Ad Id First")
             }
         } else {
-            throw RuntimeException("set RewardedVideo Ad Id First")
+            onStartToLoadAd.invoke()
+            onAdLoaded.invoke()
         }
+
     }
 
     /**
@@ -273,47 +316,62 @@ object RewardedVideoAdHelper {
      * )
      *
      * @param onUserEarnedReward @see [AdMobAdsListener.onUserEarnedReward]
+     * @param isNeedToShow check if Subscribe is done then ads will not show
+     * @param remoteConfig check remote Config parameters is if true ads will show else false ads will not show
      */
     fun Activity.showRewardedVideoAd(
-        onUserEarnedReward: (isUserEarnedReward: Boolean) -> Unit
-    ) {
-        if (!isThisAdShowing) {
-            var isUserEarnedReward = false
+        isNeedToShow: Boolean = true,
+        onUserEarnedReward: (isUserEarnedReward: Boolean) -> Unit,
 
-            mListener = object : AdMobAdsListener {
-                override fun onAdClosed(isShowFullScreenAd: Boolean) {
-                    if (isAppForeground) {
-                        onUserEarnedReward.invoke(isUserEarnedReward)
+        ) {
+        if (isNeedToShow && VasuAdsConfig.with(this).remoteConfigRewardVideoAds) {
+            if (!isThisAdShowing) {
+                var isUserEarnedReward = false
+
+                mListener = object : AdMobAdsListener {
+                    override fun onAdClosed(isShowFullScreenAd: Boolean) {
+                        if (isAppForeground) {
+                            onUserEarnedReward.invoke(isUserEarnedReward)
+                        }
+                        logI(
+                            tag = TAG,
+                            message = "showRewardedVideoAd: onAdClosed: Load New Ad after ad close"
+                        )
                     }
-                    logI(tag = TAG, message = "showRewardedVideoAd: onAdClosed: Load New Ad after ad close")
                 }
-            }
 
-            if (admob_rewarded_video_ad_model_list.isNotEmpty()) {
+                if (admob_rewarded_video_ad_model_list.isNotEmpty()) {
 
-                val loadedAdModel: RewardedVideoAdModel? = admob_rewarded_video_ad_model_list.find { it.rewardedAd != null }
+                    val loadedAdModel: RewardedVideoAdModel? =
+                        admob_rewarded_video_ad_model_list.find { it.rewardedAd != null }
 
-                loadedAdModel?.let {
-                    val lIndex: Int = admob_rewarded_video_ad_model_list.indexOf(it)
+                    loadedAdModel?.let {
+                        val lIndex: Int = admob_rewarded_video_ad_model_list.indexOf(it)
 
-                    if (isNeedToShowAds && !isThisAdShowing) {
-                        if (it.rewardedAd != null && isOnline && !this.isFinishing) {
-                            if (!isAnyAdShowing) {
-                                isAnyAdShowing = true
-                                isAnyAdOpen = true
-                                isThisAdShowing = true
+                        if (isNeedToShowAds && !isThisAdShowing) {
+                            if (it.rewardedAd != null && isOnline && !this.isFinishing) {
+                                if (!isAnyAdShowing) {
+                                    isAnyAdShowing = true
+                                    isAnyAdOpen = true
+                                    isThisAdShowing = true
 
-                                it.rewardedAd?.show(this) {
-                                    isUserEarnedReward = true
-                                    logI(tag = TAG, message = "showRewardedVideoAd: Show RewardedVideo Ad Index -> $lIndex")
+                                    it.rewardedAd?.show(this) {
+                                        isUserEarnedReward = true
+                                        logI(
+                                            tag = TAG,
+                                            message = "showRewardedVideoAd: Show RewardedVideo Ad Index -> $lIndex"
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
+                } else {
+                    throw RuntimeException("set RewardedVideo Ad Id First")
                 }
-            } else {
-                throw RuntimeException("set RewardedVideo Ad Id First")
             }
+        } else {
+            onUserEarnedReward.invoke(true)
         }
     }
 

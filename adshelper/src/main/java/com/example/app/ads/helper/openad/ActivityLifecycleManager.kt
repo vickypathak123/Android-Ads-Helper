@@ -43,7 +43,7 @@ class ActivityLifecycleManager(
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
     //</editor-fold>
 
-    fun showOpenAd() {
-        mCurrentActivity?.let { it.showAppOpenAd {} }
+    fun showOpenAd(isNeedToShowAds: Boolean) {
+        mCurrentActivity?.let { it.showAppOpenAd(isNeedToShowAds) {} }
     }
 }

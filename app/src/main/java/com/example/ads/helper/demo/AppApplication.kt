@@ -6,11 +6,8 @@ import android.util.Log
 import androidx.multidex.MultiDex
 import com.example.ads.helper.demo.activitys.SecondActivity
 import com.example.ads.helper.demo.activitys.SplashActivity
-import com.example.ads.helper.demo.base.utils.isOnline
 import com.example.app.ads.helper.VasuAdsConfig
-import com.example.app.ads.helper.openad.AppOpenAdHelper
 import com.example.app.ads.helper.openad.AppOpenApplication
-import com.example.app.ads.helper.purchase.AdsManager
 
 class AppApplication : AppOpenApplication(), AppOpenApplication.AppLifecycleListener {
 
@@ -29,12 +26,17 @@ class AppApplication : AppOpenApplication(), AppOpenApplication.AppLifecycleList
         Log.e(TAG, "onCreate: IS_OPEN_ADS_ENABLE::${this.getBoolean(IS_OPEN_ADS_ENABLE, true)}")
 
         VasuAdsConfig.with(this)
-            .needToTakeAllTestAdID(true)
-            .isDebugModeEnable(true)
-            .needToBlockInterstitialAd(false)
             .isNeedToLoadMultipleNativeAdRequest(true)
-
+            .isEnableToRemoteConfigOpenAds(true)
+            .isEnableToRemoteConfigBannerAds(true)
+            .isEnableToRemoteConfigNativeAdvancedAds(true)
+            .isEnableToRemoteConfigInterstitialAds(true)
+            .isEnableToRemoteConfigInterstitialRewardAds(true)
+            .isEnableToRemoteConfigRewardVideoAds(true)
             .isEnableOpenAd(this.getBoolean(IS_OPEN_ADS_ENABLE, true))
+            .isDebugModeEnable(true)
+            .needToTakeAllTestAdID(true)
+            .needToBlockInterstitialAd(false)
             .setLifeTimeProductKey("android.test.purchased")
 //            .setSubscriptionKey("com.screen.mirror.cast.share.tv.device.app.weekly","com.screen.mirror.cast.share.tv.device.app.monthly",
 //            "com.screen.mirror.cast.share.tv.device.app.yearly")
@@ -68,6 +70,7 @@ class AppApplication : AppOpenApplication(), AppOpenApplication.AppLifecycleList
             this@AppApplication.isNeedToLoadAd -> {
                 true
             }
+
             else -> {
                 false
             }

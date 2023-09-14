@@ -12,7 +12,6 @@ import com.example.app.ads.helper.reward.RewardedInterstitialAdHelper
 import com.example.app.ads.helper.reward.RewardedInterstitialAdModel
 import com.example.app.ads.helper.reward.RewardedVideoAdHelper
 import com.example.app.ads.helper.reward.RewardedVideoAdModel
-import com.google.gson.Gson
 import java.io.Serializable
 
 /**
@@ -25,9 +24,16 @@ var TAG = VasuAdsConfig.javaClass.simpleName
 @Suppress("unused")
 object VasuAdsConfig {
 
+    var setAdsID: SetAdsID? = null
+
     @JvmStatic
     fun with(fContext: Context): SetAdsID {
-        return SetAdsID(fContext)
+        return if (setAdsID != null) {
+            setAdsID!!
+        } else {
+            setAdsID = SetAdsID(fContext)
+            return setAdsID!!
+        }
     }
 }
 
@@ -70,6 +76,47 @@ class SetAdsID(private val mContext: Context) : Serializable {
     private var mIsBlockInterstitialAd: Boolean = false
     private var mIsDebugMode: Boolean = false
 
+    var remoteConfigOpenAds: Boolean = true
+    var remoteConfigBannerAds: Boolean = true
+    var remoteConfigNativeAdvancedAds: Boolean = true
+    var remoteConfigInterstitialAds: Boolean = true
+    var remoteConfigInterstitialRewardAds: Boolean = true
+    var remoteConfigRewardVideoAds: Boolean = true
+
+
+    /**
+     * RemoteConfig Value set for All Ads
+     */
+    @JvmName("isEnableToRemoteConfigOpenAds")
+    fun isEnableToRemoteConfigOpenAds(fIsEnable: Boolean) = this@SetAdsID.apply {
+        this.remoteConfigOpenAds = fIsEnable
+    }
+
+    @JvmName("isEnableToRemoteConfigBannerAds")
+    fun isEnableToRemoteConfigBannerAds(fIsEnable: Boolean) = this@SetAdsID.apply {
+        this.remoteConfigBannerAds = fIsEnable
+    }
+
+    @JvmName("isEnableToRemoteConfigNativeAdvancedAds")
+    fun isEnableToRemoteConfigNativeAdvancedAds(fIsEnable: Boolean) = this@SetAdsID.apply {
+        this.remoteConfigNativeAdvancedAds = fIsEnable
+    }
+
+    @JvmName("isEnableToRemoteConfigInterstitialAds")
+    fun isEnableToRemoteConfigInterstitialAds(fIsEnable: Boolean) = this@SetAdsID.apply {
+        this.remoteConfigInterstitialAds = fIsEnable
+    }
+
+    @JvmName("isEnableToRemoteConfigInterstitialRewardAds")
+    fun isEnableToRemoteConfigInterstitialRewardAds(fIsEnable: Boolean) = this@SetAdsID.apply {
+        this.remoteConfigInterstitialRewardAds = fIsEnable
+    }
+
+    @JvmName("isEnableToRemoteConfigRewardVideoAds")
+    fun isEnableToRemoteConfigRewardVideoAds(fIsEnable: Boolean) = this@SetAdsID.apply {
+        this.remoteConfigRewardVideoAds = fIsEnable
+    }
+
     //<editor-fold desc="Set Ads ID">
     @JvmName("setAdmobAppId")
     fun setAdmobAppId(fAdmobAppId: String) = this@SetAdsID.apply {
@@ -95,10 +142,11 @@ class SetAdsID(private val mContext: Context) : Serializable {
     }
 
     @JvmName("setAdmobInterstitialAdRewardId")
-    fun setAdmobInterstitialAdRewardId(vararg fAdmobInterstitialAdRewardIds: String) = this@SetAdsID.apply {
-        this.admobInterstitialAdRewardId.clearAll()
-        this.admobInterstitialAdRewardId.addAll(fAdmobInterstitialAdRewardIds)
-    }
+    fun setAdmobInterstitialAdRewardId(vararg fAdmobInterstitialAdRewardIds: String) =
+        this@SetAdsID.apply {
+            this.admobInterstitialAdRewardId.clearAll()
+            this.admobInterstitialAdRewardId.addAll(fAdmobInterstitialAdRewardIds)
+        }
 
     @JvmName("setAdmobOpenAdId")
     fun setAdmobOpenAdId(vararg fAdmobOpenAdIds: String) = this@SetAdsID.apply {
@@ -165,29 +213,34 @@ class SetAdsID(private val mContext: Context) : Serializable {
 
     //<editor-fold desc="Set Purchase Key">
     @JvmName("isNeedToLoadMultipleInterstitialAdRequest")
-    fun isNeedToLoadMultipleInterstitialAdRequest(fIsNeedToLoadMultipleRequest: Boolean) = this@SetAdsID.apply {
-        mIsNeedToLoadMultipleInterstitialAdRequest = fIsNeedToLoadMultipleRequest
-    }
+    fun isNeedToLoadMultipleInterstitialAdRequest(fIsNeedToLoadMultipleRequest: Boolean) =
+        this@SetAdsID.apply {
+            mIsNeedToLoadMultipleInterstitialAdRequest = fIsNeedToLoadMultipleRequest
+        }
 
     @JvmName("isNeedToLoadMultipleAppOpenAdRequest")
-    fun isNeedToLoadMultipleAppOpenAdRequest(fIsNeedToLoadMultipleRequest: Boolean) = this@SetAdsID.apply {
-        mIsNeedToLoadMultipleAppOpenAdRequest = fIsNeedToLoadMultipleRequest
-    }
+    fun isNeedToLoadMultipleAppOpenAdRequest(fIsNeedToLoadMultipleRequest: Boolean) =
+        this@SetAdsID.apply {
+            mIsNeedToLoadMultipleAppOpenAdRequest = fIsNeedToLoadMultipleRequest
+        }
 
     @JvmName("isNeedToLoadMultipleRewardedInterstitialAdRequest")
-    fun isNeedToLoadMultipleRewardedInterstitialAdRequest(fIsNeedToLoadMultipleRequest: Boolean) = this@SetAdsID.apply {
-        mIsNeedToLoadMultipleRewardedInterstitialAdRequest = fIsNeedToLoadMultipleRequest
-    }
+    fun isNeedToLoadMultipleRewardedInterstitialAdRequest(fIsNeedToLoadMultipleRequest: Boolean) =
+        this@SetAdsID.apply {
+            mIsNeedToLoadMultipleRewardedInterstitialAdRequest = fIsNeedToLoadMultipleRequest
+        }
 
     @JvmName("isNeedToLoadMultipleRewardedVideoAdRequest")
-    fun isNeedToLoadMultipleRewardedVideoAdRequest(fIsNeedToLoadMultipleRequest: Boolean) = this@SetAdsID.apply {
-        mIsNeedToLoadMultipleRewardedVideoAdRequest = fIsNeedToLoadMultipleRequest
-    }
+    fun isNeedToLoadMultipleRewardedVideoAdRequest(fIsNeedToLoadMultipleRequest: Boolean) =
+        this@SetAdsID.apply {
+            mIsNeedToLoadMultipleRewardedVideoAdRequest = fIsNeedToLoadMultipleRequest
+        }
 
     @JvmName("isNeedToLoadMultipleNativeAdRequest")
-    fun isNeedToLoadMultipleNativeAdRequest(fIsNeedToLoadMultipleRequest: Boolean) = this@SetAdsID.apply {
-        mIsNeedToLoadMultipleNativeAdRequest = fIsNeedToLoadMultipleRequest
-    }
+    fun isNeedToLoadMultipleNativeAdRequest(fIsNeedToLoadMultipleRequest: Boolean) =
+        this@SetAdsID.apply {
+            mIsNeedToLoadMultipleNativeAdRequest = fIsNeedToLoadMultipleRequest
+        }
     //</editor-fold>
 
     @JvmName("initialize")
@@ -320,10 +373,13 @@ class SetAdsID(private val mContext: Context) : Serializable {
         //</editor-fold>
 
         //<editor-fold desc="Set Load Multiple Ads Request Flag">
-        InterstitialAdHelper.isNeedToLoadMultipleRequest = this.mIsNeedToLoadMultipleInterstitialAdRequest
+        InterstitialAdHelper.isNeedToLoadMultipleRequest =
+            this.mIsNeedToLoadMultipleInterstitialAdRequest
         AppOpenAdHelper.isNeedToLoadMultipleRequest = this.mIsNeedToLoadMultipleAppOpenAdRequest
-        RewardedInterstitialAdHelper.isNeedToLoadMultipleRequest = this.mIsNeedToLoadMultipleRewardedInterstitialAdRequest
-        RewardedVideoAdHelper.isNeedToLoadMultipleRequest = this.mIsNeedToLoadMultipleRewardedVideoAdRequest
+        RewardedInterstitialAdHelper.isNeedToLoadMultipleRequest =
+            this.mIsNeedToLoadMultipleRewardedInterstitialAdRequest
+        RewardedVideoAdHelper.isNeedToLoadMultipleRequest =
+            this.mIsNeedToLoadMultipleRewardedVideoAdRequest
         NativeAdHelper.isNeedToLoadMultipleRequest = this.mIsNeedToLoadMultipleNativeAdRequest
         //</editor-fold>
 

@@ -63,7 +63,7 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
             startTimer(3000)
 
             if (this.getBoolean(IS_OPEN_ADS_ENABLE, true)) {
-                AppOpenAdHelper.loadAd(mActivity, onAdLoaded = {
+                AppOpenAdHelper.loadAd(mActivity, true,onAdLoaded = {
                     Log.e(TAG, "onOpenAdLoad: ")
                     mTimer?.cancel()
                     openActivityWithAd()
@@ -98,7 +98,7 @@ class SplashActivity : BaseBindingActivity<ActivitySplashBinding>() {
             if (AppOpenAdHelper.isAppOpenAdAvailable()) {
                 if (!isNextActivityCall) {
                     Log.e(TAG, "openActivityWithAd: Call With Open Ad")
-                    mActivity.showAppOpenAd {
+                    mActivity.showAppOpenAd(true) {
                         startNextActivity()
                     }
                 }
