@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import com.example.app.ads.helper.R
 import com.example.app.ads.helper.VasuAdsConfig
 import com.example.app.ads.helper.admob_banner_ad_id
+import com.example.app.ads.helper.admob_interstitial_ad_model_list
 import com.example.app.ads.helper.displayDensity
 import com.example.app.ads.helper.displayWidth
 import com.example.app.ads.helper.gone
@@ -300,5 +301,10 @@ class BannerHelper(private val mContext: Activity) {
             fLayout.gone
         }
 
+    }
+
+
+    fun isBannerAdAvailable(): Boolean {
+        return  admob_interstitial_ad_model_list.find { it.interstitialAd != null }?.interstitialAd != null
     }
 }

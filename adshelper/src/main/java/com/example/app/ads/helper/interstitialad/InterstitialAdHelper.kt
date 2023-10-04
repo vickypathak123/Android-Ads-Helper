@@ -7,6 +7,7 @@ import com.example.app.ads.helper.NativeAdvancedModelHelper
 import com.example.app.ads.helper.VasuAdsConfig
 import com.example.app.ads.helper.activity.FullScreenNativeAdDialogActivity
 import com.example.app.ads.helper.admob_interstitial_ad_model_list
+import com.example.app.ads.helper.admob_rewarded_interstitial_ad_model_list
 import com.example.app.ads.helper.isAnyAdOpen
 import com.example.app.ads.helper.isAnyAdShowing
 import com.example.app.ads.helper.isAppForeground
@@ -341,7 +342,7 @@ object InterstitialAdHelper {
                     // show native ad
                     showFullScreenNativeAdDialog()
                 }
-                if (!isThisAdShowing && isOnline) {
+                if (!isThisAdShowing && isOnline && loadedAdModel != null) {
                     mListener?.onAdClosed(false)
                 }
             } else {
@@ -349,7 +350,7 @@ object InterstitialAdHelper {
             }
         } else {
             if (!isThisAdShowing) {
-                onAdClosed.invoke(true,false)
+                onAdClosed.invoke(true, false)
             }
         }
 
@@ -383,6 +384,10 @@ object InterstitialAdHelper {
         } else {
             mListener?.onAdClosed(true)
         }
+    }
+
+    fun isInterstitialAdAvailable(): Boolean {
+        return  admob_interstitial_ad_model_list.find { it.interstitialAd != null }?.interstitialAd != null
     }
 
     fun destroy() {

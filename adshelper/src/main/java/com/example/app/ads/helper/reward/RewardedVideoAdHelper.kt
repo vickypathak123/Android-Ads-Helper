@@ -4,12 +4,14 @@ import android.app.Activity
 import android.content.Context
 import com.example.app.ads.helper.AdMobAdsListener
 import com.example.app.ads.helper.VasuAdsConfig
+import com.example.app.ads.helper.admob_app_open_ad_model_list
 import com.example.app.ads.helper.admob_rewarded_video_ad_model_list
 import com.example.app.ads.helper.isAnyAdOpen
 import com.example.app.ads.helper.isAnyAdShowing
 import com.example.app.ads.helper.isAppForeground
 import com.example.app.ads.helper.isNeedToShowAds
 import com.example.app.ads.helper.isOnline
+import com.example.app.ads.helper.isOpenAdEnable
 import com.example.app.ads.helper.logE
 import com.example.app.ads.helper.logI
 import com.google.android.gms.ads.AdError
@@ -373,6 +375,9 @@ object RewardedVideoAdHelper {
         } else {
             onUserEarnedReward.invoke(true)
         }
+    }
+    fun isRewardedAdAvailable(): Boolean {
+        return  admob_rewarded_video_ad_model_list.find { it.rewardedAd != null }?.rewardedAd != null
     }
 
     fun destroy() {

@@ -32,7 +32,7 @@ object VasuAdsConfig {
             setAdsID!!
         } else {
             setAdsID = SetAdsID(fContext)
-            return setAdsID!!
+             setAdsID!!
         }
     }
 }

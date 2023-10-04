@@ -5,6 +5,7 @@ import android.content.Context
 import com.example.app.ads.helper.AdMobAdsListener
 import com.example.app.ads.helper.VasuAdsConfig
 import com.example.app.ads.helper.admob_rewarded_interstitial_ad_model_list
+import com.example.app.ads.helper.admob_rewarded_video_ad_model_list
 import com.example.app.ads.helper.isAnyAdOpen
 import com.example.app.ads.helper.isAnyAdShowing
 import com.example.app.ads.helper.isAppForeground
@@ -378,7 +379,9 @@ object RewardedInterstitialAdHelper {
             onUserEarnedReward.invoke(true)
         }
     }
-
+    fun isRewardedInterstitialAvailable(): Boolean {
+        return  admob_rewarded_interstitial_ad_model_list.find { it.rewardedInterstitialAd != null }?.rewardedInterstitialAd != null
+    }
     fun destroy() {
         mListener = null
         isThisAdShowing = false
