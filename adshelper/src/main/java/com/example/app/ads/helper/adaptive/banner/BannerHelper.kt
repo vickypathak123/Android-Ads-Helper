@@ -2,6 +2,7 @@ package com.example.app.ads.helper.adaptive.banner
 
 import android.app.Activity
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
@@ -18,6 +19,7 @@ import com.example.app.ads.helper.logE
 import com.example.app.ads.helper.logI
 import com.example.app.ads.helper.onGlobalLayout
 import com.example.app.ads.helper.visible
+import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
@@ -70,9 +72,10 @@ class BannerHelper(private val mContext: Activity) {
         fContext: Context,
         fAdSize: AdSize,
         onAdLoaded: (adView: AdView) -> Unit,
+        onAdClicked:()->Unit,
         onAdClosed: () -> Unit,
-
-        ) {
+        bannerType: BannerType
+    ) {
 
         mAdView?.let {
             logI(
@@ -118,21 +121,51 @@ class BannerHelper(private val mContext: Activity) {
                                 if ((mAdIdPosition + 1) >= admob_banner_ad_id.size) {
                                     mAdIdPosition = -1
                                 } else {
-                                    loadAds(fContext, fAdSize, onAdLoaded, onAdClosed)
+                                    loadAds(fContext, fAdSize, onAdLoaded, onAdClicked,onAdClosed, bannerType)
                                 }
                             }
 
-                            override fun onAdClosed() {
-                                super.onAdClosed()
+                            override fun onAdClicked() {
+                                super.onAdClicked()
                                 isAdLoaded = false
                                 mAdView?.destroy()
                                 mAdView = null
+                                logI(tag = TAG, message = "onAdClicked: ")
+                                onAdClicked.invoke()
+                            }
+
+
+                            override fun onAdClosed() {
+                                super.onAdClosed()
                                 logI(tag = TAG, message = "onAdClosed: ")
                                 onAdClosed.invoke()
                             }
+
+                        }
+                    val extras = Bundle()
+                    val adRequest = when (bannerType) {
+                        BannerType.NORMAL -> {
+                            AdRequest.Builder().build()
                         }
 
-                    val adRequest: AdRequest = AdRequest.Builder().build()
+                        BannerType.SPLASH -> {
+                            extras.putString("is_splash_banner", "true")
+                            AdRequest.Builder()
+                                .addNetworkExtrasBundle(AdMobAdapter::class.java, extras).build()
+                        }
+
+                        BannerType.COLLAPSIBLE_BOTTOM -> {
+                            extras.putString("collapsible", "bottom")
+                            AdRequest.Builder()
+                                .addNetworkExtrasBundle(AdMobAdapter::class.java, extras).build()
+                        }
+
+                        BannerType.COLLAPSIBLE_TOP -> {
+                            extras.putString("collapsible", "top")
+                            AdRequest.Builder()
+                                .addNetworkExtrasBundle(AdMobAdapter::class.java, extras).build()
+                        }
+                    }
                     this.loadAd(adRequest)
                 }.also { mAdView = it }
             }
@@ -146,6 +179,7 @@ class BannerHelper(private val mContext: Activity) {
         fLayout: FrameLayout,
         isNeedToShowShimmer: Boolean? = true,
         isNeedToShowAd: Boolean = true,
+        bannerType: BannerType
     ) {
         if (isNeedToShowAd && VasuAdsConfig.with(fLayout.context).remoteConfigBannerAds && fLayout.context.isOnline) {
             mFLayout = fLayout
@@ -226,13 +260,24 @@ class BannerHelper(private val mContext: Activity) {
                         fLayout.addView(adView)
                         fLayout.visible
                     },
+                    onAdClicked = {
+                        logI(
+                            tag = TAG,
+                            message = "loadBanner: onAdClicked: ${mContext.localClassName}"
+                        )
+                        loadBanner(
+                            fBannerAdSize = fBannerAdSize,
+                            fLayout = fLayout,
+                            bannerType = bannerType
+                        )
+                    },
                     onAdClosed = {
                         logI(
                             tag = TAG,
                             message = "loadBanner: onAdClosed: ${mContext.localClassName}"
                         )
-                        loadBanner(fBannerAdSize = fBannerAdSize, fLayout = fLayout)
-                    }
+                    },
+                    bannerType
                 )
             }
         }
@@ -305,6 +350,6 @@ class BannerHelper(private val mContext: Activity) {
 
 
     fun isBannerAdAvailable(): Boolean {
-        return  admob_interstitial_ad_model_list.find { it.interstitialAd != null }?.interstitialAd != null
+        return admob_interstitial_ad_model_list.find { it.interstitialAd != null }?.interstitialAd != null
     }
 }
