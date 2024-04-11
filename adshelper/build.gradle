@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
     namespace "com.example.app.ads.helper"
     defaultConfig {
         minSdk 23
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "$dependencies_version"
         multiDexEnabled true
