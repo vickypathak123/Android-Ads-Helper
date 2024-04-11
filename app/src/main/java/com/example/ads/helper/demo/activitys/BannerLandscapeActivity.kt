@@ -9,6 +9,7 @@ import com.example.ads.helper.demo.base.utils.visible
 import com.example.ads.helper.demo.databinding.ActivityBannerTypeBinding
 import com.example.app.ads.helper.adaptive.banner.BannerHelper
 import com.example.app.ads.helper.adaptive.banner.BannerAdSize
+import com.example.app.ads.helper.adaptive.banner.BannerType
 
 class BannerLandscapeActivity : BaseBindingActivity<ActivityBannerTypeBinding>() {
 
@@ -43,13 +44,13 @@ class BannerLandscapeActivity : BaseBindingActivity<ActivityBannerTypeBinding>()
         super.initAds()
 
         with(mBinding) {
-            mBanner.loadBanner(fBannerAdSize = BannerAdSize.BANNER, fLayout = flBanner)
-            mLargeBanner.loadBanner(fBannerAdSize = BannerAdSize.LARGE_BANNER, fLayout = flLargeBanner)
-            mMediumRectangle.loadBanner(fBannerAdSize = BannerAdSize.MEDIUM_RECTANGLE, fLayout = flMediumBanner)
-            mFullBanner.loadBanner(fBannerAdSize = BannerAdSize.FULL_BANNER, fLayout = flFullBanner)
-            mLeaderboard.loadBanner(fBannerAdSize = BannerAdSize.LEADERBOARD, fLayout = flLeaderBoard)
-            mAdaptiveBanner.loadBanner(fBannerAdSize = BannerAdSize.ADAPTIVE_BANNER, fLayout = flAdaptiveBanner)
-            mSmartBanner.loadBanner(fBannerAdSize = BannerAdSize.SMART_BANNER, fLayout = flSmartBanner)
+            mBanner.loadBanner(fBannerAdSize = BannerAdSize.BANNER, fLayout = flBanner,bannerType = BannerType.NORMAL)
+            mLargeBanner.loadBanner(fBannerAdSize = BannerAdSize.LARGE_BANNER, fLayout = flLargeBanner,bannerType = BannerType.NORMAL)
+            mMediumRectangle.loadBanner(fBannerAdSize = BannerAdSize.MEDIUM_RECTANGLE, fLayout = flMediumBanner,bannerType = BannerType.NORMAL)
+            mFullBanner.loadBanner(fBannerAdSize = BannerAdSize.FULL_BANNER, fLayout = flFullBanner,bannerType = BannerType.NORMAL)
+            mLeaderboard.loadBanner(fBannerAdSize = BannerAdSize.LEADERBOARD, fLayout = flLeaderBoard,bannerType = BannerType.NORMAL)
+            mAdaptiveBanner.loadBanner(fBannerAdSize = BannerAdSize.ADAPTIVE_BANNER, fLayout = flAdaptiveBanner,bannerType = BannerType.NORMAL)
+            mSmartBanner.loadBanner(fBannerAdSize = BannerAdSize.SMART_BANNER, fLayout = flSmartBanner,bannerType = BannerType.NORMAL)
         }
     }
 
