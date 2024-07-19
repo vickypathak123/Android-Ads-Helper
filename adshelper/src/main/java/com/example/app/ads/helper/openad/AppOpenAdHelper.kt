@@ -1,19 +1,26 @@
+@file:Suppress("unused")
+
 package com.example.app.ads.helper.openad
 
 import android.app.Activity
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import com.example.app.ads.helper.AdMobAdsListener
-import com.example.app.ads.helper.VasuAdsConfig
-import com.example.app.ads.helper.admob_app_open_ad_model_list
+import com.example.app.ads.helper.AdStatusModel
+import com.example.app.ads.helper.adRequestBuilder
 import com.example.app.ads.helper.isAnyAdOpen
-import com.example.app.ads.helper.isAnyAdShowing
 import com.example.app.ads.helper.isAppForeground
+import com.example.app.ads.helper.isAppNotPurchased
+import com.example.app.ads.helper.is_enable_app_open_ad_from_remote_config
+import com.example.app.ads.helper.isEnableOpenAd
+import com.example.app.ads.helper.is_need_to_load_multiple_app_open_ad_request
 import com.example.app.ads.helper.isOnline
-import com.example.app.ads.helper.isOpenAdEnable
+import com.example.app.ads.helper.list_of_admob_app_open_ads
 import com.example.app.ads.helper.logE
 import com.example.app.ads.helper.logI
+import com.example.app.ads.helper.nativead.NativeAdView.OnNativeAdViewListener
 import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
@@ -21,6 +28,7 @@ import com.google.android.gms.ads.appopen.AppOpenAd
 /**
  * @author Akshay Harsoda
  * @since 28 Nov 2022
+ * @updated 25 Jun 2024
  *
  * AppOpenAdHelper.kt - Simple object which has load and handle your AppOpen AD data
  */
@@ -28,60 +36,75 @@ object AppOpenAdHelper {
 
     private val TAG = "Admob_${javaClass.simpleName}"
 
-    private var mListener: AdMobAdsListener? = null
-
-    //<editor-fold desc="This Ads Related Flag">
     private var isThisAdShowing: Boolean = false
     private var isAnyIndexLoaded = false
     private var isAnyIndexAlreadyLoaded = false
-    //</editor-fold>
-
-    internal var isNeedToLoadMultipleRequest: Boolean = false
     private var mAdIdPosition: Int = -1
 
-    private var mOnAdLoaded: () -> Unit = {}
+    private var mOnAdLoaded: (isNewAdLoaded: Boolean) -> Unit = {}
+    private var mListener: AdMobAdsListener<AppOpenAd>? = null
 
-    private fun getAppOpenAdModel(
-        onFindModel: (index: Int, openAdModel: OpenAdModel) -> Unit
-    ) {
-        mAdIdPosition = if (mAdIdPosition < admob_app_open_ad_model_list.size) {
-            if (mAdIdPosition == -1) {
-                0
+    private val isLastIndex: Boolean get() = (mAdIdPosition + 1) >= list_of_admob_app_open_ads.size
+
+    private val isAdsIDSated: Boolean
+        get() {
+            if (list_of_admob_app_open_ads.isNotEmpty()) {
+                return true
             } else {
-                (mAdIdPosition + 1)
+                throw RuntimeException("set AppOpen Ad Id First")
             }
-        } else {
-            0
         }
 
-        logE(TAG, "getAppOpenAdModel: AdIdPosition -> $mAdIdPosition")
+    private fun getAppOpenAdModel(
+        isNeedToLoadMultipleRequest: Boolean,
+        onFindModel: (index: Int, fAdModel: AdStatusModel<AppOpenAd>) -> Unit
+    ) {
+        if (isAdsIDSated) {
+            if (isNeedToLoadMultipleRequest) {
+                logE(TAG, "getAppOpenAdModel: Load Multiple Request")
+                list_of_admob_app_open_ads.forEachIndexed { index, adStatusModel ->
+                    onFindModel.invoke(index, adStatusModel)
+                }
+            } else {
+                if (list_of_admob_app_open_ads.any { it.isAdLoadingRunning }) {
+                    logE(tag = TAG, message = "getAppOpenAdModel: list_of_admob_app_open_ads.any { it.isAdLoadingRunning } == true, $mAdIdPosition")
+                } else {
+                    logE(tag = TAG, message = "getAppOpenAdModel: list_of_admob_app_open_ads.any { it.isAdLoadingRunning } == false, $mAdIdPosition")
+                    mAdIdPosition = if (mAdIdPosition < list_of_admob_app_open_ads.size) {
+                        if (mAdIdPosition == -1) {
+                            0
+                        } else {
+                            (mAdIdPosition + 1)
+                        }
+                    } else {
+                        0
+                    }
 
-        if (mAdIdPosition >= 0 && mAdIdPosition < admob_app_open_ad_model_list.size) {
-            onFindModel.invoke(mAdIdPosition, admob_app_open_ad_model_list[mAdIdPosition])
-        } else {
-            mAdIdPosition = -1
+                    logE(TAG, "getAppOpenAdModel: AdIdPosition -> $mAdIdPosition")
+
+                    if (mAdIdPosition >= 0 && mAdIdPosition < list_of_admob_app_open_ads.size) {
+                        onFindModel.invoke(mAdIdPosition, list_of_admob_app_open_ads[mAdIdPosition])
+                    } else {
+                        mAdIdPosition = -1
+                    }
+                }
+            }
         }
     }
 
-    // TODO: Load Single Ad Using Model Class
     private fun loadNewAd(
         fContext: Context,
-        fModel: OpenAdModel,
-        fOrientation: Int,
+        fModel: AdStatusModel<AppOpenAd>,
         fIndex: Int
     ) {
-
-        logI(tag = TAG, message = "loadNewAd: Index -> $fIndex\nAdsID -> ${fModel.adsID}")
-
+        logI(tag = TAG, message = "loadNewAd: Index -> $fIndex\nAdID -> ${fModel.adID}")
         fModel.isAdLoadingRunning = true
 
         AppOpenAd.load(
             fContext,
-            fModel.adsID,
-            AdRequest.Builder().build(),
-            fOrientation,
+            fModel.adID,
+            adRequestBuilder,
             object : AppOpenAd.AppOpenAdLoadCallback() {
-
                 override fun onAdLoaded(appOpenAd: AppOpenAd) {
                     super.onAdLoaded(appOpenAd)
                     fModel.isAdLoadingRunning = false
@@ -95,7 +118,8 @@ object AppOpenAdHelper {
                                     tag = TAG,
                                     message = "loadNewAd: onAdShowedFullScreenContent: Index -> $fIndex"
                                 )
-                                isAnyAdShowing = true
+                                isAnyAdOpen = true
+//                                isAnyAdShowing = true
                                 isThisAdShowing = true
                             }
 
@@ -113,21 +137,24 @@ object AppOpenAdHelper {
                                     tag = TAG,
                                     message = "loadNewAd: onAdDismissedFullScreenContent: Index -> $fIndex"
                                 )
-                                fModel.appOpenAd?.fullScreenContentCallback = null
-                                fModel.appOpenAd = null
+                                fModel.apply {
+                                    this.loadedAd?.fullScreenContentCallback = null
+                                    this.loadedAd = null
+                                    isAnyAdOpen = false
+                                    isThisAdShowing = false
+                                    this.listener?.onAdClosed()
+                                }
 
-                                isAnyAdShowing = false
-                                isAnyAdOpen = false
-                                isThisAdShowing = false
+//                                isAnyAdShowing = false
 
-                                fModel.listener?.onAdClosed()
                             }
                         }
                     }.also {
                         logI(tag = TAG, message = "loadNewAd: onAdLoaded: Index -> $fIndex")
-                        fModel.appOpenAd = it
-                        fModel.listener?.onAdLoaded()
-                        fModel.listener?.onAppOpenAdLoaded(it)
+                        fModel.apply {
+                            this.loadedAd = it
+                            this.listener?.onAdLoaded(it)
+                        }
                     }
                 }
 
@@ -137,9 +164,12 @@ object AppOpenAdHelper {
                         tag = TAG,
                         message = "loadNewAd: onAdFailedToLoad: Index -> $fIndex\nAd failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}\nErrorMessage::${adError.message}"
                     )
-                    fModel.isAdLoadingRunning = false
-                    fModel.appOpenAd = null
-                    fModel.listener?.onAdFailed()
+
+                    fModel.apply {
+                        this.isAdLoadingRunning = false
+                        this.loadedAd = null
+                        this.listener?.onAdFailed()
+                    }
                 }
             }
         )
@@ -147,34 +177,32 @@ object AppOpenAdHelper {
 
     private fun requestWithIndex(
         fContext: Context,
-        openAdModel: OpenAdModel,
-        index: Int,
-        fOrientation: Int,
+        fModel: AdStatusModel<AppOpenAd>,
+        fIndex: Int,
         onAdLoaded: () -> Unit,
         onAdFailed: () -> Unit
     ) {
-        if (fContext.isOnline
-            && openAdModel.appOpenAd == null
-            && !openAdModel.isAdLoadingRunning
+        if (isOnline
+            && fModel.loadedAd == null
+            && !fModel.isAdLoadingRunning
         ) {
             loadNewAd(
                 fContext = fContext,
-                fOrientation = fOrientation,
-                fModel = openAdModel.apply {
-                    this.listener = object : AdMobAdsListener {
+                fModel = fModel.apply {
+                    this.listener = object : AdMobAdsListener<AppOpenAd> {
 
-                        override fun onAppOpenAdLoaded(appOpenAd: AppOpenAd) {
-                            super.onAppOpenAdLoaded(appOpenAd)
+                        override fun onAdLoaded(fLoadedAd: AppOpenAd) {
+                            super.onAdLoaded(fLoadedAd)
                             mAdIdPosition = -1
                             logI(
                                 tag = TAG,
-                                message = "requestWithIndex: onAppOpenAdLoaded: Index -> $index"
+                                message = "requestWithIndex: onAdLoaded: Index -> $fIndex"
                             )
                             if (!isAnyIndexLoaded) {
                                 isAnyIndexLoaded = true
                                 onAdLoaded.invoke()
                                 if (onAdLoaded != mOnAdLoaded) {
-                                    mOnAdLoaded.invoke()
+                                    mOnAdLoaded.invoke(true)
                                 }
                             }
                         }
@@ -190,17 +218,15 @@ object AppOpenAdHelper {
                         }
                     }
                 },
-                fIndex = index
+                fIndex = fIndex
             )
-        } else if (fContext.isOnline
-            && openAdModel.appOpenAd != null
-        ) {
+        } else if (isOnline && fModel.loadedAd != null) {
             if (!isAnyIndexAlreadyLoaded) {
-                logI(tag = TAG, message = "requestWithIndex: already loaded ad Index -> $index")
+                logI(tag = TAG, message = "requestWithIndex: already loaded ad Index -> $fIndex")
                 isAnyIndexAlreadyLoaded = true
                 onAdLoaded.invoke()
                 if (onAdLoaded != mOnAdLoaded) {
-                    mOnAdLoaded.invoke()
+                    mOnAdLoaded.invoke(true)
                 }
             }
         }
@@ -213,67 +239,73 @@ object AppOpenAdHelper {
      * @param fContext this is a reference to your activity context
      * @param onAdLoaded callback after ad successfully loaded
      */
-    fun loadAd(
+    internal fun loadAd(
         fContext: Context,
-        isNeedToShowAds: Boolean,
-        fOrientation: Int = AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
-        onAdLoaded: () -> Unit = {}
+        onAdLoaded: (isNewAdLoaded: Boolean) -> Unit = {}
     ) {
         mOnAdLoaded = onAdLoaded
         isAnyIndexLoaded = false
         isAnyIndexAlreadyLoaded = false
-        if (isNeedToShowAds && VasuAdsConfig.with(fContext).remoteConfigOpenAds && fContext.isOnline) {
-            if (admob_app_open_ad_model_list.isNotEmpty()) {
 
-                if (isNeedToLoadMultipleRequest) {
-                    logI(tag = TAG, message = "loadAd: Request Ad From All ID at Same Time")
-                    admob_app_open_ad_model_list.forEachIndexed { index, openAdModel ->
-                        requestWithIndex(
-                            fContext = fContext,
-                            openAdModel = openAdModel,
-                            index = index,
-                            fOrientation = fOrientation,
-                            onAdLoaded = onAdLoaded,
-                            onAdFailed = {},
-                        )
-                    }
-                } else {
-                    logI(tag = TAG, message = "loadAd: Request Ad After Failed Previous Index Ad")
-                    getAppOpenAdModel { index, openAdModel ->
-                        logI(tag = TAG, message = "loadAd: getAppOpenAdModel: Index -> $index")
-                        requestWithIndex(
-                            fContext = fContext,
-                            openAdModel = openAdModel,
-                            index = index,
-                            fOrientation = fOrientation,
-                            onAdLoaded = onAdLoaded,
-                            onAdFailed = {
-                                if ((mAdIdPosition + 1) >= admob_app_open_ad_model_list.size) {
-                                    mAdIdPosition = -1
-                                } else {
-                                    loadAd(
-                                        fContext = fContext,
-                                        isNeedToShowAds,
-                                        onAdLoaded = mOnAdLoaded
-                                    )
-                                }
-                            },
-                        )
-                    }
-                }
-            } else {
-                throw RuntimeException("set AppOpen Ad Id First")
+        if (isAppOpenAdEnable() && isOnline) {
+            getAppOpenAdModel(isNeedToLoadMultipleRequest = is_need_to_load_multiple_app_open_ad_request) { index, fAdModel ->
+                logI(tag = TAG, message = "loadAd: getAppOpenAdModel: Index -> $index")
+                requestWithIndex(
+                    fContext = fContext,
+                    fModel = fAdModel,
+                    fIndex = index,
+                    onAdLoaded = {
+                        callAdLoaded()
+                        onAdLoaded.invoke(true)
+                    },
+                    onAdFailed = {
+                        if (!is_need_to_load_multiple_app_open_ad_request) {
+                            if (isLastIndex) {
+                                mAdIdPosition = -1
+                            } else {
+                                loadAd(
+                                    fContext = fContext,
+                                    onAdLoaded = mOnAdLoaded
+                                )
+                            }
+                        }
+                    },
+                )
             }
         } else {
-            onAdLoaded.invoke()
+            onAdLoaded.invoke(false)
         }
     }
+
+
+    //<editor-fold desc="Current Ad View Callback">
+    interface OnAppOpenAdLoadListener {
+        fun onAdLoaded()
+    }
+
+    private var mOnAppOpenAdLoadListener: OnAppOpenAdLoadListener? = null
+
+    fun setOnAppOpenAdLoadListener(fListener: OnAppOpenAdLoadListener) {
+        mOnAppOpenAdLoadListener = fListener
+    }
+
+    private fun callAdLoaded() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            mOnAppOpenAdLoadListener?.let {
+                it.onAdLoaded()
+                mOnAppOpenAdLoadListener = null
+            } ?: kotlin.run { callAdLoaded() }
+        }, 100)
+    }
+    //</editor-fold>
+
+    internal fun isAppOpenAdEnable(): Boolean = isEnableOpenAd && isAppNotPurchased && is_enable_app_open_ad_from_remote_config
 
     /**
      * this method will check AppOpen Ad is Available or not
      */
-    fun isAppOpenAdAvailable(): Boolean {
-        return isOpenAdEnable && admob_app_open_ad_model_list.find { it.appOpenAd != null }?.appOpenAd != null
+    private fun isAppOpenAdAvailable(): Boolean {
+        return isAppOpenAdEnable() && list_of_admob_app_open_ads.any { it.loadedAd != null }
     }
 
     /**
@@ -285,52 +317,32 @@ object AppOpenAdHelper {
      *
      * @param onAdClosed this is a call back of your ad close, it will call also if your ad was not showing to the user
      */
-    fun Activity.showAppOpenAd(
-        isNeedToShowAds: Boolean,
-        onAdClosed: () -> Unit
-    ) {
-        if (!isThisAdShowing && isNeedToShowAds && VasuAdsConfig.with(this).remoteConfigOpenAds) {
-            mListener = object : AdMobAdsListener {
+    fun Activity.showAppOpenAd(onAdClosed: () -> Unit) {
+        if (!isThisAdShowing && isAppOpenAdAvailable() && isOnline) {
+            mListener = object : AdMobAdsListener<AppOpenAd> {
                 override fun onAdClosed(isShowFullScreenAd: Boolean) {
                     if (isAppForeground) {
                         onAdClosed.invoke()
                     }
 
                     logI(tag = TAG, message = "showAppOpenAd: onAdClosed: Load New Ad")
-                    loadAd(fContext = this@showAppOpenAd, isNeedToShowAds)
+                    loadAd(fContext = this@showAppOpenAd)
                 }
             }
+            if (isAdsIDSated) {
+                list_of_admob_app_open_ads.find { it.loadedAd != null }?.let { loadedAdModel ->
+                    val lIndex: Int = list_of_admob_app_open_ads.indexOf(loadedAdModel)
 
-            if (admob_app_open_ad_model_list.isNotEmpty()) {
-
-                val loadedAdModel: OpenAdModel? =
-                    admob_app_open_ad_model_list.find { it.appOpenAd != null }
-
-                loadedAdModel?.let {
-                    val lIndex: Int = admob_app_open_ad_model_list.indexOf(it)
-
-                    if (isNeedToShowAds && !isThisAdShowing) {
-                        if (isAppOpenAdAvailable() && it.appOpenAd != null && isOnline && !this.isFinishing) {
-                            if (!isAnyAdShowing) {
-                                isAnyAdShowing = true
-                                isAnyAdOpen = true
-                                isThisAdShowing = true
-
-                                it.appOpenAd?.show(this)
-                                logI(
-                                    tag = TAG,
-                                    message = "showAppOpenAd: Show AppOpen Ad Index -> $lIndex"
-                                )
-                            }
-                        }
+                    if (isAppOpenAdAvailable() && loadedAdModel.loadedAd != null && isOnline && !this.isFinishing && !isAnyAdOpen && !isThisAdShowing) {
+                        isAnyAdOpen = true
+                        isThisAdShowing = true
+                        loadedAdModel.loadedAd?.show(this)
+                        logI(tag = TAG, message = "showAppOpenAd: Show AppOpen Ad Index -> $lIndex")
                     }
                 }
-
                 if (!isThisAdShowing) {
-                    mListener?.onAdClosed(false)
+                    mListener?.onAdClosed()
                 }
-            } else {
-                throw RuntimeException("set AppOpen Ad Id First")
             }
         } else {
             onAdClosed.invoke()
@@ -344,9 +356,9 @@ object AppOpenAdHelper {
         isAnyIndexAlreadyLoaded = false
         mAdIdPosition = -1
 
-        for (data in admob_app_open_ad_model_list) {
-            data.appOpenAd?.fullScreenContentCallback = null
-            data.appOpenAd = null
+        for (data in list_of_admob_app_open_ads) {
+            data.loadedAd?.fullScreenContentCallback = null
+            data.loadedAd = null
             data.listener = null
             data.isAdLoadingRunning = false
         }

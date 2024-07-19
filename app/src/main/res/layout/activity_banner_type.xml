@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple_200"
+    tools:background="@android:color/darker_gray"
     tools:context=".activitys.BannerPortraitActivity">
+    <!--    android:background="@color/purple_200"-->
 
     <include
         android:id="@+id/layout_header"
@@ -44,9 +45,35 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/txt_ct_banner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="#ddd"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:text="Collasible Banner Top Using Adapter Banner Only"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@android:color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.example.app.ads.helper.banner.BannerAdView
+                android:id="@+id/fl_ct_banner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:banner_ad_size="adaptive_banner"
+                app:banner_ad_type="collapsible_top"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_ct_banner" />
+
+            <TextView
                 android:id="@+id/txt_banner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="#ddd"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp"
@@ -55,13 +82,16 @@
                 android:textColor="@android:color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/fl_ct_banner" />
 
-            <FrameLayout
+            <com.example.app.ads.helper.banner.BannerAdView
                 android:id="@+id/fl_banner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/purple_200"
+                app:banner_ad_size="banner"
+                app:banner_ad_type="normal"
+                app:banner_placeholder_text_color="@android:color/holo_orange_light"
+                app:banner_placeholder_type="text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txt_banner" />
@@ -70,6 +100,7 @@
                 android:id="@+id/txt_large_banner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="#ddd"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp"
@@ -80,11 +111,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fl_banner" />
 
-            <FrameLayout
+            <com.example.app.ads.helper.banner.BannerAdView
                 android:id="@+id/fl_large_banner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/purple_200"
+                app:banner_ad_size="large_banner"
+                app:banner_ad_type="normal"
+                app:banner_placeholder_type="text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txt_large_banner" />
@@ -93,6 +126,7 @@
                 android:id="@+id/txt_medium_banner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="#ddd"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp"
@@ -103,11 +137,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fl_large_banner" />
 
-            <FrameLayout
+            <com.example.app.ads.helper.banner.BannerAdView
                 android:id="@+id/fl_medium_banner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/purple_200"
+                app:banner_ad_size="medium_rectangle"
+                app:banner_ad_type="normal"
+                app:banner_placeholder_type="none"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txt_medium_banner" />
@@ -116,6 +152,7 @@
                 android:id="@+id/txt_full_banner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="#ddd"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp"
@@ -126,11 +163,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fl_medium_banner" />
 
-            <FrameLayout
+            <com.example.app.ads.helper.banner.BannerAdView
                 android:id="@+id/fl_full_banner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/purple_200"
+                app:banner_ad_size="full_banner"
+                app:banner_ad_type="normal"
+                app:banner_custom_placeholder="@layout/all_screen_header"
+                app:banner_placeholder_type="custom"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txt_full_banner" />
@@ -139,6 +179,7 @@
                 android:id="@+id/txt_leader_board"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="#ddd"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp"
@@ -149,11 +190,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fl_full_banner" />
 
-            <FrameLayout
+            <com.example.app.ads.helper.banner.BannerAdView
                 android:id="@+id/fl_leader_board"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/purple_200"
+                app:banner_ad_size="leaderboard"
+                app:banner_ad_type="normal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txt_leader_board" />
@@ -162,6 +204,7 @@
                 android:id="@+id/txt_adaptive_banner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="#ddd"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp"
@@ -172,88 +215,22 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fl_leader_board" />
 
-            <FrameLayout
+            <com.example.app.ads.helper.banner.BannerAdView
                 android:id="@+id/fl_adaptive_banner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/purple_200"
+                app:banner_ad_size="adaptive_banner"
+                app:banner_ad_type="normal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txt_adaptive_banner" />
 
-            <TextView
-                android:id="@+id/txt_smart_banner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-                android:text="Smart Banner (Screen width x 32|50|90)"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@android:color/black"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fl_adaptive_banner" />
-
-            <FrameLayout
-                android:id="@+id/fl_smart_banner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/purple_200"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_smart_banner" />
-
-            <TextView
-                android:id="@+id/txt_splash_banner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-                android:text="Splash Banner : "
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@android:color/black"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fl_smart_banner" />
-
-            <FrameLayout
-                android:id="@+id/fl_splash_banner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/purple_200"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_splash_banner" />
-
-            <TextView
-                android:id="@+id/txt_ct_banner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-                android:text="Collasible Banner Top Using Adapter Banner Only"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@android:color/black"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fl_splash_banner" />
-
-            <FrameLayout
-                android:id="@+id/fl_ct_banner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/purple_200"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_ct_banner" />
 
             <TextView
                 android:id="@+id/txt_cb_banner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="#ddd"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp"
@@ -262,13 +239,14 @@
                 android:textColor="@android:color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fl_ct_banner" />
+                app:layout_constraintTop_toBottomOf="@id/fl_adaptive_banner" />
 
-            <FrameLayout
+            <com.example.app.ads.helper.banner.BannerAdView
                 android:id="@+id/fl_cb_banner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/purple_200"
+                app:banner_ad_size="adaptive_banner"
+                app:banner_ad_type="collapsible_bottom"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txt_cb_banner" />

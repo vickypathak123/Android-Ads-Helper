@@ -8,7 +8,7 @@ class KotlinBlurProcess : BlurProcess {
     private var preScale: Float = 0.2f
 
     override fun blur(original: Bitmap, radius: Float): Bitmap? {
-        val compressedBitmap: Bitmap = prescaleBitmap(original)
+        val compressedBitmap: Bitmap = preScaleBitmap(original)
         val w = compressedBitmap.width
         val h = compressedBitmap.height
         val currentPixels = IntArray(w * h)
@@ -74,7 +74,7 @@ class KotlinBlurProcess : BlurProcess {
     /**
      * trick to improve performance
      * */
-    private fun prescaleBitmap(original: Bitmap): Bitmap {
+    private fun preScaleBitmap(original: Bitmap): Bitmap {
         val compressedBitmap: Bitmap
         val preScale = preScale
         compressedBitmap = try {

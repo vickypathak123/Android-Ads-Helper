@@ -1,25 +1,27 @@
+@file:Suppress("unused")
+
 package com.example.app.ads.helper.interstitialad
 
 import android.app.Activity
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import com.example.app.ads.helper.AdMobAdsListener
-import com.example.app.ads.helper.NativeAdvancedModelHelper
-import com.example.app.ads.helper.VasuAdsConfig
-import com.example.app.ads.helper.activity.FullScreenNativeAdDialogActivity
-import com.example.app.ads.helper.admob_interstitial_ad_model_list
-import com.example.app.ads.helper.admob_rewarded_interstitial_ad_model_list
+import com.example.app.ads.helper.AdStatusModel
+import com.example.app.ads.helper.activity.InterstitialNativeAdActivity
+import com.example.app.ads.helper.adRequestBuilder
 import com.example.app.ads.helper.isAnyAdOpen
-import com.example.app.ads.helper.isAnyAdShowing
 import com.example.app.ads.helper.isAppForeground
-import com.example.app.ads.helper.isInterstitialAdShow
-import com.example.app.ads.helper.isNeedToShowAds
+import com.example.app.ads.helper.isAppNotPurchased
+import com.example.app.ads.helper.isBlockInterstitialAd
+import com.example.app.ads.helper.is_enable_interstitial_ad_from_remote_config
+import com.example.app.ads.helper.is_need_to_load_multiple_interstitial_ad_request
 import com.example.app.ads.helper.isOnline
+import com.example.app.ads.helper.list_of_admob_interstitial_ads
 import com.example.app.ads.helper.logE
 import com.example.app.ads.helper.logI
-import com.example.app.ads.helper.mList
-import com.example.app.ads.helper.onDialogActivityDismiss
+import com.example.app.ads.helper.nativead.NativeAdHelper
 import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -28,6 +30,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 /**
  * @author Akshay Harsoda
  * @since 18 Nov 2022
+ * @updated 25 Jun 2024
  *
  * InterstitialAdHelper.kt - Simple object which has load and handle your Interstitial AD data
  */
@@ -35,63 +38,76 @@ object InterstitialAdHelper {
 
     private val TAG = "Admob_${javaClass.simpleName}"
 
-    private var mListener: AdMobAdsListener? = null
-
-    //<editor-fold desc="This Ads Related Flag">
     private var isThisAdShowing: Boolean = false
-    private var mIsShowFullScreenNativeAd: Boolean = true
-    private var isAdsShowingFlagForDeveloper: Boolean = false
     private var isAnyIndexLoaded = false
     private var isAnyIndexAlreadyLoaded = false
-    //</editor-fold>
-
-    internal var isNeedToLoadMultipleRequest: Boolean = false
+    private var isAdsShowingFlagForDeveloper: Boolean = false
     private var mAdIdPosition: Int = -1
 
-    private var mOnAdLoaded: () -> Unit = {}
+    private var mOnAdLoaded: (isNewAdLoaded: Boolean) -> Unit = {}
+    private var mListener: AdMobAdsListener<InterstitialAd>? = null
+
+    private val isLastIndex: Boolean get() = (mAdIdPosition + 1) >= list_of_admob_interstitial_ads.size
+
+    private val isAdsIDSated: Boolean
+        get() {
+            if (list_of_admob_interstitial_ads.isNotEmpty()) {
+                return true
+            } else {
+                throw RuntimeException("set Interstitial Ad Id First")
+            }
+        }
 
     private fun getInterstitialAdModel(
-        onFindModel: (index: Int, interstitialAdModel: InterstitialAdModel) -> Unit,
+        isNeedToLoadMultipleRequest: Boolean,
+        onFindModel: (index: Int, fAdModel: AdStatusModel<InterstitialAd>) -> Unit
     ) {
-        mAdIdPosition =
-            if (mList.size == 1) {
-                0
-            } else if (mAdIdPosition < admob_interstitial_ad_model_list.size) {
-                if (mAdIdPosition == -1) {
-                    0
-                } else {
-                    (mAdIdPosition + 1)
+        if (isAdsIDSated) {
+            if (isNeedToLoadMultipleRequest) {
+                logE(TAG, "getInterstitialAdModel: Load Multiple Request")
+                list_of_admob_interstitial_ads.forEachIndexed { index, adStatusModel ->
+                    onFindModel.invoke(index, adStatusModel)
                 }
             } else {
-                0
+                if (list_of_admob_interstitial_ads.any { it.isAdLoadingRunning }) {
+                    logE(tag = TAG, message = "getInterstitialAdModel: list_of_admob_interstitial_ads.any { it.isAdLoadingRunning } == true, $mAdIdPosition")
+                } else {
+                    logE(tag = TAG, message = "getInterstitialAdModel: list_of_admob_interstitial_ads.any { it.isAdLoadingRunning } == false, $mAdIdPosition")
+                    mAdIdPosition = if (mAdIdPosition < list_of_admob_interstitial_ads.size) {
+                        if (mAdIdPosition == -1) {
+                            0
+                        } else {
+                            (mAdIdPosition + 1)
+                        }
+                    } else {
+                        0
+                    }
+
+                    logE(TAG, "getInterstitialAdModel: AdIdPosition -> $mAdIdPosition")
+
+                    if (mAdIdPosition >= 0 && mAdIdPosition < list_of_admob_interstitial_ads.size) {
+                        onFindModel.invoke(mAdIdPosition, list_of_admob_interstitial_ads[mAdIdPosition])
+                    } else {
+                        mAdIdPosition = -1
+                    }
+                }
             }
-
-        logE(TAG, "getInterstitialAdModel: AdIdPosition -> $mAdIdPosition")
-
-        if (mAdIdPosition >= 0 && mAdIdPosition < admob_interstitial_ad_model_list.size) {
-            onFindModel.invoke(mAdIdPosition, admob_interstitial_ad_model_list[mAdIdPosition])
-        } else {
-            mAdIdPosition = -1
         }
     }
 
-    // TODO: Load Single Ad Using Model Class
     private fun loadNewAd(
         fContext: Context,
-        fModel: InterstitialAdModel,
-        fIndex: Int,
+        fModel: AdStatusModel<InterstitialAd>,
+        fIndex: Int
     ) {
-
-        logI(tag = TAG, message = "loadNewAd: Index -> $fIndex\nAdsID -> ${fModel.adsID}")
-
+        logI(tag = TAG, message = "loadNewAd: Index -> $fIndex\nAdID -> ${fModel.adID}")
         fModel.isAdLoadingRunning = true
 
         InterstitialAd.load(
             fContext,
-            fModel.adsID,
-            AdRequest.Builder().build(),
+            fModel.adID,
+            adRequestBuilder,
             object : InterstitialAdLoadCallback() {
-
                 override fun onAdLoaded(interstitialAd: InterstitialAd) {
                     super.onAdLoaded(interstitialAd)
                     fModel.isAdLoadingRunning = false
@@ -105,8 +121,8 @@ object InterstitialAdHelper {
                                     tag = TAG,
                                     message = "loadNewAd: onAdShowedFullScreenContent: Index -> $fIndex"
                                 )
-                                isAnyAdShowing = true
-                                isInterstitialAdShow = true
+                                isAnyAdOpen = true
+                                isThisAdShowing = true
                                 isAdsShowingFlagForDeveloper = true
                             }
 
@@ -124,22 +140,21 @@ object InterstitialAdHelper {
                                     tag = TAG,
                                     message = "loadNewAd: onAdDismissedFullScreenContent: Index -> $fIndex"
                                 )
-                                fModel.interstitialAd?.fullScreenContentCallback = null
-                                fModel.interstitialAd = null
-
-                                isAnyAdShowing = false
-                                isInterstitialAdShow = false
-                                isAnyAdOpen = false
-                                isThisAdShowing = false
-
-                                fModel.listener?.onAdClosed()
+                                fModel.apply {
+                                    this.loadedAd?.fullScreenContentCallback = null
+                                    this.loadedAd = null
+                                    isAnyAdOpen = false
+                                    isThisAdShowing = false
+                                    this.listener?.onAdClosed()
+                                }
                             }
                         }
                     }.also {
                         logI(tag = TAG, message = "loadNewAd: onAdLoaded: Index -> $fIndex")
-                        fModel.interstitialAd = it
-                        fModel.listener?.onAdLoaded()
-                        fModel.listener?.onInterstitialAdLoaded(it)
+                        fModel.apply {
+                            this.loadedAd = it
+                            this.listener?.onAdLoaded(it)
+                        }
                     }
                 }
 
@@ -149,9 +164,12 @@ object InterstitialAdHelper {
                         tag = TAG,
                         message = "loadNewAd: onAdFailedToLoad: Index -> $fIndex\nAd failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}\nErrorMessage::${adError.message}"
                     )
-                    fModel.isAdLoadingRunning = false
-                    fModel.interstitialAd = null
-                    fModel.listener?.onAdFailed()
+
+                    fModel.apply {
+                        this.isAdLoadingRunning = false
+                        this.loadedAd = null
+                        this.listener?.onAdFailed()
+                    }
                 }
             }
         )
@@ -159,32 +177,32 @@ object InterstitialAdHelper {
 
     private fun requestWithIndex(
         fContext: Context,
-        interstitialAdModel: InterstitialAdModel,
-        index: Int,
+        fModel: AdStatusModel<InterstitialAd>,
+        fIndex: Int,
         onAdLoaded: () -> Unit,
-        onAdFailed: () -> Unit,
+        onAdFailed: () -> Unit
     ) {
-        if (fContext.isOnline
-            && interstitialAdModel.interstitialAd == null
-            && !interstitialAdModel.isAdLoadingRunning
+        if (isOnline
+            && fModel.loadedAd == null
+            && !fModel.isAdLoadingRunning
         ) {
             loadNewAd(
                 fContext = fContext,
-                fModel = interstitialAdModel.apply {
-                    this.listener = object : AdMobAdsListener {
+                fModel = fModel.apply {
+                    this.listener = object : AdMobAdsListener<InterstitialAd> {
 
-                        override fun onInterstitialAdLoaded(interstitialAd: InterstitialAd) {
-                            super.onInterstitialAdLoaded(interstitialAd)
+                        override fun onAdLoaded(fLoadedAd: InterstitialAd) {
+                            super.onAdLoaded(fLoadedAd)
                             mAdIdPosition = -1
                             logI(
                                 tag = TAG,
-                                message = "requestWithIndex: onInterstitialAdLoaded: Index -> $index"
+                                message = "requestWithIndex: onAdLoaded: Index -> $fIndex"
                             )
                             if (!isAnyIndexLoaded) {
                                 isAnyIndexLoaded = true
                                 onAdLoaded.invoke()
                                 if (onAdLoaded != mOnAdLoaded) {
-                                    mOnAdLoaded.invoke()
+                                    mOnAdLoaded.invoke(true)
                                 }
                             }
                         }
@@ -200,17 +218,15 @@ object InterstitialAdHelper {
                         }
                     }
                 },
-                fIndex = index
+                fIndex = fIndex
             )
-        } else if (fContext.isOnline
-            && interstitialAdModel.interstitialAd != null
-        ) {
+        } else if (isOnline && fModel.loadedAd != null) {
             if (!isAnyIndexAlreadyLoaded) {
-                logI(tag = TAG, message = "requestWithIndex: already loaded ad Index -> $index")
+                logI(tag = TAG, message = "requestWithIndex: already loaded ad Index -> $fIndex")
                 isAnyIndexAlreadyLoaded = true
                 onAdLoaded.invoke()
                 if (onAdLoaded != mOnAdLoaded) {
-                    mOnAdLoaded.invoke()
+                    mOnAdLoaded.invoke(true)
                 }
             }
         }
@@ -222,62 +238,78 @@ object InterstitialAdHelper {
      *
      * @param fContext this is a reference to your activity context
      * @param onAdLoaded callback after ad successfully loaded
-     * @param isNeedToShow check if Subscribe is done then ads will not show
-     * @param remoteConfig check remote Config parameters is if true ads will show else false ads will not show
      */
-    fun loadAd(
+    internal fun loadAd(
         fContext: Context,
-        isNeedToShow: Boolean = true,
-        onAdLoaded: () -> Unit = {},
+        onAdLoaded: (isNewAdLoaded: Boolean) -> Unit = {}
+    ) {
+        mOnAdLoaded = onAdLoaded
+        isAnyIndexLoaded = false
+        isAnyIndexAlreadyLoaded = false
 
-        ) {
-        if (isNeedToShow && VasuAdsConfig.with(fContext).remoteConfigInterstitialAds && fContext.isOnline) {
-            mOnAdLoaded = onAdLoaded
-            isAnyIndexLoaded = false
-            isAnyIndexAlreadyLoaded = false
-            if (admob_interstitial_ad_model_list.isNotEmpty()) {
-
-                if (isNeedToLoadMultipleRequest) {
-                    logI(tag = TAG, message = "loadAd: Request Ad From All ID at Same Time")
-                    admob_interstitial_ad_model_list.forEachIndexed { index, interstitialAdModel ->
-                        requestWithIndex(
-                            fContext = fContext,
-                            interstitialAdModel = interstitialAdModel,
-                            index = index,
-                            onAdLoaded = onAdLoaded,
-                            onAdFailed = {},
-                        )
-                    }
-                } else {
-                    logI(tag = TAG, message = "loadAd: Request Ad After Failed Previous Index Ad")
-                    getInterstitialAdModel { index, interstitialAdModel ->
-                        logI(tag = TAG, message = "loadAd: getInterstitialAdModel: Index -> $index")
-                        requestWithIndex(
-                            fContext = fContext,
-                            interstitialAdModel = interstitialAdModel,
-                            index = index,
-                            onAdLoaded = onAdLoaded,
-                            onAdFailed = {
-                                if ((mAdIdPosition + 1) >= admob_interstitial_ad_model_list.size) {
-                                    mAdIdPosition = -1
-                                } else {
-                                    loadAd(fContext = fContext, onAdLoaded = mOnAdLoaded)
-                                }
-                            },
-                        )
-                    }
-                }
-            } else {
-                throw RuntimeException("set Interstitial Ad Id First")
+        if (isInterstitialAdEnable() && isOnline) {
+            getInterstitialAdModel(isNeedToLoadMultipleRequest = is_need_to_load_multiple_interstitial_ad_request) { index, fAdModel ->
+                logI(tag = TAG, message = "loadAd: getInterstitialAdModel: Index -> $index")
+                requestWithIndex(
+                    fContext = fContext,
+                    fModel = fAdModel,
+                    fIndex = index,
+                    onAdLoaded = {
+                        callAdLoaded()
+                        onAdLoaded.invoke(true)
+                    },
+                    onAdFailed = {
+                        if (!is_need_to_load_multiple_interstitial_ad_request) {
+                            if (isLastIndex) {
+                                mAdIdPosition = -1
+                            } else {
+                                loadAd(
+                                    fContext = fContext,
+                                    onAdLoaded = mOnAdLoaded
+                                )
+                            }
+                        }
+                    },
+                )
             }
-        } else {
-            onAdLoaded.invoke()
+        } else if (isInterstitialAdEnable() && NativeAdHelper.isNativeAdEnable()) {
+            onAdLoaded.invoke(NativeAdHelper.isNativeAdAvailable())
         }
+    }
+
+    //<editor-fold desc="Current Ad View Callback">
+    interface OnInterstitialAdLoadListener {
+        fun onAdLoaded()
+    }
+
+    private var mOnInterstitialAdLoadListener: OnInterstitialAdLoadListener? = null
+
+    fun setOnInterstitialAdLoadListener(fListener: OnInterstitialAdLoadListener) {
+        mOnInterstitialAdLoadListener = fListener
+    }
+
+    private fun callAdLoaded() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            mOnInterstitialAdLoadListener?.let {
+                it.onAdLoaded()
+                mOnInterstitialAdLoadListener = null
+            } ?: kotlin.run { callAdLoaded() }
+        }, 100)
+    }
+    //</editor-fold>
+
+    internal fun isInterstitialAdEnable(): Boolean = isAppNotPurchased && is_enable_interstitial_ad_from_remote_config
+
+    /**
+     * this method will check Interstitial Ad is Available or not
+     */
+    private fun isInterstitialAdAvailable(): Boolean {
+        return isInterstitialAdEnable() && list_of_admob_interstitial_ads.any { it.loadedAd != null }
     }
 
     /**
      * Call this method when you need to show Interstitial AD
-     * also this method call our offline native dialog AD [FullScreenNativeAdDialogActivity] when Interstitial Ad fails and give call bake on same way
+     * also this method call our offline native dialog AD [InterstitialNativeAdActivity] when Interstitial Ad fails and give call bake on same way
      *
      * Use of this Method
      * activity.showInterstitialAd {[your code which has run after AD show or if AD fails to show]}
@@ -285,109 +317,89 @@ object InterstitialAdHelper {
      *
      * @param fIsShowFullScreenNativeAd pass false if you don't need native ad if interstitial ads not loaded
      * @param onAdClosed this is a call back of your ad close, it will call also if your ad was not showing to the user
-     * @param isNeedToShow check if Subscribe is done then ads will not show
-     * @param remoteConfig check remote Config parameters is if true ads will show else false ads will not show
      */
     fun Activity.showInterstitialAd(
         fIsShowFullScreenNativeAd: Boolean = true,
-        isNeedToShow: Boolean = true,
         onAdClosed: (isAdShowing: Boolean, isShowFullScreenAd: Boolean) -> Unit
 
     ) {
-        if (isNeedToShow && VasuAdsConfig.with(this).remoteConfigInterstitialAds) {
-
-
-            this@InterstitialAdHelper.mIsShowFullScreenNativeAd = fIsShowFullScreenNativeAd
-
-            mListener = object : AdMobAdsListener {
-                override fun onAdClosed(isShowFullScreenAd: Boolean) {
-                    if (isAppForeground) {
-                        onAdClosed.invoke(isAdsShowingFlagForDeveloper, isShowFullScreenAd)
-                        isAdsShowingFlagForDeveloper = false
-                    }
-
-                    logI(tag = TAG, message = "showInterstitialAd: onAdClosed: Load New Ad")
-                    loadAd(fContext = this@showInterstitialAd, onAdLoaded = mOnAdLoaded)
+        mListener = object : AdMobAdsListener<InterstitialAd> {
+            override fun onAdClosed(isShowFullScreenAd: Boolean) {
+                if (isAppForeground) {
+                    onAdClosed.invoke(isAdsShowingFlagForDeveloper, isShowFullScreenAd)
+                    isAdsShowingFlagForDeveloper = false
                 }
-            }
 
-            if (admob_interstitial_ad_model_list.isNotEmpty()) {
-
-                val loadedAdModel: InterstitialAdModel? =
-                    admob_interstitial_ad_model_list.find { it.interstitialAd != null }
-
-                loadedAdModel?.let {
-                    val lIndex: Int = admob_interstitial_ad_model_list.indexOf(it)
-
-                    if (isNeedToShowAds && !isThisAdShowing && !isInterstitialAdShow) {
-                        if (it.interstitialAd != null) {
-                            if (!isAnyAdShowing) {
-                                isAdsShowingFlagForDeveloper = false
-                                isAnyAdShowing = true
-                                isAnyAdOpen = true
-                                isInterstitialAdShow = true
-                                it.interstitialAd?.show(this)
-                                logI(
-                                    tag = TAG,
-                                    message = "showInterstitialAd: Show Interstitial Ad Index -> $lIndex"
-                                )
-                                isThisAdShowing = true
-                            }
-                        } else {
-                            // show native ad
-                            showFullScreenNativeAdDialog()
-                        }
-                    }
-                } ?: kotlin.run {
-                    // show native ad
-                    showFullScreenNativeAdDialog()
-                }
-                if (!isThisAdShowing && isOnline && loadedAdModel != null) {
-                    mListener?.onAdClosed(false)
-                }
-            } else {
-                throw RuntimeException("set Interstitial Ad Id First")
-            }
-        } else {
-            if (!isThisAdShowing) {
-                onAdClosed.invoke(true, false)
+                logI(tag = TAG, message = "showInterstitialAd: onAdClosed: Load New Ad")
+                loadAd(fContext = this@showInterstitialAd, onAdLoaded = mOnAdLoaded)
             }
         }
 
+        if (!isThisAdShowing && isInterstitialAdAvailable() && isOnline) {
+            if (isAdsIDSated) {
+                list_of_admob_interstitial_ads.find { it.loadedAd != null }?.let { loadedAdModel ->
+                    val lIndex: Int = list_of_admob_interstitial_ads.indexOf(loadedAdModel)
+
+                    if (isInterstitialAdAvailable() && loadedAdModel.loadedAd != null && isOnline && !this.isFinishing && !isAnyAdOpen && !isThisAdShowing) {
+                        isAdsShowingFlagForDeveloper = false
+                        isAnyAdOpen = true
+                        isThisAdShowing = true
+                        loadedAdModel.loadedAd?.show(this)
+                        logI(
+                            tag = TAG,
+                            message = "showInterstitialAd: Show Interstitial Ad Index -> $lIndex"
+                        )
+                    } else {
+                        // show native ad
+                        showFullScreenNativeAdDialog(fIsShowFullScreenNativeAd = fIsShowFullScreenNativeAd)
+                    }
+
+                    if (!isThisAdShowing) {
+                        mListener?.onAdClosed(false)
+                    }
+                } ?: kotlin.run {
+                    // show native ad
+                    showFullScreenNativeAdDialog(fIsShowFullScreenNativeAd = fIsShowFullScreenNativeAd)
+                }
+            }
+        } else if (!isThisAdShowing && NativeAdHelper.isNativeAdAvailable() && isOnline && isBlockInterstitialAd) {
+            showFullScreenNativeAdDialog(fIsShowFullScreenNativeAd = fIsShowFullScreenNativeAd)
+        } else {
+            if (!isThisAdShowing) {
+                onAdClosed.invoke(false, false)
+            }
+        }
     }
 
-    private fun Activity.showFullScreenNativeAdDialog() {
-        if (mIsShowFullScreenNativeAd
-            && NativeAdvancedModelHelper.getNativeAd != null
+    /**
+     * After Native Ad completed
+     */
+    private fun Activity.showFullScreenNativeAdDialog(fIsShowFullScreenNativeAd: Boolean = true) {
+        if (fIsShowFullScreenNativeAd
+            && NativeAdHelper.isNativeAdAvailable()
             && isOnline
             && !this.isFinishing
+            && !isAnyAdOpen
+            && !isThisAdShowing
         ) {
-            if (!isAnyAdShowing) {
-                isAdsShowingFlagForDeveloper = false
-                isAnyAdShowing = true
-                logI(tag = TAG, message = "showFullScreenNativeAdDialog: Try To Open Dialog...")
+            isAdsShowingFlagForDeveloper = false
 
-                onDialogActivityDismiss = {
-                    logE(
-                        tag = TAG,
-                        message = "showFullScreenNativeAdDialog: Dialog Activity Dismiss"
-                    )
+            logI(tag = TAG, message = "showFullScreenNativeAdDialog: Try To Open Dialog...")
+
+            InterstitialNativeAdActivity.lunchFullScreenAd(
+                fActivity = this,
+                onInterstitialNativeAdClosed = {
+                    isAnyAdOpen = false
                     isThisAdShowing = false
                     isAdsShowingFlagForDeveloper = true
                     mListener?.onAdClosed(true)
                 }
+            )
 
-                FullScreenNativeAdDialogActivity.lunchFullScreenAd(this)
-
-                isThisAdShowing = true
-            }
-        } else {
-            mListener?.onAdClosed(true)
+            isThisAdShowing = true
+        } else if (isBlockInterstitialAd) {
+            mListener?.onAdClosed(false)
         }
-    }
-
-    fun isInterstitialAdAvailable(): Boolean {
-        return  admob_interstitial_ad_model_list.find { it.interstitialAd != null }?.interstitialAd != null
     }
 
     fun destroy() {
@@ -395,12 +407,11 @@ object InterstitialAdHelper {
         isThisAdShowing = false
         isAnyIndexLoaded = false
         isAnyIndexAlreadyLoaded = false
-        mIsShowFullScreenNativeAd = true
         mAdIdPosition = -1
 
-        for (data in admob_interstitial_ad_model_list) {
-            data.interstitialAd?.fullScreenContentCallback = null
-            data.interstitialAd = null
+        for (data in list_of_admob_interstitial_ads) {
+            data.loadedAd?.fullScreenContentCallback = null
+            data.loadedAd = null
             data.listener = null
             data.isAdLoadingRunning = false
         }

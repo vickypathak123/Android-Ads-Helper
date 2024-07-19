@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="txt_ad" type="id"/>
+    <item name="native_ad_media_container" type="id"/>
+    <item name="iv_progress_interstitial_native" type="id"/>
+
+    <item name="ad_advertiser" type="id"/>
+    <item name="ad_body" type="id"/>
+    <item name="ad_headline" type="id"/>
+    <item name="ad_price" type="id"/>
+    <item name="ad_store" type="id"/>
+    <item name="ad_stars" type="id"/>
+    <item name="ad_app_icon" type="id"/>
+    <item name="ad_bg_main_image" type="id"/>
+    <item name="ad_media" type="id"/>
+    <item name="ad_call_to_action" type="id"/>
+
+    <item name="iv_play_logo" type="id"/>
+    <item name="ad_txt_rating" type="id"/>
+    <item name="ad_call_to_close" type="id"/>
+</resources>

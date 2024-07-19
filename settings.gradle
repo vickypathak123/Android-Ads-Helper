@@ -1,16 +1,18 @@
-
 pluginManagement {
     repositories {
-        gradlePluginPortal()
-        google()
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
         mavenCentral()
+        gradlePluginPortal()
         mavenLocal()
         maven { url "https://jitpack.io" }
-        jcenter()
     }
 }
-
-
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -18,9 +20,9 @@ dependencyResolutionManagement {
         mavenCentral()
         mavenLocal()
         maven { url "https://jitpack.io" }
-        jcenter()
     }
 }
-rootProject.name = "Ads Helper"
+
+rootProject.name = "Ads Helper 2.0"
 include ':app'
 include ':adshelper'

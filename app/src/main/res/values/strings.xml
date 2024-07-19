@@ -1,25 +1,46 @@
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
-    <string name="app_name">Ads Helper</string>
+<resources>
+    <string name="app_name">Ads Helper 2.0</string>
 
-    <string name="exit">Exit</string>
-    <string name="do_you_want_to_exit">Do you want to exit?</string>
+    <!--    <string name="exit">Exit</string>-->
+    <!--    <string name="do_you_want_to_exit">Do you want to exit?</string>-->
     <string name="no">No</string>
     <string name="yes">Yes</string>
 
-    <string name="with_out_star_rating">with out star rating</string>
-    <string name="showing_open_ads">Showing Open Ads</string>
-    <string name="interstitial_ads">Interstitial Ads</string>
+    <!--    <string name="with_out_star_rating">with out star rating</string>-->
+    <!--    <string name="showing_open_ads">Showing Open Ads</string>-->
+    <!--    <string name="interstitial_ads">Interstitial Ads</string>-->
     <string name="banner_ads">Banner Ads</string>
-    <string name="full_screen_native_ad">Full Screen Native Ad</string>
-    <string name="reward_video_ads">Reward Video Ads</string>
-    <string name="reward_interstitial_ads">Reward Interstitial Ads</string>
-    <string name="native_ads">Native Ads</string>
-    <string name="custom_native_ads">Custom Native Ads</string>
-    <string name="run_time_permission">Run-Time Permission</string>
-    <string name="other_dialogs">Other Dialogs</string>
-    <string name="change_app_language">Change App Language</string>
-    <string name="selected_lanaguage">Select Lanaguage</string>
-    <string name="dialog_title" >other_dialogs</string>
-    <string name="dialog_messages" >Run-Time Permission</string>
+    <!--    <string name="full_screen_native_ad">Full Screen Native Ad</string>-->
+    <!--    <string name="reward_video_ads">Reward Video Ads</string>-->
+    <!--    <string name="reward_interstitial_ads">Reward Interstitial Ads</string>-->
+    <!--    <string name="native_ads">Native Ads</string>-->
+    <!--    <string name="custom_native_ads">Custom Native Ads</string>-->
+    <!--    <string name="run_time_permission">Run-Time Permission</string>-->
+    <!--    <string name="other_dialogs">Other Dialogs</string>-->
+    <!--    <string name="change_app_language">Change App Language</string>-->
+    <!--    <string name="selected_lanaguage">Select Lanaguage</string>-->
+    <string name="dialog_title">other_dialogs</string>
+    <string name="dialog_messages">Run-Time Permission</string>
 
+    <string-array name="banner_ad_size_list">
+        <item>Banner</item>
+        <item>LargeBanner</item>
+        <item>MediumRectangle</item>
+        <item>FullBanner</item>
+        <item>Leaderboard</item>
+        <item>AdaptiveBanner</item>
+    </string-array>
+
+    <string-array name="banner_ad_type_list">
+        <item>Normal</item>
+        <item>CollapsibleBottom</item>
+        <item>CollapsibleTop</item>
+    </string-array>
+
+    <string-array name="banner_placeholder_type_list">
+        <item>None</item>
+        <item>Shimmer</item>
+        <item>Text</item>
+        <item>Custom</item>
+    </string-array>
 </resources>

@@ -1,20 +1,22 @@
+@file:Suppress("unused")
+
 package com.example.app.ads.helper.reward
 
 import android.app.Activity
 import android.content.Context
 import com.example.app.ads.helper.AdMobAdsListener
-import com.example.app.ads.helper.VasuAdsConfig
-import com.example.app.ads.helper.admob_rewarded_interstitial_ad_model_list
-import com.example.app.ads.helper.admob_rewarded_video_ad_model_list
+import com.example.app.ads.helper.AdStatusModel
+import com.example.app.ads.helper.adRequestBuilder
 import com.example.app.ads.helper.isAnyAdOpen
-import com.example.app.ads.helper.isAnyAdShowing
 import com.example.app.ads.helper.isAppForeground
-import com.example.app.ads.helper.isNeedToShowAds
+import com.example.app.ads.helper.isAppNotPurchased
+import com.example.app.ads.helper.is_enable_rewarded_interstitial_ad_from_remote_config
+import com.example.app.ads.helper.is_need_to_load_multiple_rewarded_interstitial_ad_request
 import com.example.app.ads.helper.isOnline
+import com.example.app.ads.helper.list_of_admob_rewarded_interstitial_ads
 import com.example.app.ads.helper.logE
 import com.example.app.ads.helper.logI
 import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
@@ -23,6 +25,7 @@ import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoa
 /**
  * @author Akshay Harsoda
  * @since 02 Dec 2022
+ * @updated 25 Jun 2024
  *
  * RewardedInterstitialAdHelper.kt - Simple object which has load and handle your Interstitial Reward AD data
  */
@@ -30,62 +33,79 @@ object RewardedInterstitialAdHelper {
 
     private val TAG = "Admob_${javaClass.simpleName}"
 
-    private var mListener: AdMobAdsListener? = null
-
-    //<editor-fold desc="This Ads Related Flag">
     private var isThisAdShowing: Boolean = false
     private var isAnyIndexLoaded = false
-    private var isStartToLoadAnyIndex = false
     private var isAnyIndexAlreadyLoaded = false
-    //</editor-fold>
-
-    internal var isNeedToLoadMultipleRequest: Boolean = false
+    private var isStartToLoadAnyIndex = false
     private var mAdIdPosition: Int = -1
 
     private var mOnAdLoaded: () -> Unit = {}
     private var mOnStartToLoadAd: () -> Unit = {}
+    private var mListener: AdMobAdsListener<RewardedInterstitialAd>? = null
 
-    private fun getRewardedInterstitialAdModel(
-        onFindModel: (index: Int, rewardedInterstitialAdModel: RewardedInterstitialAdModel) -> Unit
-    ) {
-        mAdIdPosition = if (mAdIdPosition < admob_rewarded_interstitial_ad_model_list.size) {
-            if (mAdIdPosition == -1) {
-                0
+    private val isLastIndex: Boolean get() = (mAdIdPosition + 1) >= list_of_admob_rewarded_interstitial_ads.size
+
+    private val isAdsIDSated: Boolean
+        get() {
+            if (list_of_admob_rewarded_interstitial_ads.isNotEmpty()) {
+                return true
             } else {
-                (mAdIdPosition + 1)
+                throw RuntimeException("set RewardedInterstitial Ad Id First")
             }
-        } else {
-            0
         }
 
-        logE(TAG, "getRewardedInterstitialAdModel: AdIdPosition -> $mAdIdPosition")
+    private fun getRewardedInterstitialAdModel(
+        isNeedToLoadMultipleRequest: Boolean,
+        onFindModel: (index: Int, fAdModel: AdStatusModel<RewardedInterstitialAd>) -> Unit
+    ) {
+        if (isAdsIDSated) {
+            if (isNeedToLoadMultipleRequest) {
+                logE(TAG, "getRewardedInterstitialAdModel: Load Multiple Request")
+                list_of_admob_rewarded_interstitial_ads.forEachIndexed { index, adStatusModel ->
+                    onFindModel.invoke(index, adStatusModel)
+                }
+            } else {
+                if (list_of_admob_rewarded_interstitial_ads.any { it.isAdLoadingRunning }) {
+                    logE(tag = TAG, message = "getRewardedInterstitialAdModel: list_of_admob_rewarded_interstitial_ads.any { it.isAdLoadingRunning } == true, $mAdIdPosition")
+                } else {
+                    logE(tag = TAG, message = "getRewardedInterstitialAdModel: list_of_admob_rewarded_interstitial_ads.any { it.isAdLoadingRunning } == false, $mAdIdPosition")
+                    mAdIdPosition = if (mAdIdPosition < list_of_admob_rewarded_interstitial_ads.size) {
+                        if (mAdIdPosition == -1) {
+                            0
+                        } else {
+                            (mAdIdPosition + 1)
+                        }
+                    } else {
+                        0
+                    }
 
-        if (mAdIdPosition >= 0 && mAdIdPosition < admob_rewarded_interstitial_ad_model_list.size) {
-            onFindModel.invoke(
-                mAdIdPosition,
-                admob_rewarded_interstitial_ad_model_list[mAdIdPosition]
-            )
-        } else {
-            mAdIdPosition = -1
+                    logE(TAG, "getRewardedInterstitialAdModel: AdIdPosition -> $mAdIdPosition")
+
+                    if (mAdIdPosition >= 0 && mAdIdPosition < list_of_admob_rewarded_interstitial_ads.size) {
+                        onFindModel.invoke(mAdIdPosition, list_of_admob_rewarded_interstitial_ads[mAdIdPosition])
+                    } else {
+                        mAdIdPosition = -1
+                    }
+                }
+            }
         }
     }
 
-    // TODO: Load Single Ad Using Model Class
     private fun loadNewAd(
         fContext: Context,
-        fModel: RewardedInterstitialAdModel,
+        fModel: AdStatusModel<RewardedInterstitialAd>,
         fIndex: Int
     ) {
 
-        logI(tag = TAG, message = "loadNewAd: Index -> $fIndex\nAdsID -> ${fModel.adsID}")
+        logI(tag = TAG, message = "loadNewAd: Index -> $fIndex\nAdID -> ${fModel.adID}")
 
         fModel.isAdLoadingRunning = true
-        fModel.listener?.onStartToLoadRewardedInterstitialAd()
+        fModel.listener?.onStartToLoadRewardAd()
 
         RewardedInterstitialAd.load(
             fContext,
-            fModel.adsID,
-            AdRequest.Builder().build(),
+            fModel.adID,
+            adRequestBuilder,
             object : RewardedInterstitialAdLoadCallback() {
 
                 override fun onAdLoaded(rewardedInterstitialAd: RewardedInterstitialAd) {
@@ -100,7 +120,7 @@ object RewardedInterstitialAdHelper {
                                     tag = TAG,
                                     message = "loadNewAd: onAdShowedFullScreenContent: Index -> $fIndex"
                                 )
-                                isAnyAdShowing = true
+                                isAnyAdOpen = true
                                 isThisAdShowing = true
                             }
 
@@ -118,20 +138,21 @@ object RewardedInterstitialAdHelper {
                                     tag = TAG,
                                     message = "loadNewAd: onAdDismissedFullScreenContent: Index -> $fIndex"
                                 )
-                                fModel.rewardedInterstitialAd?.fullScreenContentCallback = null
-                                fModel.rewardedInterstitialAd = null
-
-                                isAnyAdShowing = false
-                                isAnyAdOpen = false
-                                isThisAdShowing = false
-
-                                fModel.listener?.onAdClosed()
+                                fModel.apply {
+                                    this.loadedAd?.fullScreenContentCallback = null
+                                    this.loadedAd = null
+                                    isAnyAdOpen = false
+                                    isThisAdShowing = false
+                                    this.listener?.onAdClosed()
+                                }
                             }
                         }
                     }.also {
                         logI(tag = TAG, message = "loadNewAd: onAdLoaded: Index -> $fIndex")
-                        fModel.rewardedInterstitialAd = it
-                        fModel.listener?.onRewardInterstitialAdLoaded(it)
+                        fModel.apply {
+                            this.loadedAd = it
+                            this.listener?.onAdLoaded(it)
+                        }
                     }
                 }
 
@@ -141,9 +162,11 @@ object RewardedInterstitialAdHelper {
                         tag = TAG,
                         message = "loadNewAd: onAdFailedToLoad: Index -> $fIndex\nAd failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}\nErrorMessage::${adError.message}"
                     )
-                    fModel.isAdLoadingRunning = false
-                    fModel.rewardedInterstitialAd = null
-                    fModel.listener?.onAdFailed()
+                    fModel.apply {
+                        this.isAdLoadingRunning = false
+                        this.loadedAd = null
+                        this.listener?.onAdFailed()
+                    }
                 }
             }
         )
@@ -151,24 +174,23 @@ object RewardedInterstitialAdHelper {
 
     private fun requestWithIndex(
         fContext: Context,
-        rewardedInterstitialAdModel: RewardedInterstitialAdModel,
-        index: Int,
+        fModel: AdStatusModel<RewardedInterstitialAd>,
+        fIndex: Int,
         onStartToLoadAd: () -> Unit,
         onAdLoaded: () -> Unit,
         onAdFailed: () -> Unit
     ) {
-        if (fContext.isOnline
-            && rewardedInterstitialAdModel.rewardedInterstitialAd == null
-            && !rewardedInterstitialAdModel.isAdLoadingRunning
+        if (isOnline
+            && fModel.loadedAd == null
+            && !fModel.isAdLoadingRunning
         ) {
             loadNewAd(
                 fContext = fContext,
-                fModel = rewardedInterstitialAdModel.apply {
-                    this.listener = object : AdMobAdsListener {
+                fModel = fModel.apply {
+                    this.listener = object : AdMobAdsListener<RewardedInterstitialAd> {
 
-                        override fun onStartToLoadRewardedInterstitialAd() {
-                            super.onStartToLoadRewardedInterstitialAd()
-
+                        override fun onStartToLoadRewardAd() {
+                            super.onStartToLoadRewardAd()
                             if (!isAnyIndexAlreadyLoaded) {
                                 if (!isStartToLoadAnyIndex) {
                                     isStartToLoadAnyIndex = true
@@ -180,12 +202,12 @@ object RewardedInterstitialAdHelper {
                             }
                         }
 
-                        override fun onRewardInterstitialAdLoaded(rewardedInterstitialAd: RewardedInterstitialAd) {
-                            super.onRewardInterstitialAdLoaded(rewardedInterstitialAd)
+                        override fun onAdLoaded(fLoadedAd: RewardedInterstitialAd) {
+                            super.onAdLoaded(fLoadedAd)
                             mAdIdPosition = -1
                             logI(
                                 tag = TAG,
-                                message = "requestWithIndex: onRewardInterstitialAdLoaded: Index -> $index"
+                                message = "requestWithIndex: onAdLoaded: Index -> $fIndex"
                             )
                             if (!isAnyIndexLoaded) {
                                 isAnyIndexLoaded = true
@@ -212,13 +234,11 @@ object RewardedInterstitialAdHelper {
                         }
                     }
                 },
-                fIndex = index
+                fIndex = fIndex
             )
-        } else if (fContext.isOnline
-            && rewardedInterstitialAdModel.rewardedInterstitialAd != null
-        ) {
+        } else if (isOnline && fModel.loadedAd != null) {
             if (!isAnyIndexAlreadyLoaded) {
-                logI(tag = TAG, message = "requestWithIndex: already loaded ad Index -> $index")
+                logI(tag = TAG, message = "requestWithIndex: already loaded ad Index -> $fIndex")
                 isAnyIndexAlreadyLoaded = true
                 onAdLoaded.invoke()
                 if (onAdLoaded != mOnAdLoaded) {
@@ -241,73 +261,57 @@ object RewardedInterstitialAdHelper {
      * )
      *
      * @param fContext this is a reference to your activity or fragment context
-     * @param onStartToLoadAd @see [AdMobAdsListener.onStartToLoadRewardedInterstitialAd]
+     * @param onStartToLoadAd @see [AdMobAdsListener.onStartToLoadRewardAd]
      * @param onAdLoaded @see [AdMobAdsListener.onAdLoaded]
-     * @param isNeedToShow check if Subscribe is done then ads will not show
-     * @param remoteConfig check remote Config parameters is if true ads will show else false ads will not show
      */
     fun loadAd(
         fContext: Context,
-        isNeedToShow: Boolean = true,
         onStartToLoadAd: () -> Unit,
         onAdLoaded: () -> Unit,
+    ) {
+        mOnAdLoaded = onAdLoaded
+        mOnStartToLoadAd = onStartToLoadAd
+        isAnyIndexLoaded = false
+        isStartToLoadAnyIndex = false
+        isAnyIndexAlreadyLoaded = false
 
-        ) {
-        if (isNeedToShow && VasuAdsConfig.with(fContext).remoteConfigInterstitialRewardAds && fContext.isOnline) {
-            mOnAdLoaded = onAdLoaded
-            mOnStartToLoadAd = onStartToLoadAd
-            isAnyIndexLoaded = false
-            isStartToLoadAnyIndex = false
-            isAnyIndexAlreadyLoaded = false
-
-            if (admob_rewarded_interstitial_ad_model_list.isNotEmpty()) {
-
-                if (isNeedToLoadMultipleRequest) {
-                    logI(tag = TAG, message = "loadAd: Request Ad From All ID at Same Time")
-                    admob_rewarded_interstitial_ad_model_list.forEachIndexed { index, rewardedInterstitialAdModel ->
-                        requestWithIndex(
-                            fContext = fContext,
-                            rewardedInterstitialAdModel = rewardedInterstitialAdModel,
-                            index = index,
-                            onStartToLoadAd = onStartToLoadAd,
-                            onAdLoaded = onAdLoaded,
-                            onAdFailed = {},
-                        )
-                    }
-                } else {
-                    logI(tag = TAG, message = "loadAd: Request Ad After Failed Previous Index Ad")
-                    getRewardedInterstitialAdModel { index, rewardedInterstitialAdModel ->
-                        logI(
-                            tag = TAG,
-                            message = "loadAd: getRewardedInterstitialAdModel: Index -> $index"
-                        )
-                        requestWithIndex(
-                            fContext = fContext,
-                            rewardedInterstitialAdModel = rewardedInterstitialAdModel,
-                            index = index,
-                            onStartToLoadAd = onStartToLoadAd,
-                            onAdLoaded = onAdLoaded,
-                            onAdFailed = {
-                                if ((mAdIdPosition + 1) >= admob_rewarded_interstitial_ad_model_list.size) {
-                                    mAdIdPosition = -1
-                                } else {
-                                    loadAd(
-                                        fContext = fContext,
-                                        onStartToLoadAd = onStartToLoadAd,
-                                        onAdLoaded = mOnAdLoaded
-                                    )
-                                }
-                            },
-                        )
-                    }
-                }
-            } else {
-                throw RuntimeException("set RewardedInterstitial Ad Id First")
+        if (isRewardedInterstitialAdEnable() && isOnline) {
+            getRewardedInterstitialAdModel(isNeedToLoadMultipleRequest = is_need_to_load_multiple_rewarded_interstitial_ad_request) { index, fAdModel ->
+                logI(tag = TAG, message = "loadAd: getRewardedInterstitialAdModel: Index -> $index")
+                requestWithIndex(
+                    fContext = fContext,
+                    fModel = fAdModel,
+                    fIndex = index,
+                    onStartToLoadAd = onStartToLoadAd,
+                    onAdLoaded = onAdLoaded,
+                    onAdFailed = {
+                        if (!is_need_to_load_multiple_rewarded_interstitial_ad_request) {
+                            if (isLastIndex) {
+                                mAdIdPosition = -1
+                            } else {
+                                loadAd(
+                                    fContext = fContext,
+                                    onStartToLoadAd = onStartToLoadAd,
+                                    onAdLoaded = mOnAdLoaded
+                                )
+                            }
+                        }
+                    },
+                )
             }
         } else {
             onStartToLoadAd.invoke()
-            onAdLoaded.invoke()
+//            onAdLoaded.invoke()
         }
+    }
+
+    internal fun isRewardedInterstitialAdEnable(): Boolean = isAppNotPurchased && is_enable_rewarded_interstitial_ad_from_remote_config
+
+    /**
+     * this method will check Reward Interstitial Ad is Available or not
+     */
+    private fun isRewardedInterstitialAvailable(): Boolean {
+        return isRewardedInterstitialAdEnable() && list_of_admob_rewarded_interstitial_ads.any { it.loadedAd != null }
     }
 
 
@@ -322,66 +326,47 @@ object RewardedInterstitialAdHelper {
      * )
      *
      * @param onUserEarnedReward @see [AdMobAdsListener.onUserEarnedReward]
-     * @param isNeedToShow check if Subscribe is done then ads will not show
-     * @param remoteConfig check remote Config parameters is if true ads will show else false ads will not show
      */
     fun Activity.showRewardedInterstitialAd(
-        isNeedToShow: Boolean = true,
         onUserEarnedReward: (isUserEarnedReward: Boolean) -> Unit,
     ) {
-        if (isNeedToShow && VasuAdsConfig.with(this).remoteConfigInterstitialRewardAds) {
-            if (!isThisAdShowing) {
-                var isUserEarnedReward = false
+        if (!isThisAdShowing && isRewardedInterstitialAvailable() && isOnline) {
+            var isUserEarnedReward = false
 
-                mListener = object : AdMobAdsListener {
-                    override fun onAdClosed(isShowFullScreenAd: Boolean) {
-                        if (isAppForeground) {
-                            onUserEarnedReward.invoke(isUserEarnedReward)
-                        }
-                        logI(
-                            tag = TAG,
-                            message = "showRewardedInterstitialAd: onAdClosed: Load New Ad after ad close"
-                        )
+            mListener = object : AdMobAdsListener<RewardedInterstitialAd> {
+                override fun onAdClosed(isShowFullScreenAd: Boolean) {
+                    if (isAppForeground) {
+                        onUserEarnedReward.invoke(isUserEarnedReward)
                     }
+                    logI(
+                        tag = TAG,
+                        message = "showRewardedInterstitialAd: onAdClosed: Load New Ad after ad close"
+                    )
                 }
+            }
 
-                if (admob_rewarded_interstitial_ad_model_list.isNotEmpty()) {
+            if (isAdsIDSated) {
+                list_of_admob_rewarded_interstitial_ads.find { it.loadedAd != null }?.let { loadedAdModel ->
+                    val lIndex: Int = list_of_admob_rewarded_interstitial_ads.indexOf(loadedAdModel)
 
-                    val loadedAdModel: RewardedInterstitialAdModel? =
-                        admob_rewarded_interstitial_ad_model_list.find { it.rewardedInterstitialAd != null }
-
-                    loadedAdModel?.let {
-                        val lIndex: Int = admob_rewarded_interstitial_ad_model_list.indexOf(it)
-
-                        if (!isThisAdShowing) {
-                            if (it.rewardedInterstitialAd != null && isOnline && !this.isFinishing) {
-                                if (!isAnyAdShowing) {
-                                    isAnyAdShowing = true
-                                    isAnyAdOpen = true
-                                    isThisAdShowing = true
-
-                                    it.rewardedInterstitialAd?.show(this) {
-                                        isUserEarnedReward = true
-                                        logI(
-                                            tag = TAG,
-                                            message = "showRewardedInterstitialAd: Show RewardedInterstitial Ad Index -> $lIndex"
-                                        )
-                                    }
-                                }
-                            }
+                    if (isRewardedInterstitialAvailable() && loadedAdModel.loadedAd != null && isOnline && !this.isFinishing && !isAnyAdOpen && !isThisAdShowing) {
+                        isAnyAdOpen = true
+                        isThisAdShowing = true
+                        loadedAdModel.loadedAd?.show(this) {
+                            isUserEarnedReward = true
+                            logI(
+                                tag = TAG,
+                                message = "showRewardedInterstitialAd: Show RewardedInterstitial Ad Index -> $lIndex"
+                            )
                         }
                     }
-                } else {
-                    throw RuntimeException("set RewardedInterstitial Ad Id First")
                 }
             }
         } else {
-            onUserEarnedReward.invoke(true)
+            onUserEarnedReward.invoke(false)
         }
     }
-    fun isRewardedInterstitialAvailable(): Boolean {
-        return  admob_rewarded_interstitial_ad_model_list.find { it.rewardedInterstitialAd != null }?.rewardedInterstitialAd != null
-    }
+
     fun destroy() {
         mListener = null
         isThisAdShowing = false
@@ -390,9 +375,9 @@ object RewardedInterstitialAdHelper {
         isAnyIndexAlreadyLoaded = false
         mAdIdPosition = -1
 
-        for (data in admob_rewarded_interstitial_ad_model_list) {
-            data.rewardedInterstitialAd?.fullScreenContentCallback = null
-            data.rewardedInterstitialAd = null
+        for (data in list_of_admob_rewarded_interstitial_ads) {
+            data.loadedAd?.fullScreenContentCallback = null
+            data.loadedAd = null
             data.listener = null
             data.isAdLoadingRunning = false
         }

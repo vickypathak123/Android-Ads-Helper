@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.ads.helper.demo">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -16,11 +15,15 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <application
         android:name=".AppApplication"
         android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -29,43 +32,39 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AdsHelper"
-        tools:ignore="LockedOrientationActivity">
-
-
+        android:theme="@style/Theme.AdsHelper20"
+        tools:ignore="DiscouragedApi, LockedOrientationActivity"
+        tools:targetApi="31">
         <activity
-            android:name=".activitys.BannerLandscapeActivity"
-            android:exported="false"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="landscape" />
+            android:name=".activitys.NativeAdsMediumActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".activitys.BannerPortraitActivity"
-            android:exported="false"
-            android:hardwareAccelerated="true" />
+            android:name=".activitys.NativeAdsBigActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activitys.CustomNativeAdsActivity"
             android:exported="false"
-            android:hardwareAccelerated="true" />
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".activitys.NativeAdsActivity"
-            android:exported="true"
-            android:hardwareAccelerated="true"/>
-        <activity
-            android:name=".activitys.SecondActivity"
+            android:name=".activitys.BannerUpdateActivity"
             android:exported="false"
-            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activitys.BannerPortraitActivity"
+            android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activitys.MainActivity"
             android:exported="false"
-            android:hardwareAccelerated="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activitys.SplashActivity"
+            android:name=".StartupActivity"
             android:exported="true"
-            android:hardwareAccelerated="true"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTranslucent"
+            android:theme="@style/splash_screen_theme"
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

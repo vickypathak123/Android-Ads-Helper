@@ -1,0 +1,832 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_start_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.025" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_start_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.100" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_end_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.975" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_end_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.975" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_end_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="end"
+        app:constraint_referenced_ids="txt_advertiser_id, txt_body_id, txt_headline_id, txt_price_id, txt_store_id, txt_stars_id, txt_txt_rating_id, txt_icon_id, txt_bg_image_id, txt_media_container_id, txt_media_content_id, txt_call_to_action_id, txt_call_to_close_id" />
+
+    <TextView
+        android:id="@+id/txt_advertiser_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_advertiser_title"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/gl_end_title"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:gravity="center"
+        android:text="ID:-"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txt_advertiser_id"
+        app:layout_constraintEnd_toEndOf="@id/gl_start_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title" />
+
+    <TextView
+        android:id="@+id/txt_advertiser_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_advertiser_id"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_advertiser_title" />
+
+    <TextView
+        android:id="@+id/ad_advertiser"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="#80000000"
+        app:layout_constraintEnd_toStartOf="@id/gl_end_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/barrier_end_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_advertiser_title"
+        tools:maxLines="3"
+        tools:text="@tools:sample/lorem/random" />
+
+    <androidx.constraintlayout.widget.Group
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:visibility="gone"
+        app:constraint_referenced_ids="txt_advertiser_title, txt_advertiser_id, ad_advertiser" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_ad_advertiser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="ad_advertiser, txt_advertiser_id" />
+
+    <TextView
+        android:id="@+id/txt_body_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_body_title"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/gl_end_title"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title"
+        app:layout_constraintTop_toBottomOf="@id/barrier_ad_advertiser" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:gravity="center"
+        android:text="ID:-"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txt_body_id"
+        app:layout_constraintEnd_toEndOf="@id/gl_start_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title" />
+
+    <TextView
+        android:id="@+id/txt_body_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_body_id"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_body_title" />
+
+    <TextView
+        android:id="@+id/ad_body"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="#80000000"
+        app:layout_constraintEnd_toStartOf="@id/gl_end_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/barrier_end_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_body_title"
+        tools:maxLines="3"
+        tools:text="@tools:sample/lorem/random" />
+
+    <androidx.constraintlayout.widget.Group
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:visibility="gone"
+        app:constraint_referenced_ids="txt_body_title, txt_body_id, ad_body" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_ad_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="ad_body, txt_body_id" />
+
+    <TextView
+        android:id="@+id/txt_headline_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_headline_title"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/gl_end_title"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title"
+        app:layout_constraintTop_toBottomOf="@id/barrier_ad_body" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:gravity="center"
+        android:text="ID:-"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txt_headline_id"
+        app:layout_constraintEnd_toEndOf="@id/gl_start_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title" />
+
+    <TextView
+        android:id="@+id/txt_headline_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_headline_id"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_headline_title" />
+
+    <TextView
+        android:id="@+id/ad_headline"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="#80000000"
+        app:layout_constraintEnd_toStartOf="@id/gl_end_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/barrier_end_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_headline_title"
+        tools:maxLines="3"
+        tools:text="@tools:sample/lorem/random" />
+
+    <androidx.constraintlayout.widget.Group
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:visibility="gone"
+        app:constraint_referenced_ids="txt_headline_title, txt_headline_id, ad_headline" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_ad_headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="ad_headline, txt_headline_id" />
+
+    <TextView
+        android:id="@+id/txt_price_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_price_title"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/gl_end_title"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title"
+        app:layout_constraintTop_toBottomOf="@id/barrier_ad_headline" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:gravity="center"
+        android:text="ID:-"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txt_price_id"
+        app:layout_constraintEnd_toEndOf="@id/gl_start_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title" />
+
+    <TextView
+        android:id="@+id/txt_price_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_price_id"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_price_title" />
+
+    <TextView
+        android:id="@+id/ad_price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="#80000000"
+        app:layout_constraintEnd_toStartOf="@id/gl_end_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/barrier_end_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_price_title"
+        tools:maxLines="3"
+        tools:text="@tools:sample/lorem/random" />
+
+    <androidx.constraintlayout.widget.Group
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:visibility="gone"
+        app:constraint_referenced_ids="txt_price_title, txt_price_id, ad_price" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_ad_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="ad_price, txt_price_id" />
+
+    <TextView
+        android:id="@+id/txt_store_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_store_title"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/gl_end_title"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title"
+        app:layout_constraintTop_toBottomOf="@id/barrier_ad_price" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:gravity="center"
+        android:text="ID:-"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txt_store_id"
+        app:layout_constraintEnd_toEndOf="@id/gl_start_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title" />
+
+    <TextView
+        android:id="@+id/txt_store_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_store_id"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_store_title" />
+
+    <TextView
+        android:id="@+id/ad_store"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="#80000000"
+        app:layout_constraintEnd_toStartOf="@id/gl_end_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/barrier_end_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_store_title"
+        tools:maxLines="3"
+        tools:text="@tools:sample/lorem/random" />
+
+    <androidx.constraintlayout.widget.Group
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:visibility="gone"
+        app:constraint_referenced_ids="txt_store_title, txt_store_id, ad_store" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_ad_store"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="ad_store, txt_store_id" />
+
+    <TextView
+        android:id="@+id/txt_stars_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_star_rating_title"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/gl_end_title"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title"
+        app:layout_constraintTop_toBottomOf="@id/barrier_ad_store" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:gravity="center"
+        android:text="ID:-"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txt_stars_id"
+        app:layout_constraintEnd_toEndOf="@id/gl_start_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title" />
+
+    <TextView
+        android:id="@+id/txt_stars_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_star_rating_id"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_stars_title" />
+
+    <RatingBar
+        android:id="@+id/ad_stars"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:progressBackgroundTint="#AAAAAA"
+        android:progressTint="#F2B200"
+        android:secondaryProgressTint="@android:color/transparent"
+        android:stepSize="0.5"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toStartOf="@id/gl_end_data"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/barrier_end_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_stars_title"
+        tools:rating="4.5" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_ad_stars"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="ad_stars, txt_stars_id" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:gravity="center"
+        android:text="ID:-"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txt_txt_rating_id"
+        app:layout_constraintEnd_toEndOf="@id/gl_start_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title" />
+
+    <TextView
+        android:id="@+id/txt_txt_rating_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_txt_rating_id"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_data"
+        app:layout_constraintTop_toBottomOf="@id/barrier_ad_stars" />
+
+    <TextView
+        android:id="@+id/ad_txt_rating"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="#80000000"
+        app:layout_constraintEnd_toStartOf="@id/gl_end_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/barrier_end_data"
+        app:layout_constraintTop_toBottomOf="@id/barrier_ad_stars"
+        tools:maxLines="3"
+        tools:text="@tools:sample/lorem/random" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_ad_txt_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="ad_txt_rating, txt_txt_rating_id" />
+
+    <TextView
+        android:id="@+id/txt_icon_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_icon_title"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/gl_end_title"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title"
+        app:layout_constraintTop_toBottomOf="@id/barrier_ad_txt_rating" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:gravity="center"
+        android:text="ID:-"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txt_icon_id"
+        app:layout_constraintEnd_toEndOf="@id/gl_start_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title" />
+
+    <TextView
+        android:id="@+id/txt_icon_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_icon_id"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_icon_title" />
+
+    <ImageView
+        android:id="@+id/ad_app_icon"
+        android:layout_width="@dimen/_55sdp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/_2sdp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@id/gl_end_data"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/barrier_end_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_icon_title"
+        tools:src="@tools:sample/backgrounds/scenic" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_ad_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="ad_app_icon, txt_icon_id" />
+
+    <TextView
+        android:id="@+id/txt_bg_image_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_bg_image_title"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/gl_end_title"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title"
+        app:layout_constraintTop_toBottomOf="@id/barrier_ad_icon" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:gravity="center"
+        android:text="ID:-"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txt_bg_image_id"
+        app:layout_constraintEnd_toEndOf="@id/gl_start_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title" />
+
+    <TextView
+        android:id="@+id/txt_bg_image_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_bg_image_id"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_bg_image_title" />
+
+    <ImageView
+        android:id="@+id/ad_bg_main_image"
+        android:layout_width="@dimen/_55sdp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/_2sdp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@id/gl_end_data"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/barrier_end_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_bg_image_title"
+        tools:src="@tools:sample/backgrounds/scenic" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_ad_bg_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="ad_bg_main_image, txt_bg_image_id" />
+
+    <TextView
+        android:id="@+id/txt_media_content_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_media_content_title"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/gl_end_title"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title"
+        app:layout_constraintTop_toBottomOf="@id/barrier_ad_bg_image" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:gravity="center"
+        android:text="ID:-"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txt_media_container_id"
+        app:layout_constraintEnd_toEndOf="@id/gl_start_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title" />
+
+    <TextView
+        android:id="@+id/txt_media_container_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_media_container_id"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_media_content_title" />
+
+    <FrameLayout
+        android:id="@+id/native_ad_media_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="3:1"
+        android:layout_margin="@dimen/_2sdp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintEnd_toStartOf="@id/gl_end_data"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/barrier_end_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_media_content_title" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_ad_media_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="native_ad_media_container, txt_media_container_id" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:gravity="center"
+        android:text="ID:-"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txt_media_content_id"
+        app:layout_constraintEnd_toEndOf="@id/gl_start_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title" />
+
+    <TextView
+        android:id="@+id/txt_media_content_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_media_content_id"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_data"
+        app:layout_constraintTop_toBottomOf="@id/barrier_ad_media_container" />
+
+    <FrameLayout
+        android:id="@+id/native_ad_media_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/_2sdp"
+        app:layout_constraintDimensionRatio="3:1"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintEnd_toStartOf="@id/gl_end_data"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/barrier_end_data"
+        app:layout_constraintTop_toBottomOf="@id/barrier_ad_media_container" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_ad_media_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="native_ad_media_content, txt_media_content_id" />
+
+    <TextView
+        android:id="@+id/txt_call_to_action_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_call_to_action_title"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/gl_end_title"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title"
+        app:layout_constraintTop_toBottomOf="@id/barrier_ad_media_content" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:gravity="center"
+        android:text="ID:-"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txt_call_to_action_id"
+        app:layout_constraintEnd_toEndOf="@id/gl_start_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title" />
+
+    <TextView
+        android:id="@+id/txt_call_to_action_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_call_to_action_id"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_call_to_action_title" />
+
+    <Button
+        android:id="@+id/ad_call_to_action"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toStartOf="@id/gl_end_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/barrier_end_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_call_to_action_title"
+        tools:maxLines="1"
+        tools:text="@tools:sample/lorem/random" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_ad_call_to_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="ad_call_to_action, txt_call_to_action_id" />
+
+    <TextView
+        android:id="@+id/txt_call_to_close_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_call_to_close_title"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/gl_end_title"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title"
+        app:layout_constraintTop_toBottomOf="@id/barrier_ad_call_to_action" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:gravity="center"
+        android:text="ID:-"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txt_call_to_close_id"
+        app:layout_constraintEnd_toEndOf="@id/gl_start_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_title" />
+
+    <TextView
+        android:id="@+id/txt_call_to_close_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="@string/ad_call_to_close_id"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/gl_start_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_call_to_close_title" />
+
+    <Button
+        android:id="@+id/ad_call_to_close"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="Close Ad Screen"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toStartOf="@id/gl_end_data"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/barrier_end_data"
+        app:layout_constraintTop_toBottomOf="@id/txt_call_to_close_title" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_ad_call_to_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="ad_call_to_close, txt_call_to_close_id" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_2sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barrier_ad_call_to_close" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

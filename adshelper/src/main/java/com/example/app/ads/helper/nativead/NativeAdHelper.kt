@@ -3,346 +3,478 @@
 package com.example.app.ads.helper.nativead
 
 import android.content.Context
-import android.util.Log
-import android.widget.FrameLayout
-import com.example.app.ads.helper.*
-import com.example.app.ads.helper.reward.RewardedVideoAdHelper
-import com.example.app.ads.helper.reward.RewardedVideoAdModel
-import com.google.android.gms.ads.*
+import com.example.app.ads.helper.AdMobAdsListener
+import com.example.app.ads.helper.AdStatusModel
+import com.example.app.ads.helper.adRequestBuilder
+import com.example.app.ads.helper.isAnyAdOpen
+import com.example.app.ads.helper.isAppNotPurchased
+import com.example.app.ads.helper.isOnline
+import com.example.app.ads.helper.is_enable_native_ad_from_remote_config
+import com.example.app.ads.helper.is_need_to_load_multiple_native_ad_request
+import com.example.app.ads.helper.list_of_admob_native_ads
+import com.example.app.ads.helper.logE
+import com.example.app.ads.helper.logI
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.VideoOptions
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 /**
  * @author Akshay Harsoda
  * @since 20 Dec 2022
+ * @updated 05 Jul 2024
  *
- * NativeAdHelper.kt - Simple object which has load Native Advanced AD data
+ * NativeAdHelper.kt - Simple object which has load and handle your Interstitial AD data
  */
-internal object NativeAdHelper {
+object NativeAdHelper {
 
-    private val TAG = "Akshay_Admob_${javaClass.simpleName}"
+    private val TAG = "Admob_${javaClass.simpleName}"
 
-    //<editor-fold desc="This Ads Related Flag">
-    private var isThisAdShowing: Boolean = false
+
     private var isAnyIndexLoaded = false
     private var isAnyIndexAlreadyLoaded = false
-    //</editor-fold>
 
-    internal var isNeedToLoadMultipleRequest: Boolean = false
-    private var showingAdIndex: Int = -1
+
     private var mAdIdPosition: Int = -1
+    private var showingAdIndex: Int = -1
 
-    private var mOnAdLoaded: (index: Int, nativeAd: NativeAd) -> Unit = { _, _ -> }
+    internal val listOfNativeAdsModel: ArrayList<AdStatusModel<NativeAd>> get() = list_of_admob_native_ads
+    internal val isAnyIndexAdLoadingRunning: Boolean = (listOfNativeAdsModel.any { it.isAdLoadingRunning })
 
-    private fun getNativeAdModel(
-        onFindModel: (index: Int, nativeAdModel: NativeAdModel) -> Unit,
-    ) {
-        mAdIdPosition = if (mList.size == 1) {
-            0
-        } else if (mAdIdPosition < mList.size) {
-            if (mAdIdPosition == -1) {
-                0
+    private val isLastIndex: Boolean get() = (mAdIdPosition + 1) >= listOfNativeAdsModel.size
+
+    private val isAdsIDSated: Boolean
+        get() {
+            if (listOfNativeAdsModel.isNotEmpty()) {
+                return true
             } else {
-                (mAdIdPosition + 1)
+                throw RuntimeException("set Native Ad Id First")
             }
-        } else {
-            0
         }
 
-        logE(TAG, "getNativeAdModel: AdIdPosition -> $mAdIdPosition")
+    private fun getNativeAdModel(
+        isNeedToLoadMultipleRequest: Boolean,
+        onFindModel: (index: Int, fAdModel: AdStatusModel<NativeAd>) -> Unit
+    ) {
+        if (isAdsIDSated) {
+            if (isNeedToLoadMultipleRequest) {
+                logE(TAG, "getNativeAdModel: Load Multiple Request")
+                listOfNativeAdsModel.forEachIndexed { index, adStatusModel ->
+                    onFindModel.invoke(index, adStatusModel)
+                }
+            } else {
+                if (listOfNativeAdsModel.any { it.isAdLoadingRunning }) {
+                    logE(tag = TAG, message = "getNativeAdModel: listOfNativeAdsModel.any { it.isAdLoadingRunning } == true, $mAdIdPosition")
+                } else {
+                    logE(tag = TAG, message = "getNativeAdModel: listOfNativeAdsModel.any { it.isAdLoadingRunning } == false, $mAdIdPosition")
+                    mAdIdPosition = if (mAdIdPosition < listOfNativeAdsModel.size) {
+                        if (mAdIdPosition == -1) {
+                            0
+                        } else {
+                            (mAdIdPosition + 1)
+                        }
+                    } else {
+                        0
+                    }
 
-        if (mAdIdPosition >= 0 && mAdIdPosition < mList.size) {
-            onFindModel.invoke(mAdIdPosition, mList[mAdIdPosition])
-        } else {
-            mAdIdPosition = -1
+                    logE(TAG, "getNativeAdModel: AdIdPosition -> $mAdIdPosition")
+
+                    if (mAdIdPosition >= 0 && mAdIdPosition < listOfNativeAdsModel.size) {
+                        onFindModel.invoke(mAdIdPosition, listOfNativeAdsModel[mAdIdPosition])
+                    } else {
+                        mAdIdPosition = -1
+                    }
+                }
+            }
         }
     }
 
-    // TODO: Load Single Ad Using Model Class
     private fun loadNewAd(
         fContext: Context,
-        fModel: NativeAdModel,
+        fModel: AdStatusModel<NativeAd>,
         fIndex: Int,
         isAddVideoOptions: Boolean,
         @NativeAdOptions.AdChoicesPlacement adChoicesPlacement: Int,
+        @NativeAdOptions.NativeMediaAspectRatio mediaAspectRatio: Int,
     ) {
+        if (!(listOfNativeAdsModel.any { it.isAdLoadingRunning })) {
+            logI(tag = TAG, message = "loadNewAd: Index -> $fIndex\nAdID -> ${fModel.adID}")
+            fModel.isAdLoadingRunning = true
 
-        logI(tag = TAG, message = "loadNewAd: Index -> $fIndex\nAdsID -> ${fModel.adsID}")
-
-        fModel.isAdLoadingRunning = true
-
-        AdLoader.Builder(fContext, fModel.adsID)
-            .withNativeAdOptions(
-                NativeAdOptions.Builder().apply {
-                    this.setAdChoicesPlacement(adChoicesPlacement)
-                    this.setMediaAspectRatio(MediaAspectRatio.LANDSCAPE)
-                    if (isAddVideoOptions) {
-                        this.setVideoOptions(
-                            VideoOptions.Builder()
-                                .setStartMuted(true)
-                                .build()
-                        )
+            var adLoader: AdLoader? = null
+            val adLoaderBuilder: AdLoader.Builder = AdLoader.Builder(fContext, fModel.adID)
+                .forNativeAd { nativeAd ->
+                    adLoader?.let { loader ->
+                        if (!loader.isLoading) {
+                            // The AdLoader has finished loading ads.
+                            logI(tag = TAG, message = "loadNewAd: forNativeAd: Index -> $fIndex")
+                            fModel.apply {
+                                this.isAdLoadingRunning = false
+                                this.loadedAd = nativeAd
+                                this.listener?.onAdLoaded(fLoadedAd = nativeAd)
+                            }
+                        } else {
+                            // The AdLoader is still loading ads.
+                            // Expect more adLoaded or onAdFailedToLoad callbacks.
+                            logE(tag = TAG, message = "loadNewAd: forNativeAd: AdLoader is still loading ads")
+                        }
                     }
-                }.build()
-            )
-            .forNativeAd { nativeAd ->
-                fModel.isAdLoadingRunning = false
-                logI(tag = TAG, message = "loadNewAd: onAdLoaded: Index -> $fIndex")
-                fModel.nativeAd = nativeAd
-                fModel.listener?.onNativeAdLoaded(nativeAd = nativeAd)
-            }
-            .withAdListener(object : AdListener() {
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    super.onAdFailedToLoad(adError)
-                    fModel.isAdLoadingRunning = false
-                    logE(tag = TAG, message = "loadNewAd: onAdFailedToLoad: Index -> $fIndex\nAd failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}\nErrorMessage::${adError.message}")
-                    fModel.nativeAd = null
-                    fModel.listener?.onAdFailed()
                 }
+                .withAdListener(object : AdListener() {
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        super.onAdFailedToLoad(adError)
+                        logE(tag = TAG, message = "loadNewAd: onAdFailedToLoad: Index -> $fIndex\nAd failed to load -> \nresponseInfo::${adError.responseInfo}\nErrorCode::${adError.code}\nErrorMessage::${adError.message}")
 
-                override fun onAdClicked() {
-                    super.onAdClicked()
-                    logI(tag = TAG, message = "loadNewAd: onAdClicked: Index -> $fIndex")
-                    isAnyAdShowing = true
-                    isInterstitialAdShow = true
-                }
+                        val model: AdStatusModel<NativeAd> = listOfNativeAdsModel.find { it.loadedAd != null } ?: fModel
+                        model.apply {
+                            this.isAdLoadingRunning = false
+                            this.loadedAd?.destroy()
+                            this.loadedAd = null
+                            this.listener?.onAdFailed()
+                        }
+                    }
 
-                override fun onAdOpened() {
-                    super.onAdOpened()
-                    logI(tag = TAG, message = "loadNewAd: onAdOpened: Index -> $fIndex")
-                    isAnyAdShowing = true
-                    isInterstitialAdShow = true
-                }
+                    override fun onAdClosed() {
+                        super.onAdClosed()
+                        logI(
+                            tag = TAG,
+                            message = "loadNewAd: onAdClosed: Index -> $fIndex"
+                        )
+                        val model: AdStatusModel<NativeAd> = listOfNativeAdsModel.find { it.loadedAd != null } ?: fModel
+                        model.apply {
+                            this.loadedAd?.destroy()
+                            this.loadedAd = null
+                            isAnyAdOpen = false
+                            this.listener?.onAdClosed()
+                        }
+                    }
 
-                override fun onAdClosed() {
-                    super.onAdClosed()
-                    logI(tag = TAG, message = "loadNewAd: onAdClosed: Index -> $fIndex")
-                    fModel.nativeAd = null
+                    override fun onAdClicked() {
+                        super.onAdClicked()
+                        logI(
+                            tag = TAG,
+                            message = "loadNewAd: onAdClicked: Index -> $fIndex"
+                        )
+                        isAnyAdOpen = true
+                    }
+                }.also { fModel.defaultAdListener = it }
+                )
+                .withNativeAdOptions(
+                    NativeAdOptions.Builder()
+                        .setAdChoicesPlacement(adChoicesPlacement)
+                        .setMediaAspectRatio(mediaAspectRatio)
+                        .setRequestMultipleImages(true)
+                        .apply {
+                            if (isAddVideoOptions) {
+                                this.setVideoOptions(
+                                    VideoOptions.Builder()
+                                        .setStartMuted(true)
+                                        .build()
+                                )
+                            }
+                        }.build()
+                )
 
-                    isAnyAdShowing = false
-                    isAnyAdOpen = false
-                    isThisAdShowing = false
-                    isInterstitialAdShow=false
-
-                    fModel.listener?.onAdClosed()
-                }
-            })
-            .build()
-            .loadAd(AdRequest.Builder().build())
+            adLoader = adLoaderBuilder.build()
+            adLoader.loadAd(adRequestBuilder)
+        }
     }
 
     private fun requestWithIndex(
         fContext: Context,
-        nativeAdModel: NativeAdModel,
+        fModel: AdStatusModel<NativeAd>,
         isAddVideoOptions: Boolean,
-        adChoicesPlacement: Int,
-        index: Int,
-        onAdLoaded: (index: Int, nativeAd: NativeAd) -> Unit,
-        onAdClosed: (index: Int) -> Unit,
-        onAdFailed: (index: Int) -> Unit,
+        @NativeAdOptions.AdChoicesPlacement adChoicesPlacement: Int,
+        @NativeAdOptions.NativeMediaAspectRatio mediaAspectRatio: Int,
+        fIndex: Int,
+        onAdLoaded: (nativeAd: NativeAd) -> Unit,
+        onAdClosed: () -> Unit,
+        onAdFailed: () -> Unit
     ) {
-        if (fContext.isOnline
+        if (isOnline
             && !isNativeAdAvailable()
-            && nativeAdModel.nativeAd == null
-            && !nativeAdModel.isAdLoadingRunning
+            && fModel.loadedAd == null
+            && !fModel.isAdLoadingRunning
         ) {
             loadNewAd(
                 fContext = fContext,
-                fModel = nativeAdModel.apply {
-                    this.listener = object : AdMobAdsListener {
+                fModel = fModel.apply {
+                    this.listener = object : AdMobAdsListener<NativeAd> {
 
-                        override fun onNativeAdLoaded(nativeAd: NativeAd) {
-                            super.onNativeAdLoaded(nativeAd)
+                        override fun onAdLoaded(fLoadedAd: NativeAd) {
+                            super.onAdLoaded(fLoadedAd)
                             mAdIdPosition = -1
-                            logI(tag = TAG, message = "requestWithIndex: onNativeAdLoaded: Index -> $index")
+                            logI(
+                                tag = TAG,
+                                message = "requestWithIndex: onAdLoaded: Index -> $fIndex"
+                            )
                             if (!isAnyIndexAlreadyLoaded) {
                                 if (!isAnyIndexLoaded) {
                                     isAnyIndexLoaded = true
-                                    showingAdIndex = index
-                                    onAdLoaded.invoke(index, nativeAd)
-//                                    if (onAdLoaded != mOnAdLoaded) {
-//                                        mOnAdLoaded.invoke(index, nativeAd)
-//                                    }
+                                    showingAdIndex = fIndex
+                                    onAdLoaded.invoke(fLoadedAd)
                                 }
                             }
                         }
 
                         override fun onAdClosed(isShowFullScreenAd: Boolean) {
                             super.onAdClosed(isShowFullScreenAd)
+                            logI(
+                                tag = TAG,
+                                message = "requestWithIndex: onAdClosed: Index -> $fIndex"
+                            )
                             showingAdIndex = -1
-                            onAdClosed.invoke(index)
+                            onAdClosed.invoke()
                         }
 
                         override fun onAdFailed() {
                             super.onAdFailed()
                             if (!isAnyIndexLoaded && !isAnyIndexAlreadyLoaded) {
-                                onAdFailed.invoke(index)
+                                onAdFailed.invoke()
                             }
                         }
                     }
                 },
-                fIndex = index,
                 isAddVideoOptions = isAddVideoOptions,
-                adChoicesPlacement = adChoicesPlacement
+                adChoicesPlacement = adChoicesPlacement,
+                mediaAspectRatio = mediaAspectRatio,
+                fIndex = fIndex
             )
-        } else if (fContext.isOnline
-            && nativeAdModel.nativeAd != null
-        ) {
-            if (showingAdIndex != -1
-                && showingAdIndex == index
-            ) {
-                nativeAdModel.nativeAd?.let { nativeAd ->
+        } else if (isOnline && fModel.loadedAd != null) {
+            if (showingAdIndex != -1 && showingAdIndex == fIndex) {
+                fModel.loadedAd?.let { nativeAd ->
                     if (!isAnyIndexAlreadyLoaded) {
-                        logI(tag = TAG, message = "requestWithIndex: Index -> $index")
+                        logI(tag = TAG, message = "requestWithIndex: already loaded ad Index -> $fIndex")
                         isAnyIndexAlreadyLoaded = true
-                        onAdLoaded.invoke(index, nativeAd)
-//                        if (onAdLoaded != mOnAdLoaded) {
-//                            mOnAdLoaded.invoke(index, nativeAd)
-//                        }
+                        onAdLoaded.invoke(nativeAd)
                     }
                 }
             }
         }
     }
 
-    data class TestModel(
-        var fLayout: FrameLayout,
-        var onAdLoaded: (index: Int, nativeAd: NativeAd) -> Unit = { _, _ -> },
-        var onAdClosed: (index: Int) -> Unit = { },
-        var onAdFailed: (index: Int) -> Unit = { },
-    )
-
-    internal val mViewList: ArrayList<TestModel> = ArrayList()
-
     /**
-     * Call this method when you need to load your Native AD
+     * Call this method when you need to load your Interstitial AD
      * you need to call this method only once in any activity or fragment
      *
      * @param fContext this is a reference to your activity context
-     * @param isAddVideoOptions [by Default value = true] pass false if you don't need to add video option
-     * @param adChoicesPlacement Ads I icon place @see [NativeAdOptions.ADCHOICES_TOP_RIGHT], [NativeAdOptions.ADCHOICES_TOP_LEFT], [NativeAdOptions.ADCHOICES_BOTTOM_RIGHT], [NativeAdOptions.ADCHOICES_BOTTOM_LEFT]
      * @param onAdLoaded callback after ad successfully loaded
      */
-    internal fun loadAd(
+    private fun loadAd(
         fContext: Context,
-        fLayout: FrameLayout,
-        isAddVideoOptions: Boolean = true,
+        isAddVideoOptions: Boolean,
         @NativeAdOptions.AdChoicesPlacement adChoicesPlacement: Int,
-        onAdLoaded: (index: Int, nativeAd: NativeAd) -> Unit = { _, _ -> },
-        onAdClosed: (index: Int) -> Unit = { },
-        onAdFailed: (index: Int) -> Unit = { },
+        @NativeAdOptions.NativeMediaAspectRatio mediaAspectRatio: Int,
+        onAdLoaded: (nativeAd: NativeAd) -> Unit,
+        onAdClosed: () -> Unit,
+        onAdFailed: () -> Unit,
     ) {
-
-        mOnAdLoaded = onAdLoaded
-        isAnyIndexLoaded = false
-        isAnyIndexAlreadyLoaded = false
-
-        val viewListData = mViewList.filter { it.fLayout == fLayout }
-
-        logE(tag = TAG, message = "loadAd: viewListData isEmpty::${viewListData.isEmpty()} -> ${fLayout.tag}")
-        if (viewListData.isEmpty()) {
-            mViewList.add(
-                TestModel(
-                    fLayout = fLayout,
-                    onAdLoaded = onAdLoaded,
-                    onAdClosed = onAdClosed,
-                    onAdFailed = onAdFailed,
-                )
-            )
+        var isRequestNewAd = true
+        if (isNativeAdAvailable()) {
+            if (isNativeAdEnable()) {
+                listOfNativeAdsModel.firstOrNull { it.loadedAd != null }?.let { item ->
+                    item.loadedAd?.let {
+                        isRequestNewAd = false
+                        onAdLoaded.invoke(it)
+                    }
+                }
+            }
         }
 
+        if (isRequestNewAd) {
+            isAnyIndexLoaded = false
+            isAnyIndexAlreadyLoaded = false
 
-        logE(tag = TAG, message = "loadAd: View List Size -> ${mViewList.size}  -> ${fLayout.tag}")
-
-
-        if (mList.isNotEmpty()) {
-            if (isNeedToLoadMultipleRequest) {
-                mList.forEachIndexed { index, nativeAdModel ->
-                    logI(tag = TAG, message = "loadAd: Request Ad From All ID at Same Time")
-                    requestWithIndex(
-                        fContext = fContext,
-                        nativeAdModel = nativeAdModel,
-                        isAddVideoOptions = isAddVideoOptions,
-                        adChoicesPlacement = adChoicesPlacement,
-                        index = index,
-                        onAdLoaded = { indexLoaded, nativeAd ->
-                            mViewList.forEach { data ->
-                                data.onAdLoaded.invoke(indexLoaded, nativeAd)
-                            }
-                        },
-                        onAdClosed = {
-                            mViewList.forEach { data ->
-                                data.onAdClosed.invoke(index)
-                            }
-                        },
-                        onAdFailed = {
-                            mViewList.forEach { data ->
-                                data.onAdFailed.invoke(index)
-                            }
-                        },
-                    )
-                }
-            } else {
-                logI(tag = TAG, message = "loadAd: Request Ad After Failed Previous Index Ad")
-                getNativeAdModel { index, nativeAdModel ->
-                    logI(tag = TAG, message = "loadAd: getNativeAdModel: Index -> $index")
-                    requestWithIndex(
-                        fContext = fContext,
-                        nativeAdModel = nativeAdModel,
-                        isAddVideoOptions = isAddVideoOptions,
-                        adChoicesPlacement = adChoicesPlacement,
-                        index = index,
-                        onAdLoaded = { indexLoaded, nativeAd ->
-                            mViewList.forEach { data ->
-                                data.onAdLoaded.invoke(indexLoaded, nativeAd)
-                            }
-                        },
-                        onAdClosed = {
-                            mViewList.forEach { data ->
-                                data.onAdClosed.invoke(index)
-                            }
-                        },
-                        onAdFailed = {
-                            if ((mAdIdPosition + 1) >= mList.size) {
-                                mAdIdPosition = -1
-                                mViewList.forEach { data ->
-                                    data.onAdFailed.invoke(index)
-                                }
-                            } else {
+            if (isNativeAdEnable() && isOnline) {
+                if (!(listOfNativeAdsModel.any { it.isAdLoadingRunning })) {
+                    getNativeAdModel(isNeedToLoadMultipleRequest = is_need_to_load_multiple_native_ad_request) { index, fAdModel ->
+                        logI(tag = TAG, message = "loadAd: getNativeAdModel: Index -> $index")
+                        requestWithIndex(
+                            fContext = fContext,
+                            fModel = fAdModel,
+                            isAddVideoOptions = isAddVideoOptions,
+                            adChoicesPlacement = adChoicesPlacement,
+                            mediaAspectRatio = mediaAspectRatio,
+                            fIndex = index,
+                            onAdLoaded = { nativeAd ->
+                                onAdLoaded.invoke(nativeAd)
+                            },
+                            onAdClosed = {
+                                logI(tag = TAG, message = "loadAd: onAdClosed: Index -> $index")
+                                onAdClosed.invoke()
                                 loadAd(
                                     fContext = fContext,
-                                    fLayout = fLayout,
                                     isAddVideoOptions = isAddVideoOptions,
                                     adChoicesPlacement = adChoicesPlacement,
+                                    mediaAspectRatio = mediaAspectRatio,
                                     onAdLoaded = onAdLoaded,
                                     onAdClosed = onAdClosed,
                                     onAdFailed = onAdFailed
                                 )
-                            }
-                        },
-                    )
+                            },
+                            onAdFailed = {
+                                if (!is_need_to_load_multiple_native_ad_request) {
+                                    if (isLastIndex) {
+                                        mAdIdPosition = -1
+                                        onAdFailed.invoke()
+                                    } else {
+                                        loadAd(
+                                            fContext = fContext,
+                                            isAddVideoOptions = isAddVideoOptions,
+                                            adChoicesPlacement = adChoicesPlacement,
+                                            mediaAspectRatio = mediaAspectRatio,
+                                            onAdLoaded = onAdLoaded,
+                                            onAdClosed = onAdClosed,
+                                            onAdFailed = onAdFailed
+                                        )
+                                    }
+                                }
+                            },
+                        )
+                    }
                 }
+//            } else if (!isAppNotPurchased || !is_enable_native_ad_from_remote_config) {
+            } else if (!isNativeAdEnable()) {
+                onAdClosed.invoke()
             }
-        } else {
-            throw RuntimeException("set Interstitial Ad Id First")
         }
     }
 
-    private fun isNativeAdAvailable(): Boolean {
-        return mList.find { it.nativeAd != null }?.nativeAd != null
+    fun loadAd(
+        fContext: Context,
+        fNativeAdView: NativeAdView,
+        isAddVideoOptions: Boolean,
+        @NativeAdOptions.AdChoicesPlacement adChoicesPlacement: Int,
+        @NativeAdOptions.NativeMediaAspectRatio mediaAspectRatio: Int,
+        onAdLoaded: (nativeAd: NativeAd) -> Unit = {},
+        onAdClosed: () -> Unit = {},
+        onAdFailed: () -> Unit = {},
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            listOfNativeAdView.filter { it.fNativeAdView == fNativeAdView }.let { listOfSavedNativeAdView ->
+                if (listOfSavedNativeAdView.isEmpty()) {
+                    logE(tag = TAG, message = "loadAd: View Added")
+                    listOfNativeAdView.add(
+                        NativeAdViewModel(
+                            fNativeAdView = fNativeAdView,
+                            onAdLoaded = onAdLoaded,
+                            onAdClosed = onAdClosed,
+                            onAdFailed = onAdFailed,
+                        )
+                    )
+                }
+            }
+
+            if (!isAnyIndexAdLoadingRunning) {
+                listOfNativeAdsModel.find { it.loadedAd != null }?.let { fModel ->
+                    logE(tag = TAG, message = "onOldAdRequest: ")
+                } ?: kotlin.run {
+                    logE(tag = TAG, message = "onOldAdRequest Null: 1")
+                }
+            } else {
+                logE(tag = TAG, message = "onOldAdRequest Null: 2")
+            }
+
+            loadAd(
+                fContext = fContext,
+                isAddVideoOptions = isAddVideoOptions,
+                adChoicesPlacement = adChoicesPlacement,
+                mediaAspectRatio = mediaAspectRatio,
+                onAdLoaded = { nativeAd ->
+                    CoroutineScope(Dispatchers.IO).launch {
+                        if (listOfNativeAdView.isNotEmpty()) {
+                            listOfNativeAdView.forEach {
+                                if (it.fNativeAdView.isAttachedToWindow) {
+                                    it.onAdLoaded.invoke(nativeAd)
+                                }
+                            }
+                        }
+                    }
+                },
+                onAdClosed = {
+                    logI(tag = TAG, message = "loadAd: onAdClosed: Index -> ${listOfNativeAdView.size}")
+                    CoroutineScope(Dispatchers.IO).launch {
+                        if (listOfNativeAdView.isNotEmpty()) {
+                            listOfNativeAdView.forEach {
+                                if (it.fNativeAdView.isAttachedToWindow) {
+                                    it.onAdClosed.invoke()
+                                }
+                            }
+                        }
+                    }
+                },
+                onAdFailed = {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        if (listOfNativeAdView.isNotEmpty()) {
+                            listOfNativeAdView.forEach {
+                                if (it.fNativeAdView.isAttachedToWindow) {
+                                    it.onAdFailed.invoke()
+                                }
+                            }
+                        }
+                    }
+                }
+            )
+        }
+
+    }
+
+    private data class NativeAdViewModel(
+        var fNativeAdView: NativeAdView,
+        var onAdLoaded: (nativeAd: NativeAd) -> Unit,
+        var onAdClosed: () -> Unit,
+        var onAdFailed: () -> Unit,
+    )
+
+
+    private val listOfNativeAdView: ArrayList<NativeAdViewModel> = ArrayList()
+
+    /**
+     * this method will check Interstitial Ad is Available or not
+     */
+    fun isNativeAdAvailable(): Boolean {
+        return isNativeAdEnable() && listOfNativeAdsModel.any { it.loadedAd != null }
+    }
+
+    fun isNativeAdEnable(): Boolean {
+        return isAppNotPurchased && is_enable_native_ad_from_remote_config
+    }
+
+//    fun addView(fNativeAdView: NativeAdView) {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            logE(tag = TAG, message = "removeView: listOfNativeAdView Size Before Remove::${listOfNativeAdView.size}")
+//            listOfNativeAdView.find { it.fNativeAdView == fNativeAdView }?.let {
+//                listOfNativeAdView.remove(it)
+//            }
+//            logE(tag = TAG, message = "removeView: listOfNativeAdView Size After Remove::${listOfNativeAdView.size}")
+//        }
+//    }
+
+    fun removeView(fNativeAdView: NativeAdView) {
+        CoroutineScope(Dispatchers.IO).launch {
+            logE(tag = TAG, message = "removeView: listOfNativeAdView Size Before Remove::${listOfNativeAdView.size}")
+            listOfNativeAdView.find { it.fNativeAdView == fNativeAdView }?.let {
+                listOfNativeAdView.remove(it)
+            }
+            logE(tag = TAG, message = "removeView: listOfNativeAdView Size After Remove::${listOfNativeAdView.size}")
+        }
     }
 
     fun destroy() {
-        isThisAdShowing = false
         isAnyIndexLoaded = false
         isAnyIndexAlreadyLoaded = false
         mAdIdPosition = -1
-        mViewList.clear()
-        for (data in mList) {
-            data.nativeAd = null
+
+        for (data in listOfNativeAdsModel) {
+            data.loadedAd = null
             data.listener = null
             data.isAdLoadingRunning = false
         }
     }
-
 }

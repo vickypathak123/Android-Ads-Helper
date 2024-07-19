@@ -1,0 +1,49 @@
+[versions]
+agp = "8.5.0"
+kotlin = "1.9.23"
+coreKtx = "1.13.1"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+appcompat = "1.7.0"
+material = "1.12.0"
+activity = "1.9.0"
+constraintlayout = "2.1.4"
+multidex = "2.0.1"
+googleGson = "2.10.1"
+playServicesAds = "23.2.0"
+lottie = "6.3.0"
+sdp = "1.1.1"
+ssp = "1.1.1"
+androidxLifecycleExtensions = "2.2.0"
+shimmer = "0.5.0"
+akspermissionAndroid = "v1.1.0"
+colorslider = "2.0.6"
+android-billing = "7.0.0"
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
+google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "googleGson" }
+google-play-services-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "playServicesAds" }
+lottie-animation = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
+intuit-sdp = { group = "com.intuit.sdp", name = "sdp-android", version.ref = "sdp" }
+intuit-ssp = { group = "com.intuit.ssp", name = "ssp-android", version.ref = "ssp" }
+androidx-lifecycle-extensions = { group = "androidx.lifecycle", name = "lifecycle-extensions", version.ref = "androidxLifecycleExtensions" }
+facebook-shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref = "shimmer" }
+akspermission-android = { group = "com.github.AkshayHarsoda", name = "AksPermission-Android", version.ref = "akspermissionAndroid" }
+colorslider = { group = "com.github.naz013", name = "ColorSlider", version.ref = "colorslider" }
+android-billing = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "android-billing" }
+

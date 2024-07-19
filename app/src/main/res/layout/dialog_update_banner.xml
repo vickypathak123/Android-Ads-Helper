@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="16dp"
+    app:cardUseCompatPadding="true"
+    app:contentPadding="16dp"
+    app:strokeWidth="0dp"
+    tools:strokeColor="@color/color_accent"
+    tools:strokeWidth="2">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent">
+
+        <TextView
+            android:id="@+id/txt_ad_size_hint"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:text="Update Ad Size :-"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toTopOf="@+id/txt_ad_type_hint"
+            app:layout_constraintEnd_toStartOf="@+id/sp_ad_size"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <Spinner
+            android:id="@+id/sp_ad_size"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:entries="@array/banner_ad_size_list"
+            android:gravity="center_vertical"
+            android:text="Update Ad Size :-"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toBottomOf="@id/txt_ad_size_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/txt_ad_size_hint"
+            app:layout_constraintTop_toTopOf="@id/txt_ad_size_hint" />
+
+        <TextView
+            android:id="@+id/txt_ad_type_hint"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:text="Update Ad Type :-"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toTopOf="@+id/txt_placeholder_type_hint"
+            app:layout_constraintEnd_toStartOf="@+id/sp_ad_type"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_ad_size_hint" />
+
+        <Spinner
+            android:id="@+id/sp_ad_type"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:entries="@array/banner_ad_type_list"
+            android:gravity="center_vertical"
+            android:text="Update Ad Type :-"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toBottomOf="@id/txt_ad_type_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/txt_ad_type_hint"
+            app:layout_constraintTop_toTopOf="@id/txt_ad_type_hint" />
+
+        <TextView
+            android:id="@+id/txt_placeholder_type_hint"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:text="Update Placeholder Type :-"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toTopOf="@+id/custom_placeholder_switch"
+            app:layout_constraintEnd_toStartOf="@+id/sp_placeholder_type"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_ad_type_hint" />
+
+        <Spinner
+            android:id="@+id/sp_placeholder_type"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:entries="@array/banner_placeholder_type_list"
+            android:gravity="center_vertical"
+            android:text="Update Placeholder Type :-"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toBottomOf="@id/txt_placeholder_type_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/txt_placeholder_type_hint"
+            app:layout_constraintTop_toTopOf="@id/txt_placeholder_type_hint" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/custom_placeholder_switch"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:text="Use Custom Layout :-"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toTopOf="@+id/txt_placeholder_text_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_placeholder_type_hint" />
+
+        <TextView
+            android:id="@+id/txt_placeholder_text_color"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:text="Update Placeholder Text Color :-"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toTopOf="@+id/color_piker"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/custom_placeholder_switch" />
+
+        <com.github.naz013.colorslider.ColorSlider
+            android:id="@+id/color_piker"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:paddingHorizontal="8dp"
+            android:layout_marginBottom="16dp"
+            android:paddingVertical="4dp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_cancel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_placeholder_text_color"/>
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_update"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/color_piker" />
+
+        <Button
+            android:id="@+id/btn_update"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:text="Update"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="@id/btn_cancel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_cancel"
+            app:layout_constraintTop_toTopOf="@id/btn_cancel" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

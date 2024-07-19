@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:theme="@style/Theme.Material3.DayNight"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardUseCompatPadding="false"
+    app:contentPadding="0dp"
+    app:shapeAppearance="@style/top_round_16_dp"
+    app:strokeColor="@android:color/transparent"
+    app:strokeWidth="0dp"
+    tools:cardBackgroundColor="@android:color/holo_orange_dark">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="fl_native_ad_place_holder_big, ivDelete" />
+
+        <com.example.app.ads.helper.banner.BannerAdView
+            android:id="@+id/fl_native_ad_place_holder_big"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:banner_ad_size="medium_rectangle"
+            app:banner_ad_type="normal"
+            app:banner_placeholder_type="shimmer" />
+
+
+        <ImageView
+            android:id="@+id/ivDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:padding="@dimen/_10sdp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_launcher_background"
+            app:layout_constrainedHeight="true"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight="wrap_content"
+            app:layout_constraintHeight_max="@dimen/_80sdp"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/exit_tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:gravity="center"
+            android:text="Dialog Title"
+            android:textColor="#192045"
+            android:textSize="@dimen/_14ssp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/exit_tv_desc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/barrier2" />
+
+        <TextView
+            android:id="@+id/exit_tv_desc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:gravity="center"
+            android:text="Dialog Sub Title"
+            android:textColor="#6D7172"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintBottom_toTopOf="@+id/exit_card_no"
+            app:layout_constraintEnd_toEndOf="@+id/exit_tv_title"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/exit_tv_title"
+            app:layout_constraintTop_toBottomOf="@+id/exit_tv_title" />
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/exit_card_no"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_marginEnd="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_6sdp"
+            android:theme="@style/Theme.Material3.DayNight"
+            app:cardBackgroundColor="#F0F8FF"
+            app:cardCornerRadius="@dimen/_12sdp"
+            app:cardElevation="0dp"
+            app:cardUseCompatPadding="true"
+            app:contentPadding="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/exit_card_yes"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/exit_tv_desc"
+            app:strokeColor="#0A82F3"
+            app:strokeWidth="1dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingBottom="@dimen/_1sdp"
+                android:text="update ad"
+                android:textColor="#0A82F3"
+                android:textSize="@dimen/_12ssp"
+                android:textStyle="bold" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/exit_card_yes"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:theme="@style/Theme.Material3.DayNight"
+            app:cardBackgroundColor="#0A82F3"
+            app:cardElevation="0dp"
+            app:cardUseCompatPadding="true"
+            app:contentPadding="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="@id/exit_card_no"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/exit_card_no"
+            app:layout_constraintTop_toTopOf="@id/exit_card_no"
+            app:strokeColor="@android:color/transparent"
+            app:strokeWidth="0dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingBottom="@dimen/_1sdp"
+                android:text="close"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/_12ssp"
+                android:textStyle="bold" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

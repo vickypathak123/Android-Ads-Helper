@@ -1,24 +1,93 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.AdsHelper" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/teal_200</item>
-        <item name="colorPrimaryDark">@color/teal_700</item>
-        <item name="colorAccent">@color/teal_200</item>
+    <!-- Base application theme. -->
+    <!--    <style name="Base.Theme.AdsHelper20" parent="Theme.Material3.DayNight.NoActionBar">-->
+    <!--        &lt;!&ndash; Customize your light theme here. &ndash;&gt;-->
+    <!--        &lt;!&ndash; <item name="colorPrimary">@color/my_light_primary</item> &ndash;&gt;-->
+    <!--    </style>-->
+
+    <!--    <style name="Theme.AdsHelper20" parent="Base.Theme.AdsHelper20" />-->
+
+    <style name="Theme.AdsHelper20" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
+        <item name="colorControlActivated">@color/color_accent</item>
+
+        <item name="android:windowDisablePreview">true</item>
 
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowBackground">@android:color/white</item>
 
+        <!-- Status bar color. -->
+        <item name="android:windowLightStatusBar">false</item>
+        <!--        <item name="android:enforceStatusBarContrast" tools:targetApi="q">true</item>-->
+        <item name="android:statusBarColor">@color/color_primary</item>
 
-        <item name="native_ads_main_color">@color/black</item>
-        <item name="native_ads_label_text_color">@android:color/white</item>
-        <item name="native_ads_background_color">@android:color/white</item>
-        <item name="native_ads_body_text_color">@android:color/black</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <!--        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">true</item>-->
+        <item name="android:navigationBarColor">@color/color_primary</item>
+
+        <!--        <item name="android:windowTranslucentStatus">true</item>-->
+        <!--        <item name="android:windowTranslucentNavigation">true</item>-->
+
+        <item name="android:timePickerDialogTheme">@style/AlertDialogTheme</item>
+        <item name="android:datePickerDialogTheme">@style/AlertDialogTheme</item>
+        <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
+
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="fontFamily">sans-serif</item>
+
+        <item name="native_ads_main_color">#9C27B0</item>
+        <item name="native_ads_body_text_color">#673AB7</item>
+        <item name="native_ads_background_color">#CDDC39</item>
+        <item name="native_ads_label_text_color">#FBC02D</item>
     </style>
 
-    <style name="AppTranslucent" parent="android:Theme.NoTitleBar.Fullscreen">
-        <item name="android:windowBackground">@drawable/ic_launcher_background</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="splash_screen_theme" parent="Theme.AdsHelper20">
+        <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@drawable/ic_launcher_background</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
+
+<!--    <style name="AppTranslucent" parent="android:Theme.NoTitleBar.Fullscreen">-->
+<!--        <item name="android:windowBackground">@drawable/ic_launcher_background</item>-->
+<!--        <item name="windowActionBar">false</item>-->
+<!--        <item name="windowNoTitle">true</item>-->
+<!--        <item name="android:windowFullscreen">true</item>-->
+<!--        <item name="android:windowContentOverlay">@null</item>-->
+<!--    </style>-->
+
+    <style name="AlertDialogTheme" parent="android:Theme.Material.Light.Dialog.Alert">
+        <item name="android:buttonBarNegativeButtonStyle">@style/Theme.Custom_Dialog_Text</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/Theme.Custom_Dialog_Text</item>
+        <item name="android:buttonBarNeutralButtonStyle">@style/Theme.Custom_Dialog_Text</item>
+    </style>
+
+    <style name="Theme.Custom_Dialog_Text" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/color_accent</item>
+    </style>
+
+    <style name="base_theme_dialog_animation">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
+    <style name="top_round_16_dp" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+    </style>
+
+    <style name="CustomBottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/CustomBottomSheet</item>
+    </style>
+
+    <style name="CustomBottomSheet" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="shapeAppearanceOverlay">@style/top_round_16_dp</item>
     </style>
 </resources>

@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.example.app.ads.helper.openad
 
 import android.app.Activity
@@ -5,6 +7,11 @@ import android.app.Application
 import android.os.Bundle
 import com.example.app.ads.helper.openad.AppOpenAdHelper.showAppOpenAd
 
+/**
+ * @author Akshay Harsoda
+ * @since 28 Nov 2022
+ * @updated 25 Jun 2024
+ */
 class ActivityLifecycleManager(
     myApplication: Application
 ) : Application.ActivityLifecycleCallbacks {
@@ -43,7 +50,7 @@ class ActivityLifecycleManager(
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
     //</editor-fold>
 
-    fun showOpenAd(isNeedToShowAds: Boolean) {
-        mCurrentActivity?.let { it.showAppOpenAd(isNeedToShowAds) {} }
+    fun showOpenAd() {
+        mCurrentActivity?.let { it.showAppOpenAd {} }
     }
 }

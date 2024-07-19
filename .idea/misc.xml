@@ -1,39 +1,5 @@
 <project version="4">
-  <component name="DesignSurface">
-    <option name="filePathToZoomLevelMap">
-      <map>
-        <entry key="adshelper/src/main/res/drawable/bordered_ad_button.xml" value="0.3503575076608784" />
-        <entry key="adshelper/src/main/res/drawable/green_ad_button.xml" value="0.3572916666666667" />
-        <entry key="adshelper/src/main/res/drawable/native_ad_button.xml" value="0.3503575076608784" />
-        <entry key="adshelper/src/main/res/drawable/progressbar_progress_drawable.xml" value="0.3503575076608784" />
-        <entry key="adshelper/src/main/res/drawable/test.xml" value="0.3503575076608784" />
-        <entry key="adshelper/src/main/res/layout/dialog_full_screen_native_ad.xml" value="0.33697916666666666" />
-        <entry key="adshelper/src/main/res/layout/layout_google_native_ad_big.xml" value="0.3074074074074074" />
-        <entry key="adshelper/src/main/res/layout/layout_google_native_ad_custom_sample.xml" value="0.33" />
-        <entry key="adshelper/src/main/res/layout/layout_google_native_ad_exit_full_screen_app_store.xml" value="0.25" />
-        <entry key="adshelper/src/main/res/layout/layout_google_native_ad_exit_full_screen_website.xml" value="0.25" />
-        <entry key="adshelper/src/main/res/layout/layout_google_native_ad_medium.xml" value="0.33" />
-        <entry key="adshelper/src/main/res/layout/testing.xml" value="0.33697916666666666" />
-        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.205" />
-        <entry key="app/src/main/res/drawable/bg_rounded_bottom_sheet.xml" value="0.24" />
-        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.205" />
-        <entry key="app/src/main/res/drawable/img_border1.xml" value="0.3572916666666667" />
-        <entry key="app/src/main/res/drawable/img_border3.xml" value="0.3572916666666667" />
-        <entry key="app/src/main/res/layout/activity_custom_native_ads.xml" value="0.33697916666666666" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.33697916666666666" />
-        <entry key="app/src/main/res/layout/activity_native_ads.xml" value="0.33697916666666666" />
-        <entry key="app/src/main/res/layout/activity_second.xml" value="0.33697916666666666" />
-        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.33697916666666666" />
-        <entry key="app/src/main/res/layout/all_screen_header.xml" value="0.33697916666666666" />
-        <entry key="app/src/main/res/layout/dialog_exit.xml" value="0.33697916666666666" />
-        <entry key="app/src/main/res/layout/dialog_select_language.xml" value="0.33697916666666666" />
-        <entry key="app/src/main/res/layout/item_select_language.xml" value="0.33697916666666666" />
-        <entry key="app/src/main/res/layout/view_gift_ad.xml" value="0.33697916666666666" />
-        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.205" />
-        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.205" />
-      </map>
-    </option>
-  </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

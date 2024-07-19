@@ -7,4 +7,80 @@
     <attr name="native_ads_body_text_color" format="color" />
     <attr name="native_ads_background_color" format="color" />
 
+    <attr name="banner_placeholder_type" format="enum">
+        <enum name="none" value="0" />
+        <enum name="shimmer" value="1" />
+        <enum name="text" value="2" />
+        <enum name="custom" value="3" />
+    </attr>
+
+    <attr name="banner_ad_type" format="enum">
+        <enum name="normal" value="0" />
+        <enum name="splash" value="1" />
+        <enum name="collapsible_bottom" value="2" />
+        <enum name="collapsible_top" value="3" />
+    </attr>
+
+    <attr name="banner_ad_size" format="enum">
+        <enum name="banner" value="0" />
+        <enum name="large_banner" value="1" />
+        <enum name="medium_rectangle" value="2" />
+        <enum name="full_banner" value="3" />
+        <enum name="leaderboard" value="4" />
+        <enum name="adaptive_banner" value="5" />
+    </attr>
+
+    <declare-styleable name="BannerAdView">
+        <attr name="banner_ad_size" />
+        <attr name="banner_ad_type" />
+        <attr name="banner_placeholder_type" />
+        <attr name="banner_placeholder_text_color" format="color" />
+        <attr name="banner_custom_placeholder" format="reference" />
+        <attr name="banner_auto_load" format="boolean" />
+    </declare-styleable>
+
+    <attr name="native_ad_type" format="enum">
+        <enum name="big" value="0" />
+        <enum name="medium" value="1" />
+        <enum name="interstitial_native" value="2" />
+        <enum name="custom" value="3" />
+    </attr>
+
+    <attr name="native_placeholder_type" format="enum">
+        <enum name="none" value="0" />
+        <enum name="shimmer" value="1" />
+        <enum name="text" value="2" />
+        <enum name="custom" value="3" />
+    </attr>
+
+    <attr name="native_interstitial_type" format="enum">
+        <enum name="website" value="0" />
+        <enum name="app_store" value="1" />
+<!--        <enum name="full_screen" value="2" />-->
+    </attr>
+
+    <declare-styleable name="NativeAdView">
+        <attr name="native_ad_type" />
+        <attr name="native_interstitial_type" />
+        <attr name="native_placeholder_type" />
+        <attr name="native_placeholder_text_color" format="color" />
+        <attr name="native_custom_placeholder" format="reference" />
+        <attr name="native_custom_ad_view" format="reference" />
+        <attr name="native_auto_load" format="boolean" />
+        <attr name="native_show_placeholder" format="boolean" />
+        <attr name="native_new_ad_request" format="boolean" />
+        <attr name="cardBackgroundColor" format="color" />
+        <attr name="cardCornerRadius" format="dimension" />
+        <attr name="cardElevation" format="dimension" />
+        <attr name="cardUseCompatPadding" format="boolean" />
+        <attr name="cardPreventCornerOverlap" format="boolean" />
+        <attr name="contentPadding" format="dimension" />
+        <attr name="contentPaddingLeft" format="dimension" />
+        <attr name="contentPaddingRight" format="dimension" />
+        <attr name="contentPaddingTop" format="dimension" />
+        <attr name="contentPaddingBottom" format="dimension" />
+        <attr name="strokeColor" format="color" />
+        <attr name="strokeWidth" format="dimension" />
+    </declare-styleable>
+
 </resources>

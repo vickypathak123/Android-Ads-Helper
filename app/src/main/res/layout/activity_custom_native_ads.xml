@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activitys.CustomNativeAdsActivity">
@@ -11,7 +12,6 @@
         layout="@layout/all_screen_header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,13 +26,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_header">
 
-        <FrameLayout
-            android:id="@+id/fl_native_ad_place_holder_custom"
+        <com.example.app.ads.helper.nativead.NativeAdView
+            android:id="@+id/custom_native_ad_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_header" />
+            app:cardBackgroundColor="@android:color/white"
+            app:native_ad_type="custom"
+            app:native_custom_ad_view="@layout/layout_google_native_ad_custom_sample"
+            app:native_auto_load="true"
+            app:native_placeholder_type="shimmer"
+            app:native_show_placeholder="true" />
 
     </ScrollView>
 

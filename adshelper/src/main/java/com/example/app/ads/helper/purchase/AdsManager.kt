@@ -3,6 +3,7 @@ package com.example.app.ads.helper.purchase
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import com.example.app.ads.helper.updateAppPurchasedStatusRemoveAds
 
 class AdsManager(context: Context) {
     @Suppress("PrivatePropertyName")
@@ -15,6 +16,7 @@ class AdsManager(context: Context) {
 
     fun onProductPurchased() {
         Log.e(TAG, "onProductPurchased")
+        updateAppPurchasedStatusRemoveAds()
         sp.save(isNeedToShow, true)
     }
 
@@ -25,6 +27,7 @@ class AdsManager(context: Context) {
 
     fun onProductSubscribed() {
         Log.e(TAG, "onProductSubscribed")
+        updateAppPurchasedStatusRemoveAds()
         sp.save(isSubscribe, true)
     }
 

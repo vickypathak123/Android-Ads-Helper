@@ -1,13 +1,75 @@
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
-    <string name="app_name">Common Code</string>
+<!--
 
-    <!--ToDo: Google Test Ads id-->
+    ToDo: This is test app ads id from {@link 'https://developers.google.com/admob/android/quick-start'}
+
+        Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
+
+    ToDo: This is test ads id from {@link 'https://developers.google.com/admob/android/test-ads#demo_ad_units'}
+
+        Interstitial ca-app-pub-3940256099942544/1033173712
+        Interstitial Video ca-app-pub-3940256099942544/8691691433
+        Native Advanced ca-app-pub-3940256099942544/2247696110
+        Native Advanced Video ca-app-pub-3940256099942544/1044960115
+        Rewarded ca-app-pub-3940256099942544/5224354917
+        Rewarded Interstitial ca-app-pub-3940256099942544/5354046379
+        App Open ca-app-pub-3940256099942544/9257395921
+        Adaptive Banner ca-app-pub-3940256099942544/9214589741
+        Fixed Size Banner ca-app-pub-3940256099942544/6300978111
+-->
+
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
+
+
+    <!--ToDo: Google Test Ads id [@updated 05 Jul 2024 by Akshay Harsoda]-->
     <string name="test_admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
     <string name="test_admob_interstitial_ad_id">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="test_admob_interstitial_video_ad_id">ca-app-pub-3940256099942544/8691691433</string>
     <string name="test_admob_native_advanced_ad_id">ca-app-pub-3940256099942544/2247696110</string>
+    <string name="test_admob_native_advanced_video_ad_id">ca-app-pub-3940256099942544/1044960115</string>
     <string name="test_admob_reward_video_ad_id">ca-app-pub-3940256099942544/5224354917</string>
-    <string name="test_admob_interstitial_ad_reward_id">ca-app-pub-3940256099942544/5354046379</string>
-    <string name="test_admob_open_ad_id">ca-app-pub-3940256099942544/3419835294</string>
+    <string name="test_admob_reward_interstitial_ad_id">ca-app-pub-3940256099942544/5354046379</string>
+    <string name="test_admob_open_ad_id">ca-app-pub-3940256099942544/9257395921</string>
     <string name="test_admob_banner_ad_id">ca-app-pub-3940256099942544/2014213617</string>
+    <string name="test_admob_adaptive_banner_ad_id">ca-app-pub-3940256099942544/9214589741</string>
+    <string name="test_admob_fixed_size_banner_ad_id">ca-app-pub-3940256099942544/6300978111</string>
+
+
+    <!--ToDo: Module Strings-->
+    <string name="ads_by_developer">Ads by developer</string>
+    <string name="ad_attribution">Ad</string>
+
+    <string name="ad_advertiser_title">\u25CF Advertiser</string>
+    <string name="ad_body_title">\u25CF Body</string>
+    <string name="ad_headline_title">\u25CF Headline</string>
+    <string name="ad_price_title">\u25CF Price</string>
+    <string name="ad_store_title">\u25CF Store</string>
+    <string name="ad_star_rating_title">\u25CF Star Rating</string>
+    <string name="ad_icon_title">\u25CF Icon</string>
+    <string name="ad_bg_image_title">\u25CF Blur Image</string>
+    <string name="ad_media_content_title">\u25CF Media Content</string>
+    <string name="ad_call_to_action_title">\u25CF Call To Action</string>
+    <string name="ad_call_to_close_title">\u25CF Call To Close</string>
+
+
+
+
+    <string name="ad_advertiser_id">ad_advertiser</string>
+    <string name="ad_body_id">ad_body</string>
+    <string name="ad_headline_id">ad_headline</string>
+    <string name="ad_price_id">ad_price</string>
+    <string name="ad_store_id">ad_store</string>
+    <string name="ad_star_rating_id">ad_stars</string>
+    <string name="ad_txt_rating_id">ad_txt_rating</string>
+    <string name="ad_icon_id">ad_app_icon</string>
+    <string name="ad_bg_image_id">ad_bg_main_image</string>
+    <string name="ad_media_container_id">native_ad_media_container\n(Use Only FrameLayout)</string>
+    <string name="ad_media_content_id">ad_media\n(Use Only MediaView)</string>
+    <string name="ad_call_to_action_id">ad_call_to_action</string>
+    <string name="ad_call_to_close_id">ad_call_to_close</string>
+
+
+
+
+
 
 </resources>

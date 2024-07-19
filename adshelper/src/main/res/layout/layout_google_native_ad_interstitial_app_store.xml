@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:layoutDirection="ltr"
+    android:minHeight="50dp">
+
+    <ImageView
+        android:id="@+id/ad_bg_main_image"
+        android:layout_width="0dp"
+        android:layout_height="350dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription"
+        tools:src="@tools:sample/backgrounds/scenic" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_main_image"
+        android:layout_width="0dp"
+        android:layout_height="180dp"
+        android:layout_margin="8dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="@id/ad_bg_main_image"
+        app:layout_constraintDimensionRatio="2:1"
+        app:layout_constraintEnd_toEndOf="@id/ad_bg_main_image"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/ad_bg_main_image"
+        app:layout_constraintTop_toTopOf="@id/ad_bg_main_image">
+
+        <FrameLayout
+            android:id="@+id/native_ad_media_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            tools:background="@tools:sample/backgrounds/scenic" />
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/txt_ad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/default_native_ads_main_color"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="@string/ad_attribution"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+        android:textColor="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ad_bg_main_image" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_app_icon_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="cv_app_icon, view_app_icon_height" />
+
+    <View
+        android:id="@+id/view_app_icon_height"
+        android:layout_width="1dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ad_bg_main_image" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_app_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ad_bg_main_image">
+
+        <ImageView
+            android:id="@+id/ad_app_icon"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/ad_headline"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/ll_extra_item"
+        app:layout_constraintEnd_toEndOf="@id/ad_bg_main_image"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@id/cv_app_icon"
+        app:layout_constraintTop_toBottomOf="@+id/ad_bg_main_image"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="@tools:sample/lorem/random" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ll_extra_item"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/barrier_app_icon_bottom"
+        app:layout_constraintEnd_toEndOf="@id/ad_headline"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/ad_headline"
+        app:layout_constraintTop_toBottomOf="@+id/ad_headline">
+
+        <TextView
+            android:id="@+id/ad_txt_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="#5E5E60"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ad_stars"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="4.5" />
+
+        <RatingBar
+            android:id="@+id/ad_stars"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:progressBackgroundTint="#AAAAAA"
+            android:progressTint="#F2B200"
+            android:secondaryProgressTint="@android:color/transparent"
+            android:stepSize="0.5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ad_price"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ad_txt_rating"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:rating="4.5" />
+
+        <TextView
+            android:id="@+id/ad_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxLines="1"
+            android:textColor="#5E5E60"
+            android:textSize="16sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/ad_txt_rating"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ad_stars"
+            tools:text="@tools:sample/us_zipcodes" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/iv_play_logo"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/play_logo"
+        app:layout_constraintBottom_toBottomOf="@id/ad_store"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ad_store"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/ad_store"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="4dp"
+        android:ellipsize="marquee"
+        android:gravity="center_vertical"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:textColor="#5E5E60"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@+id/ad_call_to_close"
+        app:layout_constraintEnd_toStartOf="@id/ad_call_to_close"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/iv_play_logo"
+        app:layout_goneMarginLeft="12dp"
+        app:layout_goneMarginStart="12dp"
+        tools:text="Google Play" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/ad_call_to_close"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@android:color/transparent"
+        android:gravity="center"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:paddingTop="0dp"
+        android:paddingBottom="2dp"
+        android:singleLine="true"
+        android:text="Close"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:textStyle="normal"
+        android:theme="@style/Theme.Material3.DayNight"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ad_call_to_action"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintTop_toBottomOf="@+id/barrier_app_icon_bottom"
+        app:shapeAppearanceOverlay="@style/full_round_4_dp"
+        app:strokeColor="#E4E4E4"
+        app:strokeWidth="0.8dip"
+        tools:ignore="HardcodedText" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/ad_call_to_action"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@color/default_native_ads_main_color"
+        android:ellipsize="marquee"
+        android:gravity="center"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:paddingTop="0dp"
+        android:paddingBottom="2dp"
+        android:singleLine="true"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:textStyle="normal"
+        android:theme="@style/Theme.Material3.DayNight"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintTop_toBottomOf="@+id/barrier_app_icon_bottom"
+        app:shapeAppearanceOverlay="@style/full_round_10_dp"
+        tools:text="Install" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

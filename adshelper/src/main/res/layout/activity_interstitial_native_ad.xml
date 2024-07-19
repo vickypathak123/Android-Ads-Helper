@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="ltr">
+
+    <!--    Website-->
+    <!--app:cardCornerRadius="0dp"
+    app:cardElevation="0dp"
+    app:cardUseCompatPadding="false"-->
+
+    <!--    App Store-->
+    <!--android:layout_margin="8dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true"-->
+
+    <com.example.app.ads.helper.nativead.NativeAdView
+        android:id="@+id/interstitial_native_ad_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:native_ad_type="interstitial_native"
+        app:native_custom_placeholder="@layout/placeholder_interstitial_native"
+        app:native_interstitial_type="app_store"
+        app:native_placeholder_type="custom"
+        app:native_show_placeholder="false" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_close_ad"
+        android:layout_width="56dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginEnd="17dp"
+        android:paddingStart="17dp"
+        android:paddingBottom="17dp"
+        android:src="@drawable/ic_ad_close_new"
+        android:visibility="gone"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription,RtlSymmetry"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
